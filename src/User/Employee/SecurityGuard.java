@@ -1,12 +1,14 @@
+package User.Employee;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class SecurityGuard extends Employee{
+public class SecurityGuard extends Employee {
     String Name;
     String SecurityGuardID;
-    String Position = "SecurityGuard";
+    String Position = "User.Employee.SecurityGuard";
 
     public SecurityGuard(String Name){
         super(Name);
