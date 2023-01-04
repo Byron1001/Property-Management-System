@@ -1,6 +1,15 @@
-public class Technician extends Employee{
-    public Technician(String Name){
-        super(Name);
+package User.Employee;
+
+public class Technician extends Employee {
+
+    String name;
+    String technicianID;
+    String position = "User.Employee.Technician";
+
+    public Technician (String technicianID){
+        super();
+        this.name = super.name;
+        technicianID = "1423";
     }
     public static int Search_View_Visitor_Pass(){
         System.out.println("Hello");

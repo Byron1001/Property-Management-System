@@ -1,4 +1,6 @@
-public class Cleaner extends Employee{
+package User.Employee;
+
+public class Cleaner extends Employee {
     public Cleaner(String Name){
         super(Name);
     }
