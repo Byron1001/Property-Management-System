@@ -1,5 +1,7 @@
 package User.Resident;
 
-public class Resident extends Outsider {
+public class Resident {
+    public Resident(){
 
+    }
 }

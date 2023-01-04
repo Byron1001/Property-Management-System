@@ -1,4 +1,5 @@
 package User.Manager;
 
-public class Building_Manager extends Manager {
+public class Building_Manager {
+
 }
