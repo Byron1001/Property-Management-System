@@ -8,7 +8,7 @@ public class Technician extends Employee {
 
     public Technician (String technicianID){
         super();
-        this.name = super.name;
+        this.name = super.employeeName;
         technicianID = "1423";
     }
     public static int Search_View_Visitor_Pass(){

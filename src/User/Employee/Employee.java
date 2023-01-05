@@ -48,7 +48,7 @@ public class Employee extends User {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        if (scanner.hasNextLine()){
+        while (scanner.hasNextLine()){
             String[] data = scanner.nextLine().split("|", 4);
             Employee employee1 = new Employee(data[0], data[2], data[3], Integer.parseInt(data[1]));
             employeeArrayList.add(employee1);

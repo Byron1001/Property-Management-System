@@ -39,13 +39,11 @@ public class Executive {
                 throw new RuntimeException(e);
             }
         }
-        if (scanner.hasNextLine()){
+        while (scanner.hasNextLine()){
             String[] data = scanner.nextLine().split("|", 4);
             Executive executive1 = new Executive(data[0], data[1], data[2], Integer.parseInt(data[3]));
             executiveArrayList.add(executive1);
         }
     }
-
-    
 
 }
