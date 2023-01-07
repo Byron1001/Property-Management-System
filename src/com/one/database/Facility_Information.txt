@@ -1,0 +1,14 @@
+Facilities|Unit|Time1|Time2|Time3|Time4
+Badminton Hall|1|-|-|-|-
+Badminton Hall|2|RS0001|-|-|-
+Badminton Hall|3|-|-|-|-
+Badminton Hall|4|-|-|-|-
+Gymnasium Room|1|-|-|-|-
+Gymnasium Room|2|-|-|-|-
+Gymnasium Room|3|-|-|-|-
+Gymnasium Room|4|-|-|-|-
+Gymnasium Room|5|-|-|-|-
+Gymnasium Room|6|-|-|-|-
+Gymnasium Room|7|-|-|-|-
+Function Room|1|-|-|-|-
+Function Room|2|-|-|-|-

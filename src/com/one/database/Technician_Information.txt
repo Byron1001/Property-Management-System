@@ -1,0 +1,2 @@
+TechnicianID|Name|Gender|contact_number
+TN0001|Joseph|Female|011-11111111

@@ -1,0 +1,2 @@
+InvoiceCode|OutsiderID|InvoiceDate|DueDate|Price|Description
+IV0001|RS0001|1.7.2022|2.7.2022|250|Description

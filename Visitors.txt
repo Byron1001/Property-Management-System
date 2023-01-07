@@ -1,2 +1,0 @@
-VI00001|Edmund|12.26.2022|12.27.2022|
-VisitorID|Name|ValidDateStart|ValidDateEnd|

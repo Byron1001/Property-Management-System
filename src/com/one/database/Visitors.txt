@@ -1,0 +1,2 @@
+VI00001|Edmund|Male|012-3456789|12.26.2022|12.27.2022
+VisitorID|Name|Gender|Contact_Number|ValidDateStart|ValidDateEnd
