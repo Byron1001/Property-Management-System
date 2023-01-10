@@ -1,0 +1,2 @@
+SecurityGuardID|Name|Gender|contact_number|password
+SG0001|Joseph|Female|011-11111111|123456

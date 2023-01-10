@@ -1,0 +1,2 @@
+VendorID|Name|Gender|contact_number
+SG0001|Joseph|Female|011-11111111
