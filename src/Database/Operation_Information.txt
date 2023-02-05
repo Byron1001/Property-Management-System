@@ -1,0 +1,1 @@
+operation ID:building manager ID:operation title:description:budget amount

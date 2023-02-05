@@ -1,2 +1,0 @@
-OutsiderID|Price|Description
-RS0001|250|Description

@@ -1,0 +1,3 @@
+CheckPointID:Name:Location
+CP001:CarPark1:Block A floor 2 Car Park
+CP002:Washroom1:Block A floor 3 Washroom

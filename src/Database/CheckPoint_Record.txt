@@ -1,0 +1,2 @@
+SecurityGuard Employee ID:CheckPointID:date:time
+SG001:CP1:1.12.2023:140000

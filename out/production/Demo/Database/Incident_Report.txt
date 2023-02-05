@@ -1,0 +1,3 @@
+Incident ID:Date:Time:SecurityGuard ID:Description
+Inc1:01.02.2023:150318:SG001:a robber drink alcohol with me
+Inc2:01.22.2923:142321:SG002:malay boy is so handsome

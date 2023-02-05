@@ -1,2 +1,0 @@
-null|123|01.02.2023|14:59:54
-SecurityID|CheckPoint|date|time

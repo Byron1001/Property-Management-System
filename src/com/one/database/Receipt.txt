@@ -1,2 +1,0 @@
-OutsiderID|ResidentID|PaidDate|Price|InvoiceCode|Description
-RC0001|RS0001|2.7.2022|250|InvoiceCode|Dorm fee

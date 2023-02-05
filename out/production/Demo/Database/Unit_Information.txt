@@ -1,0 +1,7 @@
+floor:unitID:complete_Year:furnish:parking_Unit:owner_Username:resident_Username
+4:A401:2020:fully:P01-001:Mike1001:Mike1001
+4:A402:2020:fully:P01-001:Andrew1123:Andrew1123
+4:A403:2020:fully:P01-001:Jay1030:Jay1030
+4:A404:2020:fully:P01-001:Ahmad4403:Ahmad4403
+4:A405:2020:fully:P01-001:Joy101:Rain1031
+5:A506:2020:fully:P01-001:Foo1201:Foo1201

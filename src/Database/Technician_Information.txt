@@ -1,0 +1,3 @@
+Employee ID:Name:Gender:contact_number:salary:position
+TN001:Alex:F:011-12679348:1200:Technician
+TN002:Brayden:F:012-22341627:1200:Technician

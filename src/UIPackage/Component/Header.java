@@ -7,9 +7,11 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Header extends JPanel {
+    public SearchText searchText;
     public Header(){
-        setSize(971, 45);
-        setLocation(215, 0);
+//        setSize(971, 45);
+        setPreferredSize(new Dimension(971, 45));
+//        setLocation(215, 0);
         setOpaque(false);
         setBackground(Color.white);
         ImageIcon icon = new ImageIcon("src/UIPackage/Icon/search.png");
@@ -18,8 +20,8 @@ public class Header extends JPanel {
         searchIcon.setSize(30, 30);
         searchIcon.setLocation(10, 5);
 
-        SearchText searchText = new SearchText();
-        searchText.setSize(860, getHeight());
+        searchText = new SearchText();
+        searchText.setPreferredSize(new Dimension(860, getHeight()));
         searchText.setLocation(60, 0);
 
         ImageIcon stack = new ImageIcon("src/UIPackage/Icon/stack.png");
@@ -28,10 +30,10 @@ public class Header extends JPanel {
         stackIcon.setSize(30, 30);
         stackIcon.setLocation(931, 5);
 
-        setLayout(null);
-        add(searchIcon);
-        add(searchText);
-        add(stackIcon);
+        setLayout(new BorderLayout());
+        add(searchIcon, BorderLayout.WEST);
+        add(searchText, BorderLayout.CENTER);
+        add(stackIcon, BorderLayout.EAST);
     }
 
     @Override

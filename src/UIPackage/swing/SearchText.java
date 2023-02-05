@@ -27,4 +27,16 @@ public class SearchText extends JTextField {
             g.drawString(hint, ins.left, height / 2 + fm.getAscent() / 2);//getAscent get the font height from baseline to height
         }
     }
+
+    public static void main(String[] args) {
+        JPanel panel = new JPanel();
+        SearchText searchText = new SearchText();
+        searchText.setPreferredSize(new Dimension(1000, 40));
+        panel.add(searchText);
+        panel.setPreferredSize(new Dimension(1000, 40));
+        JFrame frame = new JFrame();
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setVisible(true);
+    }
 }

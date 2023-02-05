@@ -1,0 +1,3 @@
+Vendor Username:Name:Gender:contact_number:vendor unit:monthly payment:unpaid payment
+VE001:Abunene:M:011-1743475:floor 1 canteen:500:0
+VE002:MalaiPo:F:013-1234152:floor 3 mamak:600:0

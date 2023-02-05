@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class MenuItem extends JPanel {
     private boolean selected;
+    private boolean over;
     public MenuItem(Model_Menu data){
 
         JLabel menuName = new JLabel();
@@ -40,12 +41,21 @@ public class MenuItem extends JPanel {
         repaint();
     }
 
+    public void setOver(boolean over) {
+        this.over = over;
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {//will be used will repaint()
-        if (selected){
+        if (selected || over){
             Graphics2D graphics2D = (Graphics2D) g;
             graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            graphics2D.setColor(new Color(255, 255, 255, 80));
+            if (selected){
+                graphics2D.setColor(new Color(255, 255, 255, 80));
+            } else {
+                graphics2D.setColor(new Color(255, 255, 255, 20));
+            }
             graphics2D.fillRoundRect(0, 0, getWidth(), getHeight(), 5, 5);
         }
         super.paintComponent(g);

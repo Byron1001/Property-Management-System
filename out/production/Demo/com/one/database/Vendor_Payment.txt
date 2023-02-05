@@ -1,2 +1,0 @@
-VendorID|Category(rental,utilities,services)|Amount|Status
-VD0001|Joseph|3000|011-11111111

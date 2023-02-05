@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Model_Card {
-    Icon icon;
-    String title, values, description;
+    public Icon icon;
+    public String title, values, description;
 
     public void setTitle(String title) {
         this.title = title;
@@ -39,8 +39,9 @@ public class Model_Card {
         return values;
     }
 
-    public Model_Card(Icon icon, String title, String values, String description){
-        this.icon = icon;
+    public Model_Card(String icon, String title, String values, String description){
+        String path = "src/UIPackage/Icon/" + icon + ".png";
+        this.icon = new ImageIcon(path);
         this.title = title;
         this.values = values;
         this.description = description;

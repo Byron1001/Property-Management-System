@@ -1,2 +1,0 @@
-ResidentID|Name|Gender|Contact_Number
-RS0001|Alan|Female|011-11111111

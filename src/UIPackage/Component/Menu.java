@@ -1,21 +1,31 @@
 package UIPackage.Component;
 
+import UIPackage.Event.EventMenuSelected;
 import UIPackage.Model.Model_Menu;
 import UIPackage.swing.ListMenu;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.security.PublicKey;
 
 
 public class Menu extends JPanel{
-    private JPanel panelMoving;
-    private JLabel title;
-    private ListMenu listMenu = new ListMenu();
+    public JPanel panelMoving;
+    public JLabel title = new JLabel("Parkhill.R");;
+    public ListMenu listMenu = new ListMenu();
+    public Color colorLeft = Color.decode("#1CB5E0");
+    public Color colorRight = Color.decode("#000046");
+    public ImageIcon titleIcon = new ImageIcon("src/UIPackage/Icon/small_icon.png");
+    private EventMenuSelected event;
+
+    public void addEventMenuSelected(EventMenuSelected event){
+        this.event = event;
+        listMenu.addEventMenuSelected(event);
+    }
+
     public Menu(){
         setOpaque(false);
         panelMoving = new JPanel();
@@ -24,11 +34,10 @@ public class Menu extends JPanel{
         panelMoving.setLayout(new FlowLayout());
         panelMoving.setBorder(BorderFactory.createEmptyBorder(20, 15, 20, 15));
 
-        title = new JLabel("Parkhill.R");
         title.setFont(new Font("Arial", Font.BOLD, 18));
         title.setForeground(Color.white);
         title.setHorizontalAlignment(JLabel.LEADING);
-        ImageIcon titleIcon = new ImageIcon("src/UIPackage/Icon/small_icon.png");
+
         titleIcon = getScaledImage(titleIcon, 40, 40);
         title.setIcon(titleIcon);
         title.setIconTextGap(15);
@@ -38,30 +47,18 @@ public class Menu extends JPanel{
         panelMoving.add(title);
 
         setSize(new Dimension(215, 621));
-        setLayout(new FlowLayout());
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
         add(panelMoving);
-        add(new JSeparator());
-        add(listMenu, CENTER_ALIGNMENT);
 
-        init();
-    }
+        constraints.gridy = 1;
+        add(new JSeparator(), constraints);
 
-    private void init(){
-        listMenu.addItem(new Model_Menu("1", "Dashboard", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("2", "UI Elements", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("3", "Components", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("4", "Form stuff", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("5", "Data Table", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-
-        listMenu.addItem(new Model_Menu("", "My Data", Model_Menu.MenuType.TITLE));
-        listMenu.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
-        listMenu.addItem(new Model_Menu("6", "Icons", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("7", "Sample Page", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("8", "Extra", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("9", "More", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("10", "Logout", Model_Menu.MenuType.MENU));
-        listMenu.addItem(new Model_Menu("", "", Model_Menu.MenuType.EMPTY));
+        constraints.gridy = 2;
+        add(listMenu, constraints);
     }
 
     public void initMoving(JFrame frame){
@@ -77,7 +74,7 @@ public class Menu extends JPanel{
     protected void paintChildren(Graphics g) {
         Graphics2D graphics2D = (Graphics2D) g;
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        GradientPaint gradientPaint = new GradientPaint(0, 0, Color.decode("#1CB5E0"), 0, getHeight(), Color.decode("#000046"));
+        GradientPaint gradientPaint = new GradientPaint(0, 0, colorLeft, 0, getHeight(), colorRight);
         graphics2D.setPaint(gradientPaint);
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
         super.paintChildren(g);

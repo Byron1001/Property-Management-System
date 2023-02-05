@@ -1,0 +1,7 @@
+Resident_Username:Name:Gender:Contact_Number:unitID:Payment pending
+Mike1001:Mike Foo:M:011-2839173:A401:100
+Andrew1123:Andrew Wiggins:M:012-7564382:A402:0
+Jay1030:Jay Chou:M:013-78433298:A403:0
+Ahmad4403:Ahmad Wakil:F:015-6723783:A404:0
+Joy101:Joy Cheng:F:012-2143673:A405:0
+Foo1202:Foo Hei:F:019-6453783:A406:0

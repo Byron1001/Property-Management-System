@@ -1,0 +1,1 @@
+expenses ID:operation ID:building manager ID:amount:payment date:payment types:description

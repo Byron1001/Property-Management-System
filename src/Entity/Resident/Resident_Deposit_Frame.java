@@ -1,0 +1,240 @@
+package Entity.Resident;
+
+import Entity.Financial.Invoice;
+import Entity.Financial.Payment;
+import UIPackage.Component.Header;
+import UIPackage.Component.Menu;
+import UIPackage.Event.EventMenuSelected;
+import UIPackage.Form.Form_Home;
+import UIPackage.Model.Model_Card;
+import UIPackage.Model.Model_Menu;
+import UIPackage.swing.PanelBorder;
+import UIPackage.swing.Table;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.RoundRectangle2D;
+import java.io.FileNotFoundException;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
+public class Resident_Deposit_Frame {
+        public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
+        public Menu menu = new Menu();
+        public Header header = new Header();
+        public Form_Home formHome = new Form_Home();
+        public Table tableData = new Table();
+        public Color backgroundColor = Color.WHITE;
+        public String resident_Username = "resident Username";
+        public JScrollPane scrollPane;
+        public GridBagConstraints constraints;
+        public JPanel panel;
+        public Resident_Profile_Panel.Button receiptButton;
+        public Resident_Profile_Panel.Button payButton;
+
+        public Resident_Deposit_Frame(String resident_Username) throws FileNotFoundException {
+            this.resident_Username = resident_Username;
+//            menu.initMoving(this);
+
+            formHome.setBackground(backgroundColor);
+
+            panelBorderLeft = new PanelBorder();
+            panelBorderRight = new PanelBorder();
+//            setLayout(new BorderLayout());
+            panelBorderRight.setLayout(new BorderLayout());
+            panelBorderLeft.setLayout(new GridLayout(1, 1));
+
+            panelBorderLeft.add(menu);
+            panelBorderRight.setBackground(backgroundColor);
+            panelBorderRight.add(header, BorderLayout.PAGE_START);
+
+            panelBorderIn = new PanelBorder();
+            panelBorderIn.setBackground(backgroundColor);
+            panelBorderIn.setLayout(new GridBagLayout());
+
+            TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), resident_Username, TitledBorder.LEFT, TitledBorder.TOP);
+            border.setTitleFont(new Font("sanserif", Font.BOLD, 18));
+            border.setTitleColor(Color.lightGray);
+            panelBorderIn.setBorder(border);
+
+            constraints = new GridBagConstraints();
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            constraints.fill = GridBagConstraints.HORIZONTAL;
+
+            JTableHeader header1 = tableData.getTableHeader();
+            header1.setReorderingAllowed(false);
+            header1.setResizingAllowed(false);
+            header1.setDefaultRenderer(new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    if (column != header1.getColumnModel().getColumnCount()) {
+                        Component com = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                        com.setBackground(backgroundColor);
+                        setBorder(noFocusBorder);
+                        com.setForeground(new Color(102, 102, 102));
+                        com.setFont(new Font("sansserif", Font.BOLD, 16));
+                        setHorizontalAlignment(JLabel.CENTER);
+                        return com;
+                    }
+                    return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                }
+            });
+
+            panel = new JPanel();
+            panel.setLayout(new FlowLayout());
+            panel.setBackground(backgroundColor);
+            panel.add(tableData);
+
+            scrollPane = new JScrollPane();
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            scrollPane.setBorder(BorderFactory.createEmptyBorder());
+            scrollPane.setViewportView(panel);
+
+            panelBorderIn.add(header1, constraints);
+            constraints.gridy++;
+            panelBorderIn.add(scrollPane, constraints);
+
+            panelBorderRight.add(panelBorderIn, BorderLayout.CENTER);
+            panelBorderRight.add(formHome, BorderLayout.PAGE_END);
+
+//            add(panelBorderLeft, BorderLayout.LINE_START);
+//            add(panelBorderRight, BorderLayout.CENTER);
+//
+//            setUndecorated(true);
+//            setSize(new Dimension(1186, 621));
+//            setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
+//            setLocationRelativeTo(null);
+        }
+
+        public void run() throws FileNotFoundException {
+            final String[] column = {"Invoice ID", "Issuer ID", "Unit ID", "Amount", "Due Date", "Pay Types", "Description", "Status"};
+            Entity.Resident.Resident_Payment_Frame frame = new Entity.Resident.Resident_Payment_Frame("Mike1001");
+            frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
+            frame.menu.listMenu.addItem(new Model_Menu("payment", "Invoice", Model_Menu.MenuType.MENU));
+            frame.menu.listMenu.addItem(new Model_Menu("deposit", "Deposit", Model_Menu.MenuType.MENU));
+            frame.menu.listMenu.addItem(new Model_Menu("paymentHistory", "Payment History", Model_Menu.MenuType.MENU));
+            frame.menu.listMenu.addItem(new Model_Menu("statement", "Statement", Model_Menu.MenuType.MENU));
+            frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
+            frame.menu.listMenu.addItem(new Model_Menu("pass", "Visitor Pass", Model_Menu.MenuType.MENU));
+            frame.menu.listMenu.addItem(new Model_Menu("complaint", "complaint", Model_Menu.MenuType.MENU));
+
+            frame.menu.colorRight = Color.decode("#38ef7d");
+            frame.menu.colorLeft = Color.decode("#11998e");
+            frame.menu.initMoving(frame);
+
+            for (String col : column){
+                frame.tableData.model.addColumn(col);
+            }
+            frame.tableData.preferredColumnWidth = 113;
+            Resident resident = new Resident();
+            resident = resident.get_Resident_Info(resident_Username);
+            ArrayList<Invoice> invoiceArrayList = resident.get_Unit_All_Invoice(resident.getUnitID());
+            ArrayList<Invoice> unpaidArrayList = resident.get_Unit_All_Unpaid_Invoice(resident.getUnitID());
+            String number = (float) unpaidArrayList.size() / invoiceArrayList.size()*100 + "%";
+            for (Invoice invoice : invoiceArrayList){
+                frame.tableData.addRow(invoice.getStringArray(invoice));
+            }
+            frame.formHome.card1.setData(new Model_Card("payment", "Invoice Pay", number, "Remember to pay"));
+            ArrayList<Payment> pendingPayment = resident.get_All_pending_Payment(resident.getUnitID());
+            int total = 0;
+            for (Payment pay : pendingPayment){
+                total += pay.getAmount();
+            }
+            String totalNumber = "RM " + total;
+
+            frame.formHome.card2.setData(new Model_Card("payment", "Pending", totalNumber, "To be confirmed"));
+            ArrayList<Payment> receiptList = resident.get_All_Receipt(resident.getUnitID());
+            int total2 = 0;
+            for (Payment pay : receiptList){
+                total2 += pay.getAmount();
+            }
+            String paid = "RM " + total2;
+            frame.formHome.card3.setData(new Model_Card("payment", "Paid", paid, "Thks for payment"));
+
+            frame.menu.addEventMenuSelected(new EventMenuSelected() {
+                @Override
+                public void selected(int index) throws FileNotFoundException {
+                    if (index == 0){
+//                        dispose();
+                        Resident_Interface residentInterface = new Resident_Interface(resident_Username);
+                        residentInterface.setPanelBorderRight(new Resident_Profile_Panel(residentInterface.getResident_Username()));
+                        residentInterface.frame.setVisible(true);
+                    } else if (index == 1) {
+                    } else if (index == 2) {
+
+                    }
+                }
+            });
+
+            frame.setVisible(true);
+        }
+
+        public static class ReceiptFrame extends JFrame{
+            public ReceiptFrame(Invoice invoice){
+                JPanel panel1 = new JPanel();
+                JPanel panel2 = new JPanel();
+                JPanel panel3 = new JPanel();
+                panel1.setLayout(new BorderLayout());
+                panel2.setLayout(new GridLayout(8, 2, 15, 15));
+                panel3.setLayout(new GridLayout(3, 1, 15, 15));
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+                JLabel invoiceTitle = new JLabel("INVOICE");
+                JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+                JLabel[] jLabelLeft = {new JLabel("Invoice ID"), new JLabel("Issuer ID"),
+                        new JLabel("Unit ID"), new JLabel("Amount"),
+                        new JLabel("Due Date"), new JLabel("Payment Types"),
+                        new JLabel("Description"), new JLabel("Status")};
+                JLabel[] jLabelRight = {new JLabel(invoice.getInvoiceID()), new JLabel(invoice.getIssuerID()),
+                        new JLabel(invoice.getUnitID()), new JLabel("RM " + invoice.getAmount()),
+                        new JLabel(invoice.getDueDate().format(formatter)), new JLabel(invoice.getPaymentTypes()),
+                        new JLabel(invoice.getDescription()), new JLabel(invoice.getStatus())};
+                Resident_Profile_Panel.Button button = new Resident_Profile_Panel.Button("Close");
+                button.setAlignmentX(JButton.CENTER);
+                invoiceTitle.setFont(new Font("sansserif", Font.BOLD, 24));
+                invoiceTitle.setHorizontalAlignment(JLabel.CENTER);
+                issuedBy.setFont(new Font("sansserif", Font.PLAIN, 10));
+                issuedBy.setHorizontalAlignment(JLabel.CENTER);
+                panel1.add(invoiceTitle, BorderLayout.NORTH);
+                for (int i = 0;i < jLabelLeft.length;i++){
+                    jLabelLeft[i].setFont(new Font("sansserif", Font.BOLD, 16));
+                    panel2.add(jLabelLeft[i]);
+                    panel2.add(jLabelRight[i]);
+                }
+                panel1.add(panel2, BorderLayout.CENTER);
+
+                panel3.add(issuedBy);
+                panel3.add(button);
+                panel1.add(panel3, BorderLayout.SOUTH);
+                setUndecorated(true);
+                panel1.setPreferredSize(new Dimension(1186/2, 621));
+                panel1.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+                setPreferredSize(new Dimension(1186, 621));
+                pack();
+
+                setLocationRelativeTo(null);
+                setContentPane(panel1);
+                setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
+                setVisible(true);
+
+                button.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        dispose();
+                    }
+                });
+            }
+        }
+
+        public static void main(String[] args) throws FileNotFoundException {
+            new Entity.Resident.Resident_Payment_Frame("Mike1001").run();
+//        new ReceiptFrame(new Invoice().getArrayList().get(0));
+        }
+    }
+

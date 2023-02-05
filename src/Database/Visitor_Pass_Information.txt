@@ -1,0 +1,3 @@
+Visitor PassID:Visitor Name:resident Username: unitID:Gender:Contact_Number:Date Start:Date End:Status
+VI1:Edmund:Mike1001:A401:M:012-3456789:12.26.2022:12.27.2022:Approved
+VI2:Aikka:Andrew1123:A402:M:011-1212345:12.26.2022:12.27.2022:Disapproved

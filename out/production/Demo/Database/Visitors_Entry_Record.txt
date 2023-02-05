@@ -1,0 +1,3 @@
+VisitorsID:Enter_Date:Enter_Time
+VI0001:12.28.2022:160826
+VI0001:12.28.2022:161133

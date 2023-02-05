@@ -1,0 +1,7 @@
+FacilityID:Name
+BH1:Badminton Hall
+BH2:Badminton Hall
+GR1:Gymnasium Room
+GR2:Gymnasium Room
+FR1:Function Room
+FR2:Function Room

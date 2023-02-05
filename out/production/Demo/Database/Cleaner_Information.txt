@@ -1,0 +1,3 @@
+Employee ID:Name:Gender:contact_number:salary:position
+CN001:JoJo:F:011-72921342:1200:Cleaner
+CN002:JiaYi:M:012-12025647:1200:Cleaner

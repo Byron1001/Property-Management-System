@@ -1,4 +1,0 @@
-EmployeeID|position|task1|task2|task3|task4|task5
-SG0001|SecurityGuard|-|-|-|-|-|
-CN0001|Cleaner|-|-|-|-|-|
-TN0001|Technician|-|-|-|-|-|

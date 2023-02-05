@@ -1,0 +1,1 @@
+Employee ID:Name:Gender:contact_number:salary:positionSG001:Alan:F:011-1456327:1200:Security GuardSG002:Jojo:F:019-3453321:1200:Security Guard

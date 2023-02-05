@@ -1,2 +1,0 @@
-CleanerID|Name|Gender|contact_number
-CN0001|Joseph|Female|011-11111111

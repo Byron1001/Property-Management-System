@@ -1,17 +1,24 @@
 package UIPackage.swing;
 
+import UIPackage.Event.EventMenuSelected;
 import UIPackage.Model.Model_Menu;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.io.FileNotFoundException;
 
 public class ListMenu<E extends Object> extends JList<E> {
-    private final DefaultListModel model;
-    private int selectedIndex = -1;
+    private final DefaultListModel model = new DefaultListModel();
+    public int selectedIndex = -1;
+    private int overIndex = -1;
+    private EventMenuSelected event;
+    public void addEventMenuSelected(EventMenuSelected event){
+        this.event = event;
+    }
     public ListMenu(){
-        model = new DefaultListModel();
         setModel(model);
         setOpaque(false);
 
@@ -21,10 +28,19 @@ public class ListMenu<E extends Object> extends JList<E> {
                 if (SwingUtilities.isLeftMouseButton(e)){
                     int index = locationToIndex(e.getPoint());
                     Object o = model.getElementAt(index);
+
                     if (o instanceof Model_Menu){
                         Model_Menu menu = (Model_Menu) o;
                         if (menu.getType() == Model_Menu.MenuType.MENU){
                             selectedIndex = index;
+                            if (event != null){
+                                try {
+                                    event.selected(index);
+                                } catch (FileNotFoundException ex) {
+
+                                }
+                            } else {
+                                System.out.println("hello");}
                         }
                     }else {
                         selectedIndex = index;
@@ -32,6 +48,32 @@ public class ListMenu<E extends Object> extends JList<E> {
                     repaint();
                 }
             }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                overIndex = -1;
+                repaint();
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int index = locationToIndex(e.getPoint());
+                if (index != overIndex){
+                    Object o = model.getElementAt(index);
+                    if (o instanceof Model_Menu){
+                        Model_Menu menu = (Model_Menu) o;
+                        if (menu.getType() == Model_Menu.MenuType.MENU){
+                            overIndex = index;
+                        } else {
+                            overIndex = -1;
+                        }
+                        repaint();
+                    }
+                }
+            }
+
         });
     }
 
@@ -48,6 +90,7 @@ public class ListMenu<E extends Object> extends JList<E> {
                 }
                 MenuItem item = new MenuItem(data);
                 item.setSelected(selectedIndex == index);
+                item.setOver(overIndex == index);
                 return item;
             }
         };

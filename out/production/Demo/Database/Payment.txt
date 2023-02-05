@@ -1,0 +1,3 @@
+paymentID:invoiceID:pay Username:unitID:amount:payment date:payment Types:issuerID:issued date:description
+Pay1:INV1:Mike1001:A401:300:01.22.2023:rental:AC01:01.23.2023:January 2023
+Pay2:INV2:Mike1001:A401:200:01.23.2023:rental:AC01:01.24.2023:January 2023

@@ -9,7 +9,6 @@ public class PanelBorder extends JPanel {
 
     public PanelBorder(){
         setOpaque(false);
-        setLayout(new GridBagLayout());
     }
 
     @Override
