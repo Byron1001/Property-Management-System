@@ -2,9 +2,13 @@ package Entity.Executive.Admin_Executive;
 
 import Entity.*;
 import Entity.Employee.*;
+import Entity.Employee.SecurityGuard.SecurityGuard;
 import Entity.Executive.Executive;
 import Entity.Resident.Resident;
+import Entity.Vendor.Vendor;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,6 +23,16 @@ public class Admin_Executive_Function {
         public Admin_Executive(String admin_Executive_ID, String name, char gender, String contact_Number){
             super();
             super.set_Info(admin_Executive_ID, name, gender, contact_Number, position);
+        }
+
+        public void update_Admin_Executive_Info(Admin_Executive adminExecutive, String executiveID) throws IOException {
+            ArrayList<Admin_Executive> adminExecutiveArrayList = adminExecutive.getArrayList();
+            for (Admin_Executive adminExecutive1 : adminExecutiveArrayList){
+                if (adminExecutive1.getExecutiveID().equals(executiveID))
+                    adminExecutiveArrayList.remove(adminExecutive1);
+            }
+            adminExecutiveArrayList.add(adminExecutive);
+            adminExecutive.save_All_Admin_Executive(adminExecutiveArrayList);
         }
 
         //Unit management
@@ -46,12 +60,6 @@ public class Admin_Executive_Function {
             unit.sort_All_Unit();
         }
 
-        public ArrayList<Unit> unit_View_All() throws FileNotFoundException {
-            Unit unit = new Unit();
-            ArrayList<Unit> unitArrayList = unit.getArrayList();
-            return unitArrayList;
-        }
-
         // Resident Management
         public void resident_Add(Resident resident) throws IOException {
             ArrayList<Resident> residentArrayList = resident.getArrayList();
@@ -75,26 +83,12 @@ public class Admin_Executive_Function {
             }
             resident.save_All_Resident(residentArrayList);
         }
-        public ArrayList<Resident> resident_View_All(String resident_Username) throws FileNotFoundException {
-            Resident resident = new Resident();
-            ArrayList<Resident> residentArrayList = resident.getArrayList();
-            return residentArrayList;
-        }
-
-        public Resident search_Resident_Info(String resident_Username) throws FileNotFoundException {
-            return new Resident().get_Resident_Info(resident_Username);
-        }
 
         // Complaint Management
         public void complaint_Add(Complaint complaint) throws IOException {
             ArrayList<Complaint> complaintArrayList = complaint.getArrayList();
             complaintArrayList.add(complaint);
             complaint.save_All_Complaint(complaintArrayList);
-        }
-        public ArrayList<Complaint> complaint_View_All() throws FileNotFoundException {
-            Complaint complaint = new Complaint();
-            ArrayList<Complaint> complaintArrayList =  complaint.getArrayList();
-            return complaintArrayList;
         }
         public void complaint_Update(Complaint complaint, String complaintID) throws IOException {
             if (complaint.check_Complaint_Availability(complaintID)){
@@ -110,6 +104,14 @@ public class Admin_Executive_Function {
                     complaintArrayList.remove(com);
             }
             complaint.save_All_Complaint(complaintArrayList);
+        }
+        public void complaint_Solved(String complaintID) throws IOException {
+            if (new Complaint().check_Complaint_Availability(complaintID)){
+                Complaint complaintNew = new Complaint().search_Complaint_Information(complaintID);
+                complaintNew.setStatus("solved");
+                complaint_Delete(complaintID);
+                complaint_Add(complaintNew);
+            }
         }
 
         // Employee Management System start from here
@@ -180,13 +182,13 @@ public class Admin_Executive_Function {
         }
 
         // Facility Management System start from here
-        public static void add_Facility(Facility facility) throws IOException, ClassNotFoundException {
+        public void add_Facility(Facility facility) throws IOException, ClassNotFoundException {
             ArrayList<Facility> facilityArrayList = facility.getArrayList();
             if (!facility.check_Facility_Availability(facility.getFacilityID()))
                 facilityArrayList.add(facility);
             facility.save_All_Facility(facilityArrayList);
         }
-        public static void delete_Facility(String facilityID) throws IOException, ClassNotFoundException {
+        public void delete_Facility(String facilityID) throws IOException, ClassNotFoundException {
             Facility facility = new Facility();
             ArrayList<Facility> facilityArrayList = facility.getArrayList();
             for (Facility facility1 : facilityArrayList){
@@ -196,25 +198,19 @@ public class Admin_Executive_Function {
             facility.save_All_Facility(facilityArrayList);
         }
 
-        public static void update_Facility(Facility facility, String facilityID) throws IOException, ClassNotFoundException {
+        public void update_Facility(Facility facility, String facilityID) throws IOException, ClassNotFoundException {
             delete_Facility(facilityID);
             add_Facility(facility);
         }
-        public static ArrayList<Facility> view_All_Facility() throws IOException, ClassNotFoundException {
-            Facility facility = new Facility();
-            ArrayList<Facility> facilityArrayList = facility.getArrayList();
-            return facilityArrayList;
-        }
 
         // Facility Booking Management System start from here
-        public boolean add_Booking(Facility.Booking booking) throws IOException, ClassNotFoundException {
+        public void add_Booking(Facility.Booking booking) throws IOException, ClassNotFoundException {
             boolean check = booking.check_TimeSlot_Availability(booking);
             if (check) {
                 ArrayList<Facility.Booking> bookingArrayList = booking.getArrayList();
                 bookingArrayList.add(booking);
                 booking.save_All_Facility_Booking(bookingArrayList);
             }
-            return check;
         }
         public void delete_Booking(String bookingID) throws IOException, ClassNotFoundException {
             Facility.Booking booking = new Facility.Booking();
@@ -225,15 +221,9 @@ public class Admin_Executive_Function {
             }
             booking.save_All_Facility_Booking(bookingArrayList);
         }
-        public void facility_Booking_Management_Update(Facility.Booking booking, String bookingID) throws IOException, ClassNotFoundException {
+        public void facility_Booking_Update(Facility.Booking booking, String bookingID) throws IOException, ClassNotFoundException {
             delete_Booking(bookingID);
             add_Booking(booking);
-        }
-
-        public static ArrayList<Facility.Booking> view_All_Booking() throws IOException, ClassNotFoundException {
-            Facility.Booking booking = new Facility.Booking();
-            ArrayList<Facility.Booking> bookingArrayList = booking.getArrayList();
-            return bookingArrayList;
         }
 
         public ArrayList<Admin_Executive> getArrayList() throws FileNotFoundException {
@@ -289,12 +279,39 @@ public class Admin_Executive_Function {
             Admin_Executive adminExecutive = new Admin_Executive();
             ArrayList<Admin_Executive> adminExecutiveArrayList = adminExecutive.getArrayList();
             for (Admin_Executive adminExecutive1 : adminExecutiveArrayList) {
-                if (adminExecutive1.getExecutiveID().equals(executiveID))
+                if (adminExecutive1.getExecutiveID().equals(executiveID)) {
                     result = true;
+                    break;
+                }
             }
             return result;
         }
 
+        //add
+        public void vendor_Add(Vendor vendor) throws IOException {
+            ArrayList<Vendor> vendorArrayList = vendor.getArrayList();
+            vendorArrayList.add(vendor);
+            vendor.save_All_Vendor(vendorArrayList);
+        }
+        public void vendor_Modify(Vendor vendor, String vendor_Username) throws IOException {
+            String dataLine = vendor.getDataString(vendor);
+            if (vendor.check_Vendor_Availability(vendor_Username)){
+                vendor_Delete(vendor_Username);
+                vendor_Add(vendor);
+                System.out.println("Successfully modify vendor information.");
+            }
+        }
+        public void vendor_Delete(String vendor_Username) throws IOException {
+            Vendor vendor = new Vendor();
+            ArrayList<Vendor> vendorArrayList = vendor.getArrayList();
+            for (Vendor vendor1 : vendorArrayList){
+                if (vendor1.getVendor_Username().equals(vendor_Username))
+                    vendorArrayList.remove(vendor1);
+            }
+            vendor.save_All_Vendor(vendorArrayList);
+        }
+
+        //Visitor Pass
         public ArrayList<Visitor_Pass> get_All_Disapproved_Visitor_Pass() throws FileNotFoundException {
             Visitor_Pass visitorPass = new Visitor_Pass();
             ArrayList<Visitor_Pass> visitorPassArrayList = visitorPass.getArrayList();
@@ -314,5 +331,25 @@ public class Admin_Executive_Function {
             new Visitor_Pass().save_All_Visitor(visitorPassArrayList);
         }
 
+    }
+    public static class Button extends JButton {
+        public Color color1 = Color.decode("#283c86");
+        public Color color2 = Color.decode("#45a247");
+        public Button(String title){
+            super(title);
+            setContentAreaFilled(false);
+            setBackground(Color.decode("#283c86"));
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            GradientPaint gradientPaint = new GradientPaint(0, 0, color1,getWidth(), 0, color2);
+            g2.setPaint(gradientPaint);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            super.paintComponent(g);
+        }
     }
 }

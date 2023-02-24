@@ -133,6 +133,16 @@ public class Payment {
         return data;
     }
 
+    public String[] getStringArrayAddStatus(Payment payment){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+        String status = "PENDING";
+        if (!payment.getIssuerID().equals("")){
+            status = "RECEIVED";
+        }
+        String[] data = {payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), payment.getIssuerID(), payment.getIssuedDate().format(formatter), status};
+        return data;
+    }
+
     public String get_Auto_PaymentID() throws FileNotFoundException {
         FileReader fileReader = new FileReader(payment_txt);
         Scanner scanner = new Scanner(fileReader);
@@ -194,7 +204,7 @@ public class Payment {
         }
     }
 
-    private static int get_Fund_Amount() throws FileNotFoundException {
+    public static int get_Fund_Amount() throws FileNotFoundException {
         File fund_Amount_txt = new File("src/Database/Fund.txt");
         Scanner scanner = new Scanner(fund_Amount_txt);
         String number = scanner.nextLine().split(":", 2)[1];
@@ -225,11 +235,23 @@ public class Payment {
     public ArrayList<Payment> get_All_Receipt(String unitID) throws FileNotFoundException {
         Payment payment = new Payment();
         ArrayList<Payment> paymentArrayList = payment.getArrayList();
+        ArrayList<Payment> paymentArrayList1 = new ArrayList<>();
         for (Payment payment1 : paymentArrayList){
-            if (!(payment1.getUnitID().equals(unitID)))
-                paymentArrayList.remove(payment1);
+            if (payment1.getUnitID().equals(unitID))
+                paymentArrayList1.add(payment1);
         }
-        return paymentArrayList;
+        return paymentArrayList1;
+    }
+
+    public ArrayList<Payment> get_All_Receipt() throws FileNotFoundException {
+        Payment payment = new Payment();
+        ArrayList<Payment> paymentArrayList = payment.getArrayList();
+        ArrayList<Payment> paymentReturn = new ArrayList<>();
+        for (Payment payment1 : paymentArrayList){
+            if (!payment1.getIssuerID().equals(""))
+                paymentReturn.add(payment1);
+        }
+        return paymentReturn;
     }
 
     public static class Deposit{

@@ -1,6 +1,7 @@
 package Entity.Financial;
 
-import javax.swing.plaf.nimbus.State;
+import Entity.Login.Login;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -79,6 +80,12 @@ public class Statement {
         return statementArrayList;
     }
 
+    public String[] getStringArray(Statement statement){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+        String[] data = {statement.getStatementID(), statement.getIssuer_Position(), statement.getDate().format(formatter), statement.getDescription(), statement.getReceiverID()};
+        return data;
+    }
+
     public String get_Auto_StatementID() throws FileNotFoundException {
         FileReader fileReader = new FileReader(statement_txt);
         Scanner scanner = new Scanner(fileReader);
@@ -118,10 +125,20 @@ public class Statement {
 
     public ArrayList<Statement> get_Statement_for_Receiver(String receiverID) throws FileNotFoundException {
         ArrayList<Statement> statementArrayList = new Statement().getArrayList();
+        ArrayList<Statement> statementArrayList1 = new ArrayList<>();
         for (Statement statement : statementArrayList){
-            if (!(statement.getReceiverID().equals(receiverID)))
-                statementArrayList.remove(statement);
+            if (statement.getReceiverID().equals(receiverID))
+                statementArrayList1.add(statement);
         }
-        return statementArrayList;
+        return statementArrayList1;
+    }
+
+    public ArrayList<String> get_Receiver_List() throws FileNotFoundException {
+        ArrayList<String> receiverList = new ArrayList<>();
+        ArrayList<Login> loginArrayList = new Login().getArrayList();
+        for (Login login : loginArrayList){
+            receiverList.add(login.getUsername());
+        }
+        return receiverList;
     }
 }

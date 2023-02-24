@@ -1,7 +1,9 @@
 package Entity;
 
 import Entity.Facility;
+import Entity.Resident.Resident;
 
+import javax.swing.text.DateFormatter;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -48,6 +50,10 @@ public class Facility {
         return facilityArrayList;
     }
 
+    public String[] getStringArray(Facility facility){
+        return new String[]{facility.getFacilityID(), facility.getName()};
+    }
+
     public boolean check_Facility_Availability(String facilityID) throws IOException, ClassNotFoundException {
         boolean result = false;
         ArrayList<Facility> facilityArrayList = this.getArrayList();
@@ -85,7 +91,7 @@ public class Facility {
         private LocalDate date;
         private LocalTime start_Time;
         private LocalTime end_Time;
-        private File facility_Booking_Record_txt = new File("src/Database/Facility_Booking_Record.txt");
+        private final File facility_Booking_Record_txt = new File("src/Database/Facility_Booking_Record.txt");
         public Booking(){}
 
         public Booking(String bookingID, String facilityID, String resident_Username, LocalDate date, LocalTime start_Time, LocalTime end_Time) {
@@ -160,16 +166,6 @@ public class Facility {
             return bookingArrayList;
         }
 
-        public boolean check_Facility_Existence(String facilityID) throws IOException, ClassNotFoundException {
-            boolean result = false;
-            ArrayList<Facility.Booking> bookingArrayList = this.getArrayList();
-            for (Facility.Booking booking : bookingArrayList){
-                if (booking.getFacilityID().equals(facilityID)){
-                    result = true;
-                }
-            }
-            return result;
-        }
         public String getDataString(Facility.Booking booking){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
@@ -203,11 +199,17 @@ public class Facility {
         }
 
         public boolean check_TimeSlot_Availability(Facility.Booking new_booking) throws IOException, ClassNotFoundException {
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
+            LocalTime closeTime = LocalTime.parse("220000", timeFormatter);
+            LocalTime openTime = LocalTime.parse("090000", timeFormatter);
             boolean result = false;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             ArrayList<Facility.Booking> bookingArrayList = new_booking.getArrayList();
             for (Booking booking1 : bookingArrayList){
-                if (new_booking.getStart_Time().isAfter(booking1.getEnd_Time()) || new_booking.getEnd_Time().isBefore(booking1.getStart_Time()))
-                    result = true;
+                if (booking1.getDate().format(formatter).equals(new_booking.getDate().format(formatter))){
+                    if (new_booking.getStart_Time().isAfter(booking1.getEnd_Time()) || new_booking.getEnd_Time().isBefore(booking1.getStart_Time()) || new_booking.getStart_Time().isBefore(openTime) || new_booking.getStart_Time().isAfter(closeTime) || new_booking.getEnd_Time().isAfter(closeTime))
+                        result = true;
+                }
             }
             return result;
         }
@@ -224,9 +226,16 @@ public class Facility {
                 num += 1;
             }
             String str = "Book" + num.toString();
-            System.out.println(str);
             return str;
         }
+
+        public String[] getStringArray(Booking booking){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
+            String[] data = {booking.getBookingID(), booking.getFacilityID(), booking.getResident_Username(), booking.getDate().format(formatter), booking.getStart_Time().format(timeFormatter), booking.getEnd_Time().format(timeFormatter)};
+            return data;
+        }
+
 
     }
 }

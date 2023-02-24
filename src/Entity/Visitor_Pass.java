@@ -103,6 +103,12 @@ public class Visitor_Pass {
         return status;
     }
 
+    public String[] getStringArray(Visitor_Pass visitorPass){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+        String[] data = {visitorPass.getVisitor_Pass_ID(), visitorPass.getVisitor_Name(), visitorPass.getResident_Username(), visitorPass.getUnitID(), Character.toString(visitorPass.getGender()), visitorPass.getContact_Number(), visitorPass.getDate_Start().format(formatter), visitorPass.getDate_End().format(formatter), visitorPass.getStatus()};
+        return data;
+    }
+
     public ArrayList<Visitor_Pass> getArrayList() throws FileNotFoundException {
         ArrayList<Visitor_Pass> visitorPassArrayList = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
@@ -128,12 +134,23 @@ public class Visitor_Pass {
         return result;
     }
 
+    public boolean check_Visitor_Pass_Availability(Visitor_Pass visitorPass) throws FileNotFoundException {
+        boolean result = false;
+        ArrayList<Visitor_Pass> visitorPassArrayList = this.getArrayList();
+        for (Visitor_Pass visitor_Pass : visitorPassArrayList){
+            if (visitor_Pass.getResident_Username().equals(visitorPass.getResident_Username()) || visitor_Pass.getVisitor_Name().equals(visitorPass.getVisitor_Name()) || visitor_Pass.getContact_Number().equals(visitorPass.getContact_Number())){
+                result = true;
+            }
+        }
+        return result;
+    }
+
     public boolean check_Visitor_Pass_Validity(String visitor_Pass_ID) throws FileNotFoundException {
         boolean result = false;
         LocalDate dateNow = LocalDate.now();
         ArrayList<Visitor_Pass> visitorPassArrayList = this.getArrayList();
         for (Visitor_Pass visitor_Pass : visitorPassArrayList){
-            if (visitor_Pass.getDate_End().isAfter(dateNow)){
+            if (visitor_Pass.getDate_End().isAfter(dateNow) && visitor_Pass.getVisitor_Pass_ID().equals(visitor_Pass_ID)){
                 result = true;
             }
         }
@@ -191,12 +208,11 @@ public class Visitor_Pass {
         Integer num = 0;
         while (scanner.hasNextLine()){
             String[] data = scanner.nextLine().split(":", 9);
-            String number = data[0].substring(4);
+            String number = data[0].substring(2);
             num = Integer.parseInt(number);
             num += 1;
         }
         String str = "VI" + num.toString();
-        System.out.println(str);
         return str;
     }
 

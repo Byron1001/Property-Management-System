@@ -23,6 +23,26 @@ public class Patrolling {
             this.value = value;
             this.nameOfDay = nameOfDay;
         }
+
+        public String getNameOfDay(int num){
+            String dayName = null;
+            for (DayName day : DayName.values()) {
+                if (day.value == num) {
+                    dayName = day.nameOfDay;
+                    break;
+                }
+            }
+            return dayName;
+        }
+        public int getValue(String nameOfDay){
+            int num = 0;
+            for (DayName day: DayName.values()){
+                if (day.nameOfDay.equals(nameOfDay)){
+                    num = day.value;
+                }
+            }
+            return num;
+        }
     }
     public Patrolling(){}
 
@@ -110,6 +130,11 @@ public class Patrolling {
         return dataLine;
     }
 
+    public String[] getStringArray(Patrolling patrolling){
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
+        return new String[]{patrolling.getPatrolID(), patrolling.getEmployeeID(), patrolling.getDay(), patrolling.getStart_Time().format(timeFormatter), patrolling.getEnd_Time().format(timeFormatter)};
+    }
+
     public void save_All_Patrolling(ArrayList<Patrolling> patrollingArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(patrolling_Schedule_Info_txt, false);
         fileWriter.write("PatrolID:Security EmployeeID:Day:Time Start:Time End");
@@ -127,16 +152,6 @@ public class Patrolling {
                 patrollingArrayList.remove(patrolling1);
         }
         return patrollingArrayList;
-    }
-
-    public boolean check_TimeSlot_Availability(Patrolling new_Patrolling) throws IOException, ClassNotFoundException {
-        boolean result = false;
-        ArrayList<Patrolling> patrollingArrayList = new_Patrolling.getArrayList();
-        for (Patrolling patrolling1 : patrollingArrayList){
-            if (new_Patrolling.getStart_Time().isAfter(patrolling1.getEnd_Time()) || new_Patrolling.getEnd_Time().isBefore(patrolling1.getStart_Time()))
-                result = true;
-        }
-        return result;
     }
 
     public String get_Auto_PatrollingID() throws FileNotFoundException {

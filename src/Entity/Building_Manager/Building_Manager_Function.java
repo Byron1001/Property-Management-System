@@ -1,11 +1,15 @@
 package Entity.Building_Manager;
 
 import Entity.Executive.Account_Executive.Account_Executive_Function;
+import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
 import Entity.Executive.Executive;
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
+import Entity.Unit;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.temporal.Temporal;
@@ -81,7 +85,7 @@ public class Building_Manager_Function{
             }
             return building_ManagerArrayList;
         }
-        public void save_All_Admin_Executive(ArrayList<Building_Manager_Function.Building_Manager> building_ManagerArrayList) throws IOException {
+        public void save_All_Building_Manager(ArrayList<Building_Manager_Function.Building_Manager> building_ManagerArrayList) throws IOException {
             FileWriter fileWriter = new FileWriter(building_Manager_Info_txt, false);
             fileWriter.write("Building Manager ID:Name:Gender:contact_number:position\n");
             for (Building_Manager building_Manager : building_ManagerArrayList){
@@ -121,6 +125,15 @@ public class Building_Manager_Function{
                     result = true;
             }
             return result;
+        }
+        public void update_Building_Manager_Info(Building_Manager buildingManager, String buildingManagerID) throws IOException {
+            ArrayList<Building_Manager> buildingManagerArrayList = buildingManager.getArrayList();
+            for (Building_Manager buildingManager1 : buildingManagerArrayList){
+                if (buildingManager1.getBuildingManagerID().equals(buildingManagerID))
+                    buildingManagerArrayList.remove(buildingManager1);
+            }
+            buildingManagerArrayList.add(buildingManager);
+            buildingManager.save_All_Building_Manager(buildingManagerArrayList);
         }
 
         public void add_Account_Executive(Account_Executive_Function.Account_Executive accountExecutive) throws IOException {
@@ -169,6 +182,30 @@ public class Building_Manager_Function{
         public void modify_Building_Executive(Building_Executive_Function.Building_Executive buildingExecutive, String executiveID) throws IOException {
             delete_Account_Executive(executiveID);
             add_Building_Executive(buildingExecutive);
+        }
+
+        public void add_Admin_Executive(Admin_Executive_Function.Admin_Executive adminExecutive) throws IOException {
+            ArrayList<Admin_Executive_Function.Admin_Executive> adminExecutiveArrayList = adminExecutive.getArrayList();
+            if (!(adminExecutive.check_Admin_Executive_Availability(adminExecutive.getExecutiveID())))
+                adminExecutiveArrayList.add(adminExecutive);
+            adminExecutive.save_All_Admin_Executive(adminExecutiveArrayList);
+        }
+
+        public void delete_Admin_Executive(String executiveID) throws IOException {
+            Admin_Executive_Function.Admin_Executive adminExecutive = new Admin_Executive_Function.Admin_Executive();
+            ArrayList<Admin_Executive_Function.Admin_Executive> adminExecutiveArrayList = adminExecutive.getArrayList();
+            if (adminExecutive.check_Admin_Executive_Availability(executiveID)){
+                for (Admin_Executive_Function.Admin_Executive adminExecutive1 : adminExecutiveArrayList){
+                    if (adminExecutive1.getExecutiveID().equals(executiveID))
+                        adminExecutiveArrayList.remove(adminExecutive1);
+                }
+            }
+            adminExecutive.save_All_Admin_Executive(adminExecutiveArrayList);
+        }
+
+        public void modify_Admin_Executive(Admin_Executive_Function.Admin_Executive adminExecutive, String executiveID) throws IOException {
+            delete_Admin_Executive(executiveID);
+            add_Admin_Executive(adminExecutive);
         }
 
         public Executive get_Executive_Info(String executiveID) throws FileNotFoundException {
@@ -265,6 +302,9 @@ public class Building_Manager_Function{
                 }
                 return operationArrayList;
             }
+            public String[] getStringArray(Operation operation){
+                return new String[]{operation.getOperationID(), operation.getBuilding_Manager_ID(), operation.getOperationTitle(), operation.getDescription(), Integer.toString(operation.getBudget_Amount())};
+            }
             public void save_All_Operation(ArrayList<Operation> operationArrayList) throws IOException {
                 FileWriter fileWriter = new FileWriter(operation_Info_txt, false);
                 fileWriter.write("operation ID:building manager ID:operation title:description:budget amount\n");
@@ -299,7 +339,7 @@ public class Building_Manager_Function{
 
             public void pay_for_Operation(Operation operation) throws IOException {
                 Payment.Expenses expenses = new Payment.Expenses();
-                expenses.add_Expenses(new Payment.Expenses(expenses.get_Auto_ExpensesID(), operation.getOperationID(), operation.getBuilding_Manager_ID(), operation.getBudget_Amount(), LocalDate.now(), operation.getOperationTitle(), operation.getDescription()));
+                Payment.Expenses.add_Expenses(new Payment.Expenses(expenses.get_Auto_ExpensesID(), operation.getOperationID(), operation.getBuilding_Manager_ID(), operation.getBudget_Amount(), LocalDate.now(), operation.getOperationTitle(), operation.getDescription()));
             }
 
             public int get_All_Available_Operation_Budget_Amount() throws FileNotFoundException {
@@ -311,7 +351,7 @@ public class Building_Manager_Function{
                 return total;
             }
 
-            private boolean check_Fund_Amount_Enough(int budget_Amount) throws FileNotFoundException {
+            public boolean check_Fund_Amount_Enough(int budget_Amount) throws FileNotFoundException {
                 int fund = get_Fund_Amount();
                 int budget_total = get_All_Available_Operation_Budget_Amount();
                 int number = fund - budget_total - budget_Amount;
@@ -320,6 +360,22 @@ public class Building_Manager_Function{
                 } else {
                     return false;
                 }
+            }
+
+            public String get_Auto_OperationID() throws FileNotFoundException {
+                FileReader fileReader = new FileReader(operation_Info_txt);
+                Scanner scanner = new Scanner(fileReader);
+                scanner.nextLine();
+                Integer num = 0;
+                while (scanner.hasNextLine()){
+                    String[] data = scanner.nextLine().split(":", 5);
+                    String number = data[0].substring(2);
+                    num = Integer.parseInt(number);
+                    num += 1;
+                }
+                String str = "OP" + num.toString();
+                System.out.println(str);
+                return str;
             }
 
             public void add_Operation(Operation operation) throws IOException {
@@ -460,6 +516,26 @@ public class Building_Manager_Function{
                 delete_Team_Leader(leader.getLeader_Username());
                 add_Team_Leader(leader);
             }
+        }
+    }
+    public static class Button extends JButton {
+        public Color color1 = Color.decode("#283c86");
+        public Color color2 = Color.decode("#45a247");
+        public Button(String title){
+            super(title);
+            setContentAreaFilled(false);
+            setBackground(Color.decode("#283c86"));
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            GradientPaint gradientPaint = new GradientPaint(0, 0, color1,getWidth(), 0, color2);
+            g2.setPaint(gradientPaint);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            super.paintComponent(g);
         }
     }
 

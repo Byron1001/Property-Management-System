@@ -4,8 +4,13 @@ import Entity.Executive.Executive;
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
 import Entity.Financial.Statement;
+import Entity.Resident.Resident;
 import Entity.Unit;
+import Entity.Vendor.Vendor;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -48,6 +53,15 @@ public class Account_Executive_Function {
             fileWriter.close();
         }
 
+        public void update_Account_Executive_Info(Account_Executive accountExecutive, String executiveID) throws IOException {
+            ArrayList<Account_Executive> accountExecutiveArrayList = accountExecutive.getArrayList();
+            for (Account_Executive accountExecutive1 : accountExecutiveArrayList){
+                if (accountExecutive1.getExecutiveID().equals(executiveID))
+                    accountExecutiveArrayList.remove(accountExecutive1);
+            }
+            accountExecutiveArrayList.add(accountExecutive);
+            accountExecutive.save_All_Account_Executive(accountExecutiveArrayList);
+        }
         public String getDataString(Account_Executive_Function.Account_Executive accountExecutive){
             String[] data = {accountExecutive.getExecutiveID(), accountExecutive.getName(), Character.toString(accountExecutive.getGender()), accountExecutive.getContact_Number(), accountExecutive.getPosition()};
             String dataLine = "";
@@ -92,6 +106,36 @@ public class Account_Executive_Function {
             new Invoice().save_All_Invoice(invoiceArrayList);
         }
 
+        public ArrayList<Payment> get_All_pending_Payment() throws FileNotFoundException {
+            Payment payment = new Payment();
+            ArrayList<Payment> paymentArrayList = payment.getArrayList();
+            for (Payment payment1 : paymentArrayList)
+            {
+                if (!payment1.getIssuerID().equals(""))
+                    paymentArrayList.remove(payment1);
+            }
+            return paymentArrayList;
+        }
+
+        public ArrayList<String> get_All_Unit_List() throws FileNotFoundException {
+            ArrayList<Resident> residentArrayList = new Resident().getArrayList();
+            ArrayList<Vendor> vendorArrayList = new Vendor().getArrayList();
+            ArrayList<String> all_Unit = new ArrayList<>();
+            for (Resident resident : residentArrayList){
+                all_Unit.add(resident.getUnitID());
+            }
+            for (Vendor vendor : vendorArrayList){
+                all_Unit.add(vendor.getVendor_Unit());
+            }
+            for (int i = 0;i < all_Unit.size();i++){
+                for (int j = 0;j < all_Unit.size();j++){
+                    if (all_Unit.get(i).equals(all_Unit.get(j)))
+                        all_Unit.remove(j);
+                }
+            }
+            return all_Unit;
+        }
+
         public void issue_Unit_Invoice(Invoice invoice) throws IOException {
             ArrayList<Invoice> invoiceArrayList = invoice.getArrayList();
             invoiceArrayList.add(invoice);
@@ -125,6 +169,16 @@ public class Account_Executive_Function {
             return invoiceArrayList;
         }
 
+        public ArrayList<Invoice> get_All_Unpaid_Invoice() throws FileNotFoundException {
+            ArrayList<Invoice> invoiceArrayList = new Invoice().getArrayList();
+            ArrayList<Invoice> invoicesReturn = new ArrayList<>();
+            for (Invoice invoice : invoiceArrayList){
+                if (invoice.getStatus().equals("unpaid"))
+                    invoicesReturn.add(invoice);
+            }
+            return invoicesReturn;
+        }
+
         public ArrayList<Invoice> get_Unit_All_Unpaid_Invoice(String unitID) throws FileNotFoundException {
             ArrayList<Invoice> invoiceArrayList = new Invoice().getArrayList();
             for (Invoice invoice : invoiceArrayList){
@@ -142,6 +196,37 @@ public class Account_Executive_Function {
                     total += invoice.getAmount();
             }
             return total;
+        }
+
+        public static ImageIcon toIcon(ImageIcon imgIcon, int w, int h){
+            Image srcImg = imgIcon.getImage();
+            BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2 = resizedImg.createGraphics();
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g2.drawImage(srcImg, 0, 0, w, h, null);
+            g2.dispose();
+            return new ImageIcon(resizedImg);
+        }
+
+    }
+    public static class AcExButton extends JButton {
+        public Color color1 = Color.decode("#283c86");
+        public Color color2 = Color.decode("#45a247");
+        public AcExButton(String title){
+            super(title);
+            setContentAreaFilled(false);
+            setBackground(Color.decode("#283c86"));
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            GradientPaint gradientPaint = new GradientPaint(0, 0, color1,getWidth(), 0, color2);
+            g2.setPaint(gradientPaint);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            super.paintComponent(g);
         }
     }
 }

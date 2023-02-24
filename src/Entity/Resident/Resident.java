@@ -8,6 +8,9 @@ import Entity.Financial.Statement;
 import Entity.Unit;
 import Entity.Visitor_Pass;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -132,12 +135,27 @@ public class Resident {
         return dataLine;
     }
 
+    public String[] getStringArray(Resident resident){
+        return new String[]{resident.getResident_Username(), resident.getName(), Character.toString(resident.getGender()), resident.getContact_Number(), resident.getUnitID(), Integer.valueOf(resident.getPayment()).toString()};
+    }
+
     public boolean check_Resident_Availability(String resident_Username) throws FileNotFoundException {
         boolean result = false;
         Resident Resident = new Resident();
         ArrayList<Resident> residentArrayList = Resident.getArrayList();
         for (Resident uni : residentArrayList) {
             if (uni.getResident_Username().equals(resident_Username))
+                result = true;
+        }
+        return result;
+    }
+
+    public boolean check_Resident_Contact_Number_Availability(String contact_Number) throws FileNotFoundException {
+        boolean result = false;
+        Resident Resident = new Resident();
+        ArrayList<Resident> residentArrayList = Resident.getArrayList();
+        for (Resident uni : residentArrayList) {
+            if (uni.getContact_Number().equals(contact_Number))
                 result = true;
         }
         return result;
@@ -200,12 +218,14 @@ public class Resident {
     public ArrayList<Payment> get_All_pending_Payment(String unitID) throws FileNotFoundException {
         Payment payment = new Payment();
         ArrayList<Payment> paymentArrayList = payment.getArrayList();
+        ArrayList<Payment> paymentArrayList1 = new ArrayList<>();
         for (Payment payment1 : paymentArrayList)
         {
-            if (!payment1.getIssuerID().equals("") && !payment1.getUnitID().equals(unitID))
-                paymentArrayList.remove(payment1);
+            if (payment1.getIssuerID().equals("") && !payment1.getUnitID().equals(unitID)) {
+                paymentArrayList1.add(payment1);
+            }
         }
-        return paymentArrayList;
+        return paymentArrayList1;
     }
 
     public ArrayList<Statement> get_Statement_for_Resident(String resident_Username) throws FileNotFoundException {
@@ -215,7 +235,7 @@ public class Resident {
 
     public void add_Facility_Booking(Facility.Booking booking) throws IOException, ClassNotFoundException {
         ArrayList<Facility.Booking> bookingArrayList = booking.getArrayList();
-        if (booking.check_Facility_Existence(booking.getFacilityID()) && booking.check_TimeSlot_Availability(booking)){
+        if (new Facility().check_Facility_Availability(booking.getFacilityID()) && booking.check_TimeSlot_Availability(booking)){
             bookingArrayList.add(booking);
             booking.save_All_Facility_Booking(bookingArrayList);
         }
@@ -254,11 +274,12 @@ public class Resident {
     public ArrayList<Visitor_Pass> view_All_Visitor_Pass_Apply(String resident_Username) throws FileNotFoundException {
         Visitor_Pass visitorPass = new Visitor_Pass();
         ArrayList<Visitor_Pass> visitorPassArrayList = visitorPass.getArrayList();
+        ArrayList<Visitor_Pass> visitorPassesReturn = new ArrayList<>();
         for (Visitor_Pass visitorPass1 : visitorPassArrayList){
-            if (!visitorPass1.getResident_Username().equals(resident_Username))
-                visitorPassArrayList.remove(visitorPass1);
+            if (visitorPass1.getResident_Username().equals(resident_Username))
+                visitorPassesReturn.add(visitorPass1);
         }
-        return visitorPassArrayList;
+        return visitorPassesReturn;
     }
 
     public void cancel_Visitor_Pass(String visitor_Pass_ID) throws IOException {
@@ -271,8 +292,8 @@ public class Resident {
         visitorPass.save_All_Visitor(visitorPassArrayList);
     }
 
-    public void update_Visitor_Pass(Visitor_Pass visitorPass, String visitor_Pass_ID) throws IOException {
-        cancel_Visitor_Pass(visitor_Pass_ID);
+    public void update_Visitor_Pass(Visitor_Pass visitorPass) throws IOException {
+        cancel_Visitor_Pass(visitorPass.getVisitor_Pass_ID());
         apply_Visitor_Pass(visitorPass);
     }
 
@@ -291,9 +312,9 @@ public class Resident {
         }
         return complaintArrayList;
     }
-    public void update_Complaint(Complaint complaint, String complaintID) throws IOException {
-        if (complaint.check_Complaint_Availability(complaintID)){
-            cancel_Complaint(complaintID);
+    public void update_Complaint(Complaint complaint) throws IOException {
+        if (complaint.check_Complaint_Availability(complaint.getComplaintID())){
+            cancel_Complaint(complaint.getComplaintID());
             log_Complaint(complaint);
         }
     }
@@ -307,6 +328,34 @@ public class Resident {
         complaint.save_All_Complaint(complaintArrayList);
     }
 
+    public static ImageIcon toIcon(ImageIcon imgIcon, int w, int h){
+        Image srcImg = imgIcon.getImage();
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return new ImageIcon(resizedImg);
+    }
 
+    public static class Button extends JButton{
+        public Color color1 = Color.decode("#283c86");
+        public Color color2 = Color.decode("#45a247");
+        public Button(String title){
+            super(title);
+            setContentAreaFilled(false);
+            setBackground(Color.decode("#283c86"));
+            setOpaque(false);
+        }
 
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            GradientPaint gradientPaint = new GradientPaint(0, 0, color1,getWidth(), 0, color2);
+            g2.setPaint(gradientPaint);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            super.paintComponent(g);
+        }
+    }
 }

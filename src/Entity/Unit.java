@@ -1,5 +1,7 @@
 package Entity;
 
+import Entity.Resident.Resident;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -94,6 +96,10 @@ public class Unit {
         return unitArrayList;
     }
 
+    public String[] getStringArray(Unit unit){
+        return new String[]{Integer.toString(unit.getFloor()), unit.getUnitID(), Integer.toString(unit.getComplete_Year()), unit.getFurnish(), unit.getParking_Unit(), unit.getOwner_Username(), unit.getResident_Username()};
+    }
+
     public void sort_All_Unit() throws IOException {
         ArrayList<Unit> unitArrayList = getArrayList();
         for (int i = 0; i < unitArrayList.size() - 1;i++){
@@ -157,6 +163,17 @@ public class Unit {
         ArrayList<Unit> unitArrayList = unit.getArrayList();
         for (Unit uni : unitArrayList) {
             if (uni.getUnitID().equals(unitID))
+                result = true;
+        }
+        return result;
+    }
+
+    public boolean check_Parking_Unit_Availability(String parking_Unit) throws FileNotFoundException {
+        boolean result = false;
+        Unit unit = new Unit();
+        ArrayList<Unit> unitArrayList = unit.getArrayList();
+        for (Unit uni : unitArrayList) {
+            if (uni.getParking_Unit().equals(parking_Unit))
                 result = true;
         }
         return result;

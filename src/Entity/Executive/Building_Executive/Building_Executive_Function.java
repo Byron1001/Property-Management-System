@@ -3,10 +3,12 @@ package Entity.Executive.Building_Executive;
 import Entity.CheckPoint;
 import Entity.Complaint;
 import Entity.Employee.Employee_Task;
-import Entity.Employee.SecurityGuard;
+import Entity.Employee.SecurityGuard.SecurityGuard;
 import Entity.Executive.Executive;
 import Entity.Patrolling;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -68,6 +70,16 @@ public class Building_Executive_Function{
             }
             return result;
         }
+        public void update_Building_Executive_Info(Building_Executive buildingExecutive, String executiveID) throws IOException {
+            ArrayList<Building_Executive> buildingExecutiveArrayList = buildingExecutive.getArrayList();
+            for (Building_Executive buildingExecutive1 : buildingExecutiveArrayList){
+                if (buildingExecutive1.getExecutiveID().equals(executiveID))
+                    buildingExecutiveArrayList.remove(buildingExecutive);
+            }
+            buildingExecutiveArrayList.add(buildingExecutive);
+            buildingExecutive.save_All_Building_Executive(buildingExecutiveArrayList);
+        }
+
         public boolean check_Building_Executive_Availability(String executiveID) throws FileNotFoundException {
             boolean result = false;
             Building_Executive building_Executive = new Building_Executive();
@@ -79,6 +91,7 @@ public class Building_Executive_Function{
             return result;
         }
 
+        //Employee Task
         public void add_Employee_Task(Employee_Task employeeTask) throws IOException {
             String status = "undone";
             employeeTask.setStatus(status);
@@ -102,11 +115,7 @@ public class Building_Executive_Function{
             add_Employee_Task(employeeTask);
         }
 
-        public ArrayList<Employee_Task> view_All_Employee_Task() throws FileNotFoundException {
-            ArrayList<Employee_Task> employeeTaskArrayList = new Employee_Task().getArrayList();
-            return employeeTaskArrayList;
-        }
-
+        //Complaint
         public ArrayList<Complaint> view_All_Complaint() throws FileNotFoundException {
             ArrayList<Complaint> complaintArrayList = new Complaint().getArrayList();
             return complaintArrayList;
@@ -121,6 +130,8 @@ public class Building_Executive_Function{
             }
             complaint.save_All_Complaint(complaintArrayList);
         }
+
+        //Patrolling
 
         public void add_Patrolling_Schedule(Patrolling patrolling) throws IOException, ClassNotFoundException {
             SecurityGuard securityGuard = new SecurityGuard();
@@ -147,12 +158,7 @@ public class Building_Executive_Function{
             add_Patrolling_Schedule(patrolling);
         }
 
-        public ArrayList<Patrolling> view_All_Patrol_Schedule() throws IOException, ClassNotFoundException {
-            Patrolling patrolling = new Patrolling();
-            ArrayList<Patrolling> patrollingArrayList = patrolling.getArrayList();
-            return patrollingArrayList;
-        }
-
+        // Checkpoint
         public void add_New_CheckPoint(CheckPoint checkPoint) throws IOException, ClassNotFoundException {
             ArrayList<CheckPoint> checkPointArrayList = checkPoint.getArrayList();
             checkPointArrayList.add(checkPoint);
@@ -180,5 +186,25 @@ public class Building_Executive_Function{
             return checkPointArrayList;
         }
 
+    }
+    public static class Button extends JButton {
+        public Color color1 = Color.decode("#283c86");
+        public Color color2 = Color.decode("#45a247");
+        public Button(String title){
+            super(title);
+            setContentAreaFilled(false);
+            setBackground(Color.decode("#283c86"));
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            GradientPaint gradientPaint = new GradientPaint(0, 0, color1,getWidth(), 0, color2);
+            g2.setPaint(gradientPaint);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+            super.paintComponent(g);
+        }
     }
 }

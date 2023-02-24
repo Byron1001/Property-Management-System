@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class ListMenu<E extends Object> extends JList<E> {
     private final DefaultListModel model = new DefaultListModel();
@@ -36,8 +37,10 @@ public class ListMenu<E extends Object> extends JList<E> {
                             if (event != null){
                                 try {
                                     event.selected(index);
-                                } catch (FileNotFoundException ex) {
+                                } catch (FileNotFoundException ignored) {
 
+                                } catch (IOException | ClassNotFoundException ex) {
+                                    throw new RuntimeException(ex);
                                 }
                             } else {
                                 System.out.println("hello");}

@@ -1,6 +1,7 @@
 package Entity;
 
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -52,12 +53,9 @@ public class Complaint {
         this.status = status;
     }
 
-    public File getComplaint_txt() {
-        return complaint_txt;
-    }
-
-    public void setComplaint_txt(File complaint_txt) {
-        this.complaint_txt = complaint_txt;
+    public String[] getStringArray(Complaint complaint){
+        String[] data = {complaint.getComplaintID(), complaint.getResident_Username(), complaint.getDescription(), complaint.getStatus()};
+        return data;
     }
 
     public ArrayList<Complaint> getArrayList() throws FileNotFoundException {

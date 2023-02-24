@@ -1,5 +1,7 @@
 package Entity;
 
+import Entity.Financial.Invoice;
+
 import java.io.*;
 import java.nio.file.StandardWatchEventKinds;
 import java.time.LocalDate;
@@ -45,6 +47,10 @@ public class CheckPoint {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+    public String[] getStringArray(CheckPoint checkPoint){
+        String[] data = {checkPoint.getCheckPointID(), checkPoint.getName(), checkPoint.getLocation()};
+        return data;
     }
 
     public ArrayList<CheckPoint> getArrayList() throws IOException, ClassNotFoundException {
@@ -204,6 +210,12 @@ public class CheckPoint {
                     recordArrayList.remove(record1);
             }
             return recordArrayList;
+        }
+
+        public String[] getStringArray(Record record){
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
+            return new String[]{record.getEmployeeID(), record.getCheckPointID(), record.getDate().format(dateFormatter), record.getTime().format(timeFormatter)};
         }
     }
 }

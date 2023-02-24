@@ -36,8 +36,8 @@ public class Resident_Payment_Frame extends JFrame {
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
-    public Resident_Profile_Panel.Button receiptButton;
-    public Resident_Profile_Panel.Button payButton;
+    public Resident.Button receiptButton;
+    public Resident.Button payButton;
 
     public Resident_Payment_Frame(String resident_Username) throws FileNotFoundException {
         this.resident_Username = resident_Username;
@@ -112,8 +112,8 @@ public class Resident_Payment_Frame extends JFrame {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 2, 40, 15));
 
-        receiptButton = new Resident_Profile_Panel.Button("View Receipt");
-        payButton = new Resident_Profile_Panel.Button("Make Payment");
+        receiptButton = new Resident.Button("View Invoice");
+        payButton = new Resident.Button("Make Payment");
 
         buttonPanel.add(receiptButton);
         buttonPanel.add(payButton);
@@ -135,7 +135,7 @@ public class Resident_Payment_Frame extends JFrame {
                 int column = tableData.getSelectedColumn();
                 if (row != -1 || column != -1){
                     Invoice invoice = invoiceArrayList.get(row);
-                    new ReceiptFrame(invoice).setVisible(true);
+                    new InvoiceFrame(invoice).setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Please choose the invoice", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
@@ -216,8 +216,14 @@ public class Resident_Payment_Frame extends JFrame {
                     residentInterface.setPanelBorderRight(new Resident_Profile_Panel(residentInterface.getResident_Username()));
                     residentInterface.frame.setVisible(true);
                 } else if (index == 1) {
-                } else if (index == 2) {
-
+                } else if (index == 2){
+                    new Entity.Resident.Resident_Deposit_Frame("Mike1001").run();
+                    dispose();
+                } else if (index == 3){
+                } else if (index == 4){
+                } else if (index == 5){
+                } else if (index == 6){
+                } else if (index == 7){
                 }
             }
         });
@@ -225,8 +231,8 @@ public class Resident_Payment_Frame extends JFrame {
         frame.setVisible(true);
     }
 
-    public static class ReceiptFrame extends JFrame{
-        public ReceiptFrame(Invoice invoice){
+    public static class InvoiceFrame extends JFrame{
+        public InvoiceFrame(Invoice invoice){
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
             JPanel panel3 = new JPanel();
@@ -244,7 +250,7 @@ public class Resident_Payment_Frame extends JFrame {
                     new JLabel(invoice.getUnitID()), new JLabel("RM " + invoice.getAmount()),
                     new JLabel(invoice.getDueDate().format(formatter)), new JLabel(invoice.getPaymentTypes()),
                     new JLabel(invoice.getDescription()), new JLabel(invoice.getStatus())};
-            Resident_Profile_Panel.Button button = new Resident_Profile_Panel.Button("Close");
+            Resident.Button button = new Resident.Button("Close");
             button.setAlignmentX(JButton.CENTER);
             invoiceTitle.setFont(new Font("sansserif", Font.BOLD, 24));
             invoiceTitle.setHorizontalAlignment(JLabel.CENTER);
@@ -283,6 +289,6 @@ public class Resident_Payment_Frame extends JFrame {
 
     public static void main(String[] args) throws FileNotFoundException {
         new Resident_Payment_Frame("Mike1001").run();
-//        new ReceiptFrame(new Invoice().getArrayList().get(0));
+//        new InvoiceFrame(new Invoice().getArrayList().get(0));
     }
 }

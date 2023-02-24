@@ -35,7 +35,7 @@ public class TableStatus extends JLabel {
                 gradientPaint = new GradientPaint(0, 0, new Color(241, 208, 62), 0, getHeight(), new Color(211, 184, 61));
             }
             g2.setPaint(gradientPaint);
-            g2.fillRoundRect(getWidth()/4, 0, getWidth() / 2, getHeight(), 15, 15);
+            g2.fillRoundRect(getWidth()/4 - 10, 0, getWidth() / 2 + 20, getHeight(), 15, 15);
 //            g2.fillRect(getWidth() - 20, 0, getWidth(), getHeight());
         }
         super.paintComponent(g);

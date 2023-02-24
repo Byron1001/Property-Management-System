@@ -5,6 +5,7 @@ import Entity.Employee.Employee;
 import Entity.Executive.Account_Executive.Account_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
+import Entity.Unit;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class Executive {
         this.position = position;
     }
 
-    private Integer check_Executive_Position(String executiveID){
+    public Integer check_Executive_Position(String executiveID){
         Integer result = 0;
         HashMap<String, Integer> map = new HashMap<>();
         map.put("AC", 1);
@@ -74,6 +75,10 @@ public class Executive {
         map.put("BE", 3);
         result = map.getOrDefault(executiveID.substring(0,2), -1);
         return result;
+    }
+
+    public String[] getStringArray(Executive executive){
+        return new String[]{executive.getExecutiveID(), executive.getName(), Character.toString(executive.getGender()), executive.getContact_Number(), executive.getPosition()};
     }
 
     public Executive search_Executive_Info(String executiveID) throws FileNotFoundException {
@@ -93,8 +98,5 @@ public class Executive {
                 executive.setExecutiveID("0");
         }
         return executive;
-    }
-
-    public void login(){
     }
 }

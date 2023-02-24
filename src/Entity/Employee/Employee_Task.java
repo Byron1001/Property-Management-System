@@ -1,5 +1,7 @@
 package Entity.Employee;
 
+import Entity.Resident.Resident;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -75,6 +77,10 @@ public class Employee_Task {
         return dataLine;
     }
 
+    public String[] getStringArray(Employee_Task employeeTask){
+        return new String[]{employeeTask.getTaskID(), employeeTask.getEmployeeID(), employeeTask.getDescription(), employeeTask.getStatus()};
+    }
+
     public void save_All_Employee_Task(ArrayList<Employee_Task> employee_TaskArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(employee_Task_txt, false);
         fileWriter.write("TaskID:EmployeeID:description:status");
@@ -84,7 +90,7 @@ public class Employee_Task {
         fileWriter.close();
     }
 
-    public static String get_Auto_TaskID() throws FileNotFoundException {
+    public String get_Auto_TaskID() throws FileNotFoundException {
         FileReader fileReader = new FileReader(employee_Task_txt);
         Scanner scanner = new Scanner(fileReader);
         scanner.nextLine();

@@ -46,9 +46,9 @@ public class Table extends JTable {
                     }
                     return comp;
                 } else {
-                    String[] approve = {"APPROVED", "paid", "OK"};
-                    String[] reject = {"REJECT", "unpaid", "NO"};
-                    String[] pending = {"PENDING", "WAIT"};
+                    String[] approve = {"APPROVED", "paid", "OK", "Approved", "solved", "RECEIVED", "solved", "done"};
+                    String[] reject = {"REJECT", "unpaid", "NO", "Disapproved", "unsolved", "unsolved"};
+                    String[] pending = {"PENDING", "WAIT", "undone"};
                     StatusType type = StatusType.REJECT;
                     String outputWord = "";
                     for (String aa : approve){

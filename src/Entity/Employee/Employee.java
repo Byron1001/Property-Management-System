@@ -1,18 +1,11 @@
 package Entity.Employee;
 
-import Entity.Visitor_Pass;
+import Entity.Employee.SecurityGuard.SecurityGuard;
 
-import javax.swing.*;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.security.PublicKey;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 public class Employee {
     protected String employeeID;
@@ -30,6 +23,7 @@ public class Employee {
         this.name = name;
         this.gender = gender;
         this.contact_Number = contact_Number;
+        this.salary = salary;
         this.position_Name = position;
     }
 
@@ -104,7 +98,7 @@ public class Employee {
         employeeTask.save_All_Employee_Task(employeeTaskArrayList);
     }
 
-    private Integer check_Employee_Position(String employeeID){
+    public Integer check_Employee_Position(String employeeID){
         Integer result = 0;
         HashMap<String, Integer> map = new HashMap<>();
         map.put("SG", 1);
@@ -112,6 +106,10 @@ public class Employee {
         map.put("TN", 3);
         result = map.getOrDefault(employeeID.substring(0,2), -1);
         return result;
+    }
+
+    public String[] getStringArray(Employee employee){
+        return new String[] {employee.getEmployeeID(), employee.getName(), Character.toString(employee.getGender()), employee.getContact_Number(), Integer.toString(employee.getSalary()), employee.getPosition_Name()};
     }
 
     public Employee search_Employee_Info(String employeeID) throws IOException, ClassNotFoundException {
@@ -131,5 +129,24 @@ public class Employee {
                 employee.setEmployeeID("0");
         }
         return employee;
+    }
+
+    public boolean check_Employee_Availability(String employeeID) throws IOException, ClassNotFoundException {
+        int result = check_Employee_Position(employeeID);
+        boolean check = false;
+        switch (result){
+            case 1:
+                check = new SecurityGuard().check_SecurityGuard_Availability(employeeID);
+                break;
+            case 2:
+                check = new Cleaner().check_Cleaner_Availability(employeeID);
+                break;
+            case 3:
+                check = new Technician().check_Technician_Availability(employeeID);
+                break;
+            default:
+                check = false;
+        }
+        return check;
     }
 }

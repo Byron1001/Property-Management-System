@@ -1,4 +1,7 @@
 invoiceID:issuerID:unitID:amount:dueDate:paymentTypes:description:status
 INV1:AC01:A401:300:03.30.2023:rental:January 2023:paid
 INV2:AC01:A401:200:03.30.2023:utility:January 2023:paid
-INV3:AC01:A401:100:03.30.2023:services:January 2023:unpaid
+INV3:AC01:A401:100:03.30.2023:services:January 2023:paid
+INV4:AC01:A401:100:03.30.2023:services:January 2023:unpaid
+INV5:AC01:floor 1 canteen:100:03.30.2023:rental:January 2023:unpaid
+INV6:AC01:floor 1 canteen:100:03.30.2023:rental:January 2023:unpaid
