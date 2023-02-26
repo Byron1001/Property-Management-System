@@ -1,7 +1,7 @@
 package Entity.Vendor;
 
 import Entity.Login.Login;
-import Entity.Resident.Resident;
+import Entity.Login.Login_Frame;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Model.Model_Menu;
 import UIPackage.main.UIFrame;
@@ -15,6 +15,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 public class Vendor_Interface {
     public UIFrame frame;
@@ -38,6 +39,7 @@ public class Vendor_Interface {
     public Vendor_Interface(String vendor_Username) throws FileNotFoundException {
         this.vendor_Username = vendor_Username;
         frame = new UIFrame(vendor_Username);
+        setPanelBorderRight(new Vendor_Profile_Panel(vendor_Username));
 
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
@@ -52,32 +54,36 @@ public class Vendor_Interface {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                 } else if (index == 1) {
-
+                    new Entity.Vendor.Vendor_Payment_Frame(vendor_Username).run(vendor_Username);
                     frame.dispose();
                 } else if (index == 2) {
-
+                    new Entity.Vendor.Vendor_Payment_History(vendor_Username).run(vendor_Username);
                     frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Vendor.Vendor_Statement_Frame(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Vendor.Vendor_Complaint(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
     }
 
-    public static class Vendor_Profile_Panel extends JPanel {
-        public Resident.Button updateButton;
+    public class Vendor_Profile_Panel extends JPanel {
+        public Vendor.Button updateButton;
         public Vendor_Profile_Panel(String vendor_Username) throws FileNotFoundException {
             setPreferredSize(new Dimension(1000, 500));
             setLayout(new BorderLayout());
 
             ImageIcon icon = new ImageIcon("src/UIPackage/Icon/profile.png");
-            icon = Resident.toIcon(icon, 200, 200);
+            icon = Vendor.toIcon(icon, 200, 200);
 
             JLabel iconLabel = new JLabel(icon);
             add(iconLabel, BorderLayout.NORTH);
@@ -103,7 +109,7 @@ public class Vendor_Interface {
                 JLabel label2 = new JLabel(data[i]);
                 downPanel.add(label2);
             }
-            updateButton = new Resident.Button("Update Profile");
+            updateButton = new Vendor.Button("Update Profile");
 
             panel.add(downPanel, BorderLayout.CENTER);
             panel.add(updateButton, BorderLayout.SOUTH);
@@ -128,10 +134,10 @@ public class Vendor_Interface {
             });
         }
 
-        public static class UpdateInfo extends JFrame{
+        public class UpdateInfo extends JFrame{
             private Font labelFont = new Font("sansserif", Font.BOLD, 14);
-            private Resident.Button updateButton;
-            private Resident.Button cancelButton;
+            private Vendor.Button updateButton;
+            private Vendor.Button cancelButton;
 
             public UpdateInfo(String[] data) throws ParseException {
                 setUndecorated(true);
@@ -176,8 +182,8 @@ public class Vendor_Interface {
                 JFormattedTextField contact_FormattedTextField = new JFormattedTextField(formatter);
                 panel.add(contact_FormattedTextField);
 
-                updateButton = new Resident.Button("Update");
-                cancelButton = new Resident.Button("Cancel");
+                updateButton = new Vendor.Button("Update");
+                cancelButton = new Vendor.Button("Cancel");
                 updateButton.color1 = Color.decode("#654ea3");
                 updateButton.color2 = Color.decode("#eaafc8");
                 panel.add(updateButton);
@@ -205,12 +211,12 @@ public class Vendor_Interface {
                         Login login = new Login();
                         boolean check = true;
                         if (login.check_Punctuation(vendor_Username_TextField.getText()) || login.check_Punctuation(name_TextField.getText())){
-                            JOptionPane.showMessageDialog(null, "Username and Name cannot include punctuation", "Punctuation error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                            JOptionPane.showMessageDialog(null, "Username and Name cannot include punctuation", "Punctuation error", JOptionPane.ERROR_MESSAGE, Vendor.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(vendor_Username_TextField.getText())) {
-                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                                if (login.check_Username_Availability(vendor_Username_TextField.getText()) && !data[0].equals(vendor_Username_TextField.getText())) {
+                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Vendor.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
                             } catch (IOException | ClassNotFoundException ex) {
@@ -228,9 +234,14 @@ public class Vendor_Interface {
                             Vendor vendorUpdated = new Vendor(vendor_Username_TextField.getText(), name_TextField.getText(), gender, contact_FormattedTextField.getText(), data[4], Integer.parseInt(data[5]), Integer.parseInt(data[6]));
                             try {
                                 vendorUpdated.update_Vendor_Info(vendorUpdated, ori_Username);
-                                JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
+                                JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, Vendor.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
                                 dispose();
                             } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            try {
+                                setPanelBorderRight(new Vendor_Profile_Panel(vendor_Username_TextField.getText()));
+                            } catch (FileNotFoundException ex) {
                                 throw new RuntimeException(ex);
                             }
                         }
@@ -246,7 +257,6 @@ public class Vendor_Interface {
 
     public static void main(String[] args) throws FileNotFoundException {
         Vendor_Interface vendorInterface = new Vendor_Interface("VE001");
-        vendorInterface.setPanelBorderRight(new Vendor_Profile_Panel(vendorInterface.getVendor_Username()));
         vendorInterface.frame.setVisible(true);
     }
 }

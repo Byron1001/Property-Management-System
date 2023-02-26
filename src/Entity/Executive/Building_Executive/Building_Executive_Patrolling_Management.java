@@ -1,6 +1,7 @@
 package Entity.Executive.Building_Executive;
 
 import Entity.Employee.SecurityGuard.SecurityGuard;
+import Entity.Login.Login_Frame;
 import Entity.Patrolling;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -140,6 +141,7 @@ public class Building_Executive_Patrolling_Management extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Building_Executive_Patrolling_Management.setupFrame().setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -153,6 +155,7 @@ public class Building_Executive_Patrolling_Management extends JFrame {
                     try {
                         Patrolling patrollingSelected = patrollingArrayList.get(row);
                         new Building_Executive_Patrolling_Management.modifyFrame(patrollingSelected).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -173,6 +176,8 @@ public class Building_Executive_Patrolling_Management extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             new Building_Executive_Function.Building_Executive().delete_Patrolling_Schedule(patrollingSelected.getPatrolID());
                             JOptionPane.showMessageDialog(null, "patrolling schedule deleted", "patrolling schedule delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -250,20 +255,28 @@ public class Building_Executive_Patrolling_Management extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Building_Executive_Interface buildingExecutiveInterface = new Building_Executive_Interface(executiveID);
-                    buildingExecutiveInterface.setPanelBorderRight(new Building_Executive_Interface.Building_Executive_Profile_Panel(buildingExecutiveInterface.getExecutiveID()));
-                    buildingExecutiveInterface.frame.setVisible(true);
-                    dispose();
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new Building_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
                 } else if (index == 4) {
+                    new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -271,7 +284,7 @@ public class Building_Executive_Patrolling_Management extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class setupFrame extends JFrame {
+    private class setupFrame extends JFrame {
         private final ArrayList<SecurityGuard> securityGuardArrayList = new SecurityGuard().getArrayList();
         public setupFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
@@ -344,8 +357,10 @@ public class Building_Executive_Patrolling_Management extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     Patrolling newPatrolling = new Patrolling(patrollingIDField.getText(), employeeIDComboBox.getSelectedItem().toString(), dayComboBox.getSelectedItem().toString(), LocalTime.parse(timeStartField.getText(), timeFormatter), LocalTime.parse(timeEndField.getText(), timeFormatter));
                     try {
-                            new Building_Executive_Function.Building_Executive().add_Patrolling_Schedule(newPatrolling);
-                            JOptionPane.showMessageDialog(null, "patrolling schedule adding successful", "patrolling schedule adding successful", JOptionPane.INFORMATION_MESSAGE);
+                        new Building_Executive_Function.Building_Executive().add_Patrolling_Schedule(newPatrolling);
+                        JOptionPane.showMessageDialog(null, "patrolling schedule adding successful", "patrolling schedule adding successful", JOptionPane.INFORMATION_MESSAGE);
+                        new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                        dispose();
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -354,13 +369,18 @@ public class Building_Executive_Patrolling_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<SecurityGuard> securityGuardArrayList = new SecurityGuard().getArrayList();
         public modifyFrame(Patrolling patrolling) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
@@ -445,6 +465,8 @@ public class Building_Executive_Patrolling_Management extends JFrame {
                     try {
                         new Building_Executive_Function.Building_Executive().modify_Patrolling_Schedule(newPatrolling, patrolling.getPatrolID());
                         JOptionPane.showMessageDialog(null, "patrolling schedule modifying successful", "patrolling schedule modifying successful", JOptionPane.INFORMATION_MESSAGE);
+                        new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                        dispose();
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -453,7 +475,12 @@ public class Building_Executive_Patrolling_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

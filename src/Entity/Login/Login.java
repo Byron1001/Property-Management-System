@@ -14,7 +14,6 @@ import Entity.Executive.Building_Executive.Building_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Interface;
 import Entity.Resident.Resident;
 import Entity.Resident.Resident_Interface;
-import Entity.Resident.Resident_Profile_Panel;
 import Entity.Vendor.Vendor;
 import Entity.Vendor.Vendor_Interface;
 import Entity.Visitor_Pass;
@@ -242,37 +241,30 @@ public class Login {
         switch (number){
             case 1:
                 Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface(username);
-                Building_ManagerInterface.setPanelBorderRight(new Building_Manager_Interface.Building_Executive_Profile_Panel(Building_ManagerInterface.getBuildingManagerID()));
                 Building_ManagerInterface.frame.setVisible(true);
                 break;
             case 2:
                 Account_Executive_Interface accountExecutiveInterface = new Account_Executive_Interface(username);
-                accountExecutiveInterface.setPanelBorderRight(new Account_Executive_Interface.Account_Executive_Profile_Panel(accountExecutiveInterface.getExecutiveID()));
                 accountExecutiveInterface.frame.setVisible(true);
                 break;
             case 3:
                 Admin_Executive_Interface adminExecutiveInterface = new Admin_Executive_Interface(username);
-                adminExecutiveInterface.setPanelBorderRight(new Admin_Executive_Interface.Admin_Executive_Profile_Panel(adminExecutiveInterface.getExecutiveID()));
                 adminExecutiveInterface.frame.setVisible(true);
                 break;
             case 4:
                 Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(username);
-                building_Executive_Interface.setPanelBorderRight(new Building_Executive_Interface.Building_Executive_Profile_Panel(building_Executive_Interface.getExecutiveID()));
                 building_Executive_Interface.frame.setVisible(true);
                 break;
             case 5:
                 Vendor_Interface vendorInterface = new Vendor_Interface(username);
-                vendorInterface.setPanelBorderRight(new Vendor_Interface.Vendor_Profile_Panel(vendorInterface.getVendor_Username()));
                 vendorInterface.frame.setVisible(true);
                 break;
             case 6:
                 Entity.Employee.SecurityGuard.SecurityGuard_Interface securityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface(username);
-                securityGuardInterface.setPanelBorderRight(new SecurityGuard_Interface.SecurityGuard_Profile_Panel(securityGuardInterface.getemployeeID()));
                 securityGuardInterface.frame.setVisible(true);
                 break;
             case 7:
                 Resident_Interface residentInterface = new Resident_Interface(username);
-                residentInterface.setPanelBorderRight(new Resident_Profile_Panel(residentInterface.getResident_Username()));
                 residentInterface.frame.setVisible(true);
                 break;
             default:

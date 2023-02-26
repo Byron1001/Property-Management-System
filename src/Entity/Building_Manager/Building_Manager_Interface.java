@@ -1,6 +1,7 @@
 package Entity.Building_Manager;
 
 import Entity.Login.Login;
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Model.Model_Menu;
@@ -24,7 +25,7 @@ public class Building_Manager_Interface extends JFrame {
         return buildingManagerID;
     }
 
-    public void setbuildingManagerID(String buildingManagerID) {
+    public void setBuildingManagerID(String buildingManagerID) {
         this.buildingManagerID = buildingManagerID;
     }
 
@@ -38,6 +39,7 @@ public class Building_Manager_Interface extends JFrame {
     public Building_Manager_Interface(String buildingManagerID) throws FileNotFoundException {
         this.buildingManagerID = buildingManagerID;
         frame = new UIFrame(buildingManagerID);
+        setPanelBorderRight(new Building_Manager_Interface.Building_Executive_Profile_Panel(buildingManagerID));
 
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
@@ -52,25 +54,29 @@ public class Building_Manager_Interface extends JFrame {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                 } else if (index == 1) {
-
+                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
                     frame.dispose();
                 } else if (index == 2) {
-
+                    new Building_Manager_Report(buildingManagerID);
                     frame.dispose();
                 } else if (index == 3) {
+                    new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Building_Manager.Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
     }
 
-    public static class Building_Executive_Profile_Panel extends JPanel {
+    public class Building_Executive_Profile_Panel extends JPanel {
         private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Building_Manager_Function.Button updateButton;
 
@@ -122,16 +128,16 @@ public class Building_Manager_Interface extends JFrame {
                     Building_Manager_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame updateInfo = null;
                     try {
                         updateInfo = new Building_Manager_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame(buildingManager);
+                        updateInfo.setLocationRelativeTo(null);
+                        updateInfo.setVisible(true);
                     } catch (ParseException ex) {
                         throw new RuntimeException(ex);
                     }
-                    updateInfo.setLocationRelativeTo(null);
-                    updateInfo.setVisible(true);
                 }
             });
         }
 
-        public static class UpdateInfo_Frame extends JFrame {
+        public class UpdateInfo_Frame extends JFrame {
             private Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private Building_Manager_Function.Button updateButton;
             private Building_Manager_Function.Button cancelButton;
@@ -237,8 +243,11 @@ public class Building_Manager_Interface extends JFrame {
                             Building_Manager_Function.Building_Manager beUpdated = new Building_Manager_Function.Building_Manager(executive_ID_TextField.getText(), name_TextField.getText(), gender, contact_FormattedTextField.getText());
                             try {
                                 beUpdated.update_Building_Manager_Info(beUpdated, building_Manager.getBuildingManagerID());
-                                JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
                                 dispose();
+                                JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
+                                Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface("BM01");
+                                Building_ManagerInterface.frame.setVisible(true);
+                                frame.dispose();
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -255,7 +264,6 @@ public class Building_Manager_Interface extends JFrame {
 
     public static void main(String[] args) throws FileNotFoundException {
         Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface("BM01");
-        Building_ManagerInterface.setPanelBorderRight(new Building_Manager_Interface.Building_Executive_Profile_Panel(Building_ManagerInterface.getBuildingManagerID()));
         Building_ManagerInterface.frame.setVisible(true);
     }
 }

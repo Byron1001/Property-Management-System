@@ -1,6 +1,7 @@
 package Entity.Executive.Admin_Executive;
 
 import Entity.Employee.Employee;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -145,6 +146,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
                 if (selection != null){
                     try {
                         new addFrame(selection.toString()).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -159,6 +161,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
                     if (row != -1){
                         Employee employeeSelected = employeeArrayList.get(row);
                         new modifyFrame(employeeSelected).setVisible(true);
+                        dispose();
                     } else {
                         JOptionPane.showMessageDialog(null, "Please choose the Employee", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                     }
@@ -179,6 +182,8 @@ public class Admin_Executive_Employee_Management extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             new Admin_Executive_Function.Admin_Executive().delete_Employee(employeeSelected.getEmployeeID());
                             JOptionPane.showMessageDialog(null, "Employee deleted", "Employee delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -259,20 +264,33 @@ public class Admin_Executive_Employee_Management extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                     Admin_Executive_Interface adminExecutiveInterface = new Admin_Executive_Interface(executiveID);
-                    adminExecutiveInterface.setPanelBorderRight(new Admin_Executive_Interface.Admin_Executive_Profile_Panel(adminExecutiveInterface.getExecutiveID()));
                     adminExecutiveInterface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Admin_Executive_Unit_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
                 } else if (index == 5) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 6) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 7) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -280,7 +298,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<Employee> employeeArrayList = new Admin_Executive_Function.Admin_Executive().view_All_Employee();
 
         public addFrame(String positionName) throws IOException, ClassNotFoundException, ParseException {
@@ -400,6 +418,8 @@ public class Admin_Executive_Employee_Management extends JFrame {
                         } else {
                             new Admin_Executive_Function.Admin_Executive().add_Employee(employee);
                             JOptionPane.showMessageDialog(null, "Employee registration successful.Please ask Employee to sign up.", "Employee adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -409,13 +429,18 @@ public class Admin_Executive_Employee_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<Employee> employeeArrayList = new Admin_Executive_Function.Admin_Executive().view_All_Employee();
 
         public modifyFrame(Employee employee) throws IOException, ClassNotFoundException, ParseException {
@@ -543,6 +568,8 @@ public class Admin_Executive_Employee_Management extends JFrame {
                         } else {
                             new Admin_Executive_Function.Admin_Executive().update_Employee(employeeNew, employee.getEmployeeID());
                             JOptionPane.showMessageDialog(null, "Employee update successful", "Employee adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -552,7 +579,12 @@ public class Admin_Executive_Employee_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

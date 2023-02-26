@@ -1,7 +1,7 @@
 package Entity.Executive.Admin_Executive;
 
 import Entity.Login.Login;
-import Entity.Resident.Resident;
+import Entity.Login.Login_Frame;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Model.Model_Menu;
 import UIPackage.main.UIFrame;
@@ -38,6 +38,7 @@ public class Admin_Executive_Interface {
     public Admin_Executive_Interface(String executiveID) throws FileNotFoundException {
         this.executiveID = executiveID;
         frame = new UIFrame(executiveID);
+        setPanelBorderRight(new Admin_Executive_Profile_Panel(executiveID));
 
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
@@ -55,25 +56,38 @@ public class Admin_Executive_Interface {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                 } else if (index == 1) {
-
+                    new Admin_Executive_Unit_Management(executiveID).run(executiveID);
                     frame.dispose();
                 } else if (index == 2) {
-
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
                     frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 6) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 7) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
     }
 
-    public static class Admin_Executive_Profile_Panel extends JPanel {
+    public class Admin_Executive_Profile_Panel extends JPanel {
         private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Admin_Executive_Function.Button updateButton;
 
@@ -82,7 +96,7 @@ public class Admin_Executive_Interface {
             setLayout(new BorderLayout());
 
             ImageIcon icon = new ImageIcon("src/UIPackage/Icon/profile.png");
-            icon = Resident.toIcon(icon, 200, 200);
+            icon = Admin_Executive_Function.toIcon(icon, 200, 200);
 
             JLabel iconLabel = new JLabel(icon);
             add(iconLabel, BorderLayout.NORTH);
@@ -124,16 +138,16 @@ public class Admin_Executive_Interface {
                     Admin_Executive_Interface.Admin_Executive_Profile_Panel.UpdateInfo_Frame updateInfo = null;
                     try {
                         updateInfo = new Admin_Executive_Interface.Admin_Executive_Profile_Panel.UpdateInfo_Frame(adminExecutive);
+                        updateInfo.setLocationRelativeTo(null);
+                        updateInfo.setVisible(true);
                     } catch (ParseException ex) {
                         throw new RuntimeException(ex);
                     }
-                    updateInfo.setLocationRelativeTo(null);
-                    updateInfo.setVisible(true);
                 }
             });
         }
 
-        public static class UpdateInfo_Frame extends JFrame {
+        public class UpdateInfo_Frame extends JFrame {
             private Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private Admin_Executive_Function.Button updateButton;
             private Admin_Executive_Function.Button cancelButton;
@@ -218,12 +232,12 @@ public class Admin_Executive_Interface {
                         Login login = new Login();
                         boolean check = true;
                         if (login.check_Punctuation(executive_ID_TextField.getText()) || login.check_Punctuation(name_TextField.getText())) {
-                            JOptionPane.showMessageDialog(null, "Username and Name cannot include punctuation", "Punctuation error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                            JOptionPane.showMessageDialog(null, "Username and Name cannot include punctuation", "Punctuation error", JOptionPane.ERROR_MESSAGE, Admin_Executive_Function.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(executive_ID_TextField.getText())) {
-                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                                if (login.check_Username_Availability(executive_ID_TextField.getText()) && !executive_ID_TextField.getText().equals(executiveID)) {
+                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Admin_Executive_Function.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
                             } catch (IOException | ClassNotFoundException ex) {
@@ -240,8 +254,11 @@ public class Admin_Executive_Interface {
                             Admin_Executive_Function.Admin_Executive aDUpdated = new Admin_Executive_Function.Admin_Executive(executive_ID_TextField.getText(), name_TextField.getText(), gender, contact_FormattedTextField.getText());
                             try {
                                 aDUpdated.update_Admin_Executive_Info(aDUpdated, adminExecutive.getExecutiveID());
-                                JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
+                                JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, Admin_Executive_Function.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
                                 dispose();
+                                Admin_Executive_Interface adminExecutiveInterface = new Admin_Executive_Interface(executiveID);
+                                adminExecutiveInterface.frame.setVisible(true);
+                                frame.dispose();
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -258,7 +275,6 @@ public class Admin_Executive_Interface {
 
     public static void main(String[] args) throws FileNotFoundException {
         Admin_Executive_Interface adminExecutiveInterface = new Admin_Executive_Interface("AD01");
-        adminExecutiveInterface.setPanelBorderRight(new Admin_Executive_Profile_Panel(adminExecutiveInterface.getExecutiveID()));
         adminExecutiveInterface.frame.setVisible(true);
     }
 }

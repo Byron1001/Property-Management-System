@@ -55,12 +55,13 @@ public class Account_Executive_Function {
 
         public void update_Account_Executive_Info(Account_Executive accountExecutive, String executiveID) throws IOException {
             ArrayList<Account_Executive> accountExecutiveArrayList = accountExecutive.getArrayList();
+            ArrayList<Account_Executive> accountExecutiveArrayList1 = new ArrayList<>();
             for (Account_Executive accountExecutive1 : accountExecutiveArrayList){
-                if (accountExecutive1.getExecutiveID().equals(executiveID))
-                    accountExecutiveArrayList.remove(accountExecutive1);
+                if (!(accountExecutive1.getExecutiveID().equals(executiveID)))
+                    accountExecutiveArrayList1.add(accountExecutive1);
             }
-            accountExecutiveArrayList.add(accountExecutive);
-            accountExecutive.save_All_Account_Executive(accountExecutiveArrayList);
+            accountExecutiveArrayList1.add(accountExecutive);
+            accountExecutive.save_All_Account_Executive(accountExecutiveArrayList1);
         }
         public String getDataString(Account_Executive_Function.Account_Executive accountExecutive){
             String[] data = {accountExecutive.getExecutiveID(), accountExecutive.getName(), Character.toString(accountExecutive.getGender()), accountExecutive.getContact_Number(), accountExecutive.getPosition()};
@@ -109,12 +110,12 @@ public class Account_Executive_Function {
         public ArrayList<Payment> get_All_pending_Payment() throws FileNotFoundException {
             Payment payment = new Payment();
             ArrayList<Payment> paymentArrayList = payment.getArrayList();
-            for (Payment payment1 : paymentArrayList)
-            {
-                if (!payment1.getIssuerID().equals(""))
-                    paymentArrayList.remove(payment1);
+            ArrayList<Payment> paymentArrayList1 = new ArrayList<>();
+            for (Payment payment1 : paymentArrayList){
+                if (payment1.getIssuerID().equals(""))
+                    paymentArrayList1.add(payment1);
             }
-            return paymentArrayList;
+            return paymentArrayList1;
         }
 
         public ArrayList<String> get_All_Unit_List() throws FileNotFoundException {

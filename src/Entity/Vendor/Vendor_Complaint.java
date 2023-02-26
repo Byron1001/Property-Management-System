@@ -1,6 +1,7 @@
 package Entity.Vendor;
 
 import Entity.Complaint;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -139,6 +140,7 @@ public class Vendor_Complaint extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Entity.Vendor.Vendor_Complaint.addFrame(vendor_Username).setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -150,8 +152,13 @@ public class Vendor_Complaint extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     int row = tableData.getSelectedRow();
-                    Complaint complaintSelected = complaintArrayList.get(row);
-                    new Entity.Vendor.Vendor_Complaint.updateFrame(complaintSelected).setVisible(true);
+                    if (row != -1){
+                        Complaint complaintSelected = complaintArrayList.get(row);
+                        new Entity.Vendor.Vendor_Complaint.updateFrame(complaintSelected).setVisible(true);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please choose complaint", "Choice error", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -165,9 +172,19 @@ public class Vendor_Complaint extends JFrame {
                 int column = tableData.getSelectedColumn();
                 if (row != -1 || column != -1) {
                     Complaint complaintSelected = complaintArrayList.get(row);
-                    new Entity.Vendor.Vendor_Complaint.cancelFrame(complaintSelected).setVisible(true);
+                    int result = JOptionPane.showConfirmDialog(null, "Do you sure to cancel this complaint?", "Get Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (result == JOptionPane.YES_OPTION) {
+                        try {
+                            new Vendor().cancel_Complaint(complaintSelected.getComplaintID());
+                            JOptionPane.showMessageDialog(null, "Complaint Cancelled", "Complaint cancellation", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Vendor.Vendor_Complaint(vendor_Username).run(vendor_Username);
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
+                    JOptionPane.showMessageDialog(null, "Please choose the complaint", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
             }
         });
@@ -180,7 +197,7 @@ public class Vendor_Complaint extends JFrame {
                     Complaint complaintSelected = complaintArrayList.get(row);
                     new Entity.Vendor.Vendor_Complaint.viewFrame(complaintSelected).setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
+                    JOptionPane.showMessageDialog(null, "Please choose the complaint", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
             }
         });
@@ -234,20 +251,24 @@ public class Vendor_Complaint extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    dispose();
                     Vendor_Interface vendorInterface = new Vendor_Interface(vendor_Username);
-                    vendorInterface.setPanelBorderRight(new Vendor_Interface.Vendor_Profile_Panel(vendorInterface.getVendor_Username()));
                     vendorInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Entity.Vendor.Vendor_Payment_Frame(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new Entity.Vendor.Vendor_Payment_History(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Vendor.Vendor_Statement_Frame(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 4) {
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -255,10 +276,8 @@ public class Vendor_Complaint extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         public addFrame(String vendor_Username) throws IOException, ClassNotFoundException, ParseException {
-            Vendor Vendor = new Vendor();
-            Vendor = Vendor.get_Vendor_Info(vendor_Username);
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
             JPanel panel3 = new JPanel();
@@ -292,8 +311,6 @@ public class Vendor_Complaint extends JFrame {
             panel2.add(jLabelLeft[1]);
             panel2.add(VendorUsernameField);
             panel2.add(jLabelLeft[2]);
-            panel2.add(VendorUsernameField);
-            panel2.add(jLabelLeft[3]);
             panel2.add(descriptionArea);
             panel1.add(panel2, BorderLayout.CENTER);
 
@@ -314,15 +331,19 @@ public class Vendor_Complaint extends JFrame {
             logButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Complaint complaint = new Complaint(complaintIDField.getText(), VendorUsernameField.getText(), descriptionArea.getText(), "Unsolved");
+                    Complaint complaint = new Complaint(complaintIDField.getText(), VendorUsernameField.getText(), descriptionArea.getText(), "unsolved");
                     try {
                         boolean check = new Vendor().check_Vendor_Availability(complaint.getResident_Username());
                         if (!check) {
                             JOptionPane.showMessageDialog(null, "Vendor username not found", "Vendor Username not found", JOptionPane.ERROR_MESSAGE);
+                        } else if (descriptionArea.getText().equals("")) {
+                            JOptionPane.showMessageDialog(null, "Description cannot be blank", "Description Blank", JOptionPane.ERROR_MESSAGE);
                         } else {
                             new Vendor().log_Complaint(complaint);
+                            new Entity.Vendor.Vendor_Complaint(vendor_Username).run(vendor_Username);
+                            dispose();
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -330,7 +351,12 @@ public class Vendor_Complaint extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Vendor_Complaint(vendor_Username).run(vendor_Username);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
@@ -350,16 +376,16 @@ public class Vendor_Complaint extends JFrame {
             for (JLabel label : jLabelLeft) {
                 label.setFont(new Font("sansserif", Font.BOLD, 16));
             }
-            JTextField complaintIDField = new JTextField(new Complaint().get_Auto_ComplaintID());
+            JTextField complaintIDField = new JTextField(complaint.getComplaintID());
             complaintIDField.setEditable(false);
-            JTextField VendorUsernameField = new JTextField(complaint.getResident_Username());
-            VendorUsernameField.setEditable(false);
-            TextArea descriptionArea = new TextArea();
+            JTextField vendorUsernameField = new JTextField(complaint.getResident_Username());
+            vendorUsernameField.setEditable(false);
+            TextArea descriptionArea = new TextArea(complaint.getDescription());
             descriptionArea.setBounds(0, 0, getWidth(), getHeight());
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            Vendor.Button updateButton = new Vendor.Button("Log Complaint");
-            Vendor.Button cancelButton = new Vendor.Button("Cancel Logging");
+            Vendor.Button updateButton = new Vendor.Button("Update Complaint");
+            Vendor.Button cancelButton = new Vendor.Button("Cancel Update");
 
             updateButton.setAlignmentX(JButton.CENTER);
             cancelButton.setAlignmentX(JButton.CENTER);
@@ -369,10 +395,8 @@ public class Vendor_Complaint extends JFrame {
             panel2.add(jLabelLeft[0]);
             panel2.add(complaintIDField);
             panel2.add(jLabelLeft[1]);
-            panel2.add(VendorUsernameField);
+            panel2.add(vendorUsernameField);
             panel2.add(jLabelLeft[2]);
-            panel2.add(VendorUsernameField);
-            panel2.add(jLabelLeft[3]);
             panel2.add(descriptionArea);
             panel1.add(panel2, BorderLayout.CENTER);
 
@@ -393,15 +417,16 @@ public class Vendor_Complaint extends JFrame {
             updateButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Complaint complaint1 = new Complaint(complaintIDField.getText(), VendorUsernameField.getText(), descriptionArea.getText(), "Unsolved");
+                    Complaint complaint1 = new Complaint(complaintIDField.getText(), vendorUsernameField.getText(), descriptionArea.getText(), "unsolved");
                     try {
                         boolean check = new Vendor().check_Vendor_Availability(complaint1.getResident_Username());
                         if (!check) {
                             JOptionPane.showMessageDialog(null, "Vendor username not found", "Vendor Username not found", JOptionPane.ERROR_MESSAGE);
                         } else {
                             new Vendor().update_Complaint(complaint1, complaint.getComplaintID());
+                            new Entity.Vendor.Vendor_Complaint(vendorUsernameField.getText()).run(vendorUsernameField.getText());
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -409,79 +434,12 @@ public class Vendor_Complaint extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
-                }
-            });
-        }
-    }
-
-    private static class cancelFrame extends JFrame {
-        public cancelFrame(Complaint complaint) {
-            JPanel panel1 = new JPanel();
-            JPanel panel2 = new JPanel();
-            JPanel panel3 = new JPanel();
-            panel1.setLayout(new BorderLayout());
-            panel3.setLayout(new GridLayout(4, 1, 15, 15));
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-
-            JLabel frameTitle = new JLabel("Complaint");
-            JLabel[] jLabelLeft = {new JLabel("Complaint ID"), new JLabel("Vendor Username"),
-                    new JLabel("Description")};
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
-            panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            JLabel[] jLabelRight = {new JLabel(complaint.getComplaintID()), new JLabel(complaint.getResident_Username()),
-                    new JLabel(complaint.getDescription()), new JLabel(complaint.getStatus())};
-            Vendor.Button cancelVisitorPassButton = new Vendor.Button("Cancel Complaint");
-            Vendor.Button cancelButton = new Vendor.Button("Back");
-            cancelVisitorPassButton.setAlignmentX(JButton.CENTER);
-            cancelButton.setAlignmentX(JButton.CENTER);
-            frameTitle.setFont(new Font("sansserif", Font.BOLD, 24));
-            frameTitle.setHorizontalAlignment(JLabel.CENTER);
-            issuedBy.setFont(new Font("sansserif", Font.PLAIN, 10));
-            issuedBy.setHorizontalAlignment(JLabel.CENTER);
-            panel1.add(frameTitle, BorderLayout.NORTH);
-            for (int i = 0; i < jLabelLeft.length; i++) {
-                jLabelLeft[i].setFont(new Font("sansserif", Font.BOLD, 16));
-                panel2.add(jLabelLeft[i]);
-                panel2.add(jLabelRight[i]);
-            }
-            panel1.add(panel2, BorderLayout.CENTER);
-
-            panel3.add(issuedBy);
-            panel3.add(cancelVisitorPassButton);
-            panel3.add(cancelButton);
-            panel1.add(panel3, BorderLayout.SOUTH);
-            setUndecorated(true);
-            panel1.setPreferredSize(new Dimension(1186 / 2, 621));
-            panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-            setPreferredSize(new Dimension(1186, 621));
-            pack();
-
-            setLocationRelativeTo(null);
-            setContentPane(panel1);
-            setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
-            setVisible(true);
-
-            cancelVisitorPassButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    int result = JOptionPane.showConfirmDialog(null, "Do you sure to cancel this complaint?", "Get Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    if (result == JOptionPane.YES_OPTION) {
-                        try {
-                            new Vendor().cancel_Complaint(complaint.getComplaintID());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else {
+                    try {
+                        new Vendor_Complaint(vendorUsernameField.getText()).run(vendorUsernameField.getText());
                         dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
                     }
-                }
-            });
-            cancelButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dispose();
                 }
             });
         }

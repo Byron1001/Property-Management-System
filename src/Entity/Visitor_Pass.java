@@ -159,7 +159,7 @@ public class Visitor_Pass {
 
     public String getDataString(Visitor_Pass visitorPass){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-        String[] data = {visitorPass.getVisitor_Pass_ID(), visitorPass.getVisitor_Name(), visitorPass.getUnitID(), visitorPass.getResident_Username(), Character.toString(visitorPass.getGender()), visitorPass.getContact_Number(), visitorPass.getDate_Start().format(formatter), visitorPass.getDate_End().format(formatter), visitorPass.getStatus()};
+        String[] data = {visitorPass.getVisitor_Pass_ID(), visitorPass.getVisitor_Name(), visitorPass.getResident_Username(), visitorPass.getUnitID(), Character.toString(visitorPass.getGender()), visitorPass.getContact_Number(), visitorPass.getDate_Start().format(formatter), visitorPass.getDate_End().format(formatter), visitorPass.getStatus()};
         String dataLine = "";
         for (String dd : data){
             dataLine += dd + ":";

@@ -169,7 +169,7 @@ public class Facility {
         public String getDataString(Facility.Booking booking){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
-            String[] data = {booking.getBookingID(), booking.getFacilityID(), booking.getResident_Username(), booking.getDate().toString(), booking.getDate().format(formatter), booking.getStart_Time().format(timeFormatter), booking.getEnd_Time().format(timeFormatter)};
+            String[] data = {booking.getBookingID(), booking.getFacilityID(), booking.getResident_Username(), booking.getDate().format(formatter), booking.getStart_Time().format(timeFormatter), booking.getEnd_Time().format(timeFormatter)};
             String dataLine = "";
             for (String dd : data){
                 dataLine += dd + ":";
@@ -181,7 +181,7 @@ public class Facility {
 
         public void save_All_Facility_Booking(ArrayList<Facility.Booking> bookingArrayList) throws IOException {
             FileWriter fileWriter = new FileWriter(facility_Booking_Record_txt, false);
-            fileWriter.write("BookingID:FacilityID:Date:Start time:End time\n");
+            fileWriter.write("BookingID:FacilityID:Resident Username:Date:Start time:End time\n");
             for (Facility.Booking booking : bookingArrayList){
                 fileWriter.write(booking.getDataString(booking));
             }
@@ -206,9 +206,12 @@ public class Facility {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             ArrayList<Facility.Booking> bookingArrayList = new_booking.getArrayList();
             for (Booking booking1 : bookingArrayList){
-                if (booking1.getDate().format(formatter).equals(new_booking.getDate().format(formatter))){
-                    if (new_booking.getStart_Time().isAfter(booking1.getEnd_Time()) || new_booking.getEnd_Time().isBefore(booking1.getStart_Time()) || new_booking.getStart_Time().isBefore(openTime) || new_booking.getStart_Time().isAfter(closeTime) || new_booking.getEnd_Time().isAfter(closeTime))
+                if (!booking1.getFacilityID().equals(new_booking.getFacilityID()) && !new_booking.getStart_Time().isBefore(openTime) && !new_booking.getEnd_Time().isAfter(closeTime) && new_booking.getEnd_Time().isAfter(new_booking.getStart_Time())){
+                    if (new_booking.getStart_Time().isAfter(booking1.getEnd_Time()) || new_booking.getEnd_Time().isBefore(booking1.getStart_Time())){
                         result = true;
+                    } else {
+                        result = false;
+                    }
                 }
             }
             return result;

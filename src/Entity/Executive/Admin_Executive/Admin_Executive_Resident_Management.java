@@ -1,5 +1,6 @@
 package Entity.Executive.Admin_Executive;
 
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
 import Entity.Unit;
 import UIPackage.Component.Header;
@@ -139,6 +140,7 @@ public class Admin_Executive_Resident_Management extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management.addFrame().setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -147,12 +149,17 @@ public class Admin_Executive_Resident_Management extends JFrame {
         modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    int row = tableData.getSelectedRow();
-                    Resident residentSelected = residentArrayList.get(row);
-                    new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management.modifyFrame(residentSelected).setVisible(true);
-                } catch (IOException | ClassNotFoundException | ParseException ex) {
-                    throw new RuntimeException(ex);
+                int row = tableData.getSelectedRow();
+                if (row != -1){
+                    try {
+                        Resident residentSelected = residentArrayList.get(row);
+                        new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management.modifyFrame(residentSelected).setVisible(true);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException | ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please choose the resident", "Choice error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -168,8 +175,10 @@ public class Admin_Executive_Resident_Management extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             new Admin_Executive_Function.Admin_Executive().resident_Delete(residentSelected.getResident_Username());
                             JOptionPane.showMessageDialog(null, "Resident deleted", "Resident delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                            dispose();
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 } else {
@@ -247,20 +256,33 @@ public class Admin_Executive_Resident_Management extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                     Admin_Executive_Interface adminExecutiveInterface = new Admin_Executive_Interface(executiveID);
-                    adminExecutiveInterface.setPanelBorderRight(new Admin_Executive_Interface.Admin_Executive_Profile_Panel(adminExecutiveInterface.getExecutiveID()));
                     adminExecutiveInterface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Admin_Executive_Unit_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 6) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 7) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -268,7 +290,7 @@ public class Admin_Executive_Resident_Management extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<Resident> residentArrayList = new Resident().getArrayList();
 
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
@@ -362,9 +384,11 @@ public class Admin_Executive_Resident_Management extends JFrame {
                             } else {
                                 new Admin_Executive_Function.Admin_Executive().resident_Add(resident);
                                 JOptionPane.showMessageDialog(null, "Resident registration successful.Please ask resident to sign up and remember to register new unit if needed.", "Resident adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                                dispose();
                             }
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -372,13 +396,18 @@ public class Admin_Executive_Resident_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<Resident> residentArrayList = new Resident().getArrayList();
 
         public modifyFrame(Resident resident) throws IOException, ClassNotFoundException, ParseException {
@@ -478,9 +507,11 @@ public class Admin_Executive_Resident_Management extends JFrame {
                             } else {
                                 new Admin_Executive_Function.Admin_Executive().resident_Modify(residentModify, resident.getResident_Username());
                                 JOptionPane.showMessageDialog(null, "Resident modification successful.Please ask resident to sign up and remember to register new unit if needed.", "Resident adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                                dispose();
                             }
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -488,7 +519,12 @@ public class Admin_Executive_Resident_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

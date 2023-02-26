@@ -5,6 +5,7 @@ import Entity.Employee.Employee_Task;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Interface;
 import Entity.Employee.Employee_Task;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -141,6 +142,7 @@ public class Building_Executive_Employee_Task extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Building_Executive_Employee_Task.addFrame().setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -154,6 +156,7 @@ public class Building_Executive_Employee_Task extends JFrame {
                     try {
                         Employee_Task employee_TaskSelected = employeeTaskArrayList.get(row);
                         new Building_Executive_Employee_Task.modifyFrame(employee_TaskSelected).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -174,8 +177,10 @@ public class Building_Executive_Employee_Task extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             new Building_Executive_Function.Building_Executive().delete_Employee_Task(employee_TaskSelected.getTaskID());
                             JOptionPane.showMessageDialog(null, "Employee Task deleted", "Employee Task delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                            dispose();
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 } else {
@@ -251,20 +256,28 @@ public class Building_Executive_Employee_Task extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Building_Executive_Interface buildingExecutiveInterface = new Building_Executive_Interface(executiveID);
-                    buildingExecutiveInterface.setPanelBorderRight(new Building_Executive_Interface.Building_Executive_Profile_Panel(buildingExecutiveInterface.getExecutiveID()));
-                    buildingExecutiveInterface.frame.setVisible(true);
-                    dispose();
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
                 } else if (index == 2) {
-                    dispose();
+                    new Building_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -272,7 +285,7 @@ public class Building_Executive_Employee_Task extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<Employee_Task> employeeTaskArrayList = new Employee_Task().getArrayList();
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
@@ -335,6 +348,8 @@ public class Building_Executive_Employee_Task extends JFrame {
                         } else {
                             new Building_Executive_Function.Building_Executive().add_Employee_Task(employee_Task);
                             JOptionPane.showMessageDialog(null, "Employee_Task registration successful.Please ask Employee_Task to sign up and remember to register new unit if needed.", "Employee_Task adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -344,13 +359,18 @@ public class Building_Executive_Employee_Task extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<Employee_Task> employeeTaskArrayList = new Employee_Task().getArrayList();
 
         public modifyFrame(Employee_Task employee_Task) throws IOException, ClassNotFoundException, ParseException {
@@ -426,6 +446,8 @@ public class Building_Executive_Employee_Task extends JFrame {
                         } else {
                             new Building_Executive_Function.Building_Executive().update_Employee_Task(employee_TaskModify, employee_Task.getTaskID());
                             JOptionPane.showMessageDialog(null, "Employee Task modification successful.Please ask employee to finish the task.", "Employee_Task modification successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -435,7 +457,12 @@ public class Building_Executive_Employee_Task extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

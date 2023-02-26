@@ -2,6 +2,7 @@ package Entity.Employee.SecurityGuard;
 
 import Entity.CheckPoint;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
+import Entity.Login.Login_Frame;
 import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -131,6 +132,8 @@ public class SecurityGuard_CheckPoint extends JFrame {
                     try {
                         new SecurityGuard().checkIn_CheckPoint(securityGuard_EmployeeID, checkPointSelected.getCheckPointID());
                         JOptionPane.showMessageDialog(null, "Check-in successful", "Check-in successful", JOptionPane.INFORMATION_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 80, 80));
+                        new Entity.Employee.SecurityGuard.SecurityGuard_CheckPoint(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                        dispose();
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -208,18 +211,22 @@ public class SecurityGuard_CheckPoint extends JFrame {
             @Override
             public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    dispose();
-                    SecurityGuard_Interface SecurityGuardInterface = new SecurityGuard_Interface(securityGuard_EmployeeID);
-                    SecurityGuardInterface.setPanelBorderRight(new SecurityGuard_Interface.SecurityGuard_Profile_Panel(SecurityGuardInterface.getemployeeID()));
+                    Entity.Employee.SecurityGuard.SecurityGuard_Interface SecurityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface(securityGuard_EmployeeID);
                     SecurityGuardInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new SecurityGuard_Visitor_Entry_Record(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                    frame.dispose();
                 } else if (index == 3) {
                 } else if (index == 4) {
+                    new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

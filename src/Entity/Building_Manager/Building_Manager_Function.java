@@ -374,7 +374,6 @@ public class Building_Manager_Function{
                     num += 1;
                 }
                 String str = "OP" + num.toString();
-                System.out.println(str);
                 return str;
             }
 
@@ -484,28 +483,26 @@ public class Building_Manager_Function{
                 }
                 return result;
             }
-            public boolean check_Team_Leader_Availability(String team) throws FileNotFoundException {
+            public boolean check_Team_Leader_Availability(String team, String position) throws FileNotFoundException {
                 boolean result = false;
                 ArrayList<Team_Leader> leaderArrayList = getArrayList();
                 for (Team_Leader leader1 : leaderArrayList) {
-                    if (leader1.getTeam().equals(team))
+                    if (leader1.getTeam().equals(team) && leader1.getPosition().equals(position))
                         result = true;
                 }
                 return result;
             }
 
             public void add_Team_Leader(Team_Leader leader) throws IOException {//add when team no leader
-                if (!check_Team_Leader_Availability(leader.getTeam())){
-                    ArrayList<Team_Leader> leaderArrayList = getArrayList();
-                    leaderArrayList.add(leader);
-                    save_All_Team_Leader(leaderArrayList);
-                }
+                ArrayList<Team_Leader> leaderArrayList = getArrayList();
+                leaderArrayList.add(leader);
+                save_All_Team_Leader(leaderArrayList);
             }
 
-            public void delete_Team_Leader(String leader_Username) throws IOException {//delete all leader of team or the specific leader
+            public void delete_Team_Leader(String leader_Username) throws IOException {//delete specific team leader
                 ArrayList<Team_Leader> leaderArrayList = getArrayList();
                 for (Team_Leader leader : leaderArrayList){
-                    if (leader.getLeader_Username().equals(leader_Username) || leader.getTeam().equals(leader_Username)){
+                    if (leader.getLeader_Username().equals(leader_Username)){
                         leaderArrayList.remove(leader);
                     }
                 }
@@ -515,6 +512,10 @@ public class Building_Manager_Function{
             public void modify_Team_Leader(Team_Leader leader) throws IOException {
                 delete_Team_Leader(leader.getLeader_Username());
                 add_Team_Leader(leader);
+            }
+
+            public String[] getStringArray(Team_Leader teamLeader){
+                return new String[]{teamLeader.getLeader_Username(), teamLeader.getTeam(), teamLeader.getPosition()};
             }
         }
     }

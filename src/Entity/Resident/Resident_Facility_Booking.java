@@ -2,6 +2,7 @@ package Entity.Resident;
 
 import Entity.Facility;
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -143,6 +144,7 @@ public class Resident_Facility_Booking extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new addFrame(resident_Username).setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -151,12 +153,17 @@ public class Resident_Facility_Booking extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    int row = tableData.getSelectedRow();
-                    Facility.Booking bookingSelected = bookingArrayList.get(row);
-                    new updateFrame(bookingSelected).setVisible(true);
-                } catch (IOException | ClassNotFoundException | ParseException ex) {
-                    throw new RuntimeException(ex);
+                int row = tableData.getSelectedRow();
+                if (row != -1){
+                    try {
+                        Facility.Booking bookingSelected = bookingArrayList.get(row);
+                        new updateFrame(bookingSelected).setVisible(true);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException | ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please choose the booking details", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
             }
         });
@@ -167,7 +174,20 @@ public class Resident_Facility_Booking extends JFrame {
                 int column = tableData.getSelectedColumn();
                 if (row != -1 || column != -1) {
                     Facility.Booking booking = bookingArrayList.get(row);
-                    new cancelFrame(booking).setVisible(true);
+                    int result = JOptionPane.showConfirmDialog(null,"Do you sure to cancel your facility booking?", "Get Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (result == JOptionPane.YES_OPTION){
+                        try {
+                            new Resident().cancel_Facility_Booking(booking.getBookingID());
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    try {
+                        new Resident_Facility_Booking(resident_Username).run();
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please choose the booking details", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
@@ -218,6 +238,7 @@ public class Resident_Facility_Booking extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Visitor Pass", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("complaint", "complaint", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#38ef7d");
         frame.menu.colorLeft = Color.decode("#11998e");
@@ -239,21 +260,33 @@ public class Resident_Facility_Booking extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
-                if (index == 0) {
-                    dispose();
+            public void selected(int index) throws IOException, ClassNotFoundException {
+                if (index == 0){
                     Resident_Interface residentInterface = new Resident_Interface(resident_Username);
-                    residentInterface.setPanelBorderRight(new Resident_Profile_Panel(residentInterface.getResident_Username()));
                     residentInterface.frame.setVisible(true);
-                } else if (index == 1) {
-                } else if (index == 2) {
-                    new Entity.Resident.Resident_Deposit_Frame("Mike1001").run();
-                    dispose();
-                } else if (index == 3) {
-                } else if (index == 4) {
-                } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    frame.dispose();
+                } else if (index == 1){
+                    new Resident_Payment_Frame(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 2){
+                    new Entity.Resident.Resident_Deposit_Frame(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 3){
+                    new Resident_Payment_History(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 4){
+                    new Entity.Resident.Resident_Statement_Frame(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 5){
+                } else if (index == 6){
+                    new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                    frame.dispose();
+                } else if (index == 7){
+                    new Entity.Resident.Resident_Complaint(resident_Username).run(resident_Username);
+                    frame.dispose();
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -261,7 +294,7 @@ public class Resident_Facility_Booking extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<Facility> facility_Info = new Facility().getArrayList();
         public addFrame(String resident_Username) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
@@ -284,7 +317,7 @@ public class Resident_Facility_Booking extends JFrame {
             }
             JTextField bookingIDField = new JTextField(new Facility.Booking().get_Auto_BookingID());
             bookingIDField.setEditable(false);
-            JComboBox facilityComboBox = new JComboBox();
+            JComboBox<String> facilityComboBox = new JComboBox<>();
             for (Facility facility : facility_Info){
                 facilityComboBox.addItem(facility.getName());
             }
@@ -334,35 +367,46 @@ public class Resident_Facility_Booking extends JFrame {
             bookButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Facility.Booking booking = new Facility.Booking(bookingIDField.getText(), facility_Info.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), formatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
-                    try {
-                        boolean check = new Resident().check_Resident_Availability(booking.getResident_Username());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = booking.check_TimeSlot_Availability(booking);
-                            if (!check){
-                                JOptionPane.showMessageDialog(null, "Time slot not available", "Time slot not available", JOptionPane.ERROR_MESSAGE);
+                    if (dateField.getText().equals("") || startTimeField.getText().equals("") || endTimeField.getText().equals("")){
+                        Facility.Booking booking = new Facility.Booking(bookingIDField.getText(), facility_Info.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), formatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
+                        try {
+                            boolean check = new Resident().check_Resident_Availability(booking.getResident_Username());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                new Resident().add_Facility_Booking(booking);
+                                check = booking.check_TimeSlot_Availability(booking);
+                                if (!check){
+                                    JOptionPane.showMessageDialog(null, "Time slot not available", "Time slot not available", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Resident().add_Facility_Booking(booking);
+                                    new Entity.Resident.Resident_Facility_Booking(resident_Username).run();
+                                    dispose();
+                                }
                             }
-                        }
 
-                    } catch (ClassNotFoundException | IOException ex) {
-                        throw new RuntimeException(ex);
+                        } catch (ClassNotFoundException | IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please complete the information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Resident_Facility_Booking(resident_Username).run();
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class updateFrame extends JFrame {
+    private class updateFrame extends JFrame {
         private final ArrayList<Facility> facility_Info = new Facility().getArrayList();
         public updateFrame(Facility.Booking booking) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
@@ -442,17 +486,19 @@ public class Resident_Facility_Booking extends JFrame {
             updateButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Facility.Booking booking = new Facility.Booking(bookingIDField.getText(), facility_Info.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), formatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
+                    Facility.Booking bookingNew = new Facility.Booking(bookingIDField.getText(), facility_Info.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), formatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
                     try {
-                        boolean check = new Resident().check_Resident_Availability(booking.getResident_Username());
+                        boolean check = new Resident().check_Resident_Availability(bookingNew.getResident_Username());
                         if (!check) {
                             JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            check = booking.check_TimeSlot_Availability(booking);
+                            check = bookingNew.check_TimeSlot_Availability(bookingNew) && !bookingNew.getDate().format(formatter).equals(booking.getDate().format(formatter)) && !bookingNew.getStart_Time().format(timeFormatter).equals(booking.getStart_Time().format(timeFormatter)) && ! bookingNew.getEnd_Time().format(timeFormatter).equals(booking.getEnd_Time().format(timeFormatter));
                             if (!check){
                                 JOptionPane.showMessageDialog(null, "Time slot not available", "Time slot not available", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                new Resident().add_Facility_Booking(booking);
+                                new Resident().update_Facility_Booking(bookingNew, booking.getBookingID());
+                                new Entity.Resident.Resident_Facility_Booking(resident_Username).run();
+                                dispose();
                             }
                         }
 
@@ -464,87 +510,18 @@ public class Resident_Facility_Booking extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
-                }
-            });
-        }
-    }
-
-    private static class cancelFrame extends JFrame {
-        public cancelFrame(Facility.Booking booking) {
-            JPanel panel1 = new JPanel();
-            JPanel panel2 = new JPanel();
-            JPanel panel3 = new JPanel();
-            panel1.setLayout(new BorderLayout());
-            panel3.setLayout(new GridLayout(4, 1, 15, 15));
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
-            JLabel frameTitle = new JLabel("BOOKING DETAILS");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
-            JLabel[] jLabelLeft = {new JLabel("Booking ID"), new JLabel("Facility ID"),
-                    new JLabel("Resident Username"), new JLabel("Date (MM.dd.yyyy)"),
-                    new JLabel("Start time (HHmmss)"), new JLabel("End time (HHmmss)")};
-            panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            JLabel[] jLabelRight = {new JLabel(booking.getBookingID()), new JLabel(booking.getFacilityID()),
-                    new JLabel(booking.getResident_Username()), new JLabel(booking.getDate().format(formatter)),
-                    new JLabel(booking.getStart_Time().format(timeFormatter)), new JLabel(booking.getEnd_Time().format(timeFormatter))};
-            Resident.Button cancelBookingButton = new Resident.Button("Cancel booking");
-            Resident.Button cancelButton = new Resident.Button("Back");
-            cancelBookingButton.setAlignmentX(JButton.CENTER);
-            cancelButton.setAlignmentX(JButton.CENTER);
-            frameTitle.setFont(new Font("sansserif", Font.BOLD, 24));
-            frameTitle.setHorizontalAlignment(JLabel.CENTER);
-            issuedBy.setFont(new Font("sansserif", Font.PLAIN, 10));
-            issuedBy.setHorizontalAlignment(JLabel.CENTER);
-            panel1.add(frameTitle, BorderLayout.NORTH);
-            for (int i = 0; i < jLabelLeft.length; i++) {
-                jLabelLeft[i].setFont(new Font("sansserif", Font.BOLD, 16));
-                panel2.add(jLabelLeft[i]);
-                panel2.add(jLabelRight[i]);
-            }
-            panel1.add(panel2, BorderLayout.CENTER);
-
-            panel3.add(issuedBy);
-            panel3.add(cancelBookingButton);
-            panel3.add(cancelButton);
-            panel1.add(panel3, BorderLayout.SOUTH);
-            setUndecorated(true);
-            panel1.setPreferredSize(new Dimension(1186 / 2, 621));
-            panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-            setPreferredSize(new Dimension(1186, 621));
-            pack();
-
-            setLocationRelativeTo(null);
-            setContentPane(panel1);
-            setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
-            setVisible(true);
-
-            cancelBookingButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    int result = JOptionPane.showConfirmDialog(null,"Do you sure to cancel your facility booking?", "Get Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    if (result == JOptionPane.YES_OPTION){
-                        try {
-                            new Resident().cancel_Facility_Booking(booking.getBookingID());
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else {
+                    try {
+                        new Resident_Facility_Booking(resident_Username).run();
                         dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
                     }
                 }
             });
-            cancelButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dispose();
-                }
-            });
         }
     }
 
-    private static class viewFrame extends JFrame {
+    private class viewFrame extends JFrame {
         public viewFrame(Facility.Booking booking) {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();

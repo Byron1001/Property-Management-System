@@ -3,3 +3,4 @@ Com1:Mike1001:A beggar in front of condo:solved
 Com2:Andrew1123:Rooftop water leakage:unsolved
 Com3:Joy101:Earthquake:unsolved
 Com4:VE001:Earthquake:unsolved
+Com5:VE001:swimming pool has pee:unsolved

@@ -2,6 +2,7 @@ package Entity.Executive.Account_Executive;
 
 import Entity.Financial.Invoice;
 import Entity.Financial.Statement;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -152,6 +153,7 @@ public class Account_Executive_Statement extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 try {
                     new IssueFrame(new Account_Executive_Function.Account_Executive().get_Account_Executive_Info(executiveID));
+                    dispose();
                 } catch (FileNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -187,6 +189,7 @@ public class Account_Executive_Statement extends JFrame{
         frame.menu.listMenu.addItem(new Model_Menu("paymentHistory", "Receipt", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("statement", "Statement", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Outstanding fees", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#ad5389");
         frame.menu.colorLeft = Color.decode("#3c1053");
@@ -208,21 +211,27 @@ public class Account_Executive_Statement extends JFrame{
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException {
                 if (index == 0) {
-                    dispose();
                     Account_Executive_Interface accountExecutiveInterface = new Account_Executive_Interface(executiveID);
-                    accountExecutiveInterface.setPanelBorderRight(new Account_Executive_Interface.Account_Executive_Profile_Panel(accountExecutiveInterface.getExecutiveID()));
                     accountExecutiveInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Account_Executive_Invoice(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-
-                    dispose();
+                    new Account_Executive_Payment(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Account_Executive.Account_Executive_Receipt(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Entity.Executive.Account_Executive.Account_Executive_Pending_fees(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 6){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -230,7 +239,7 @@ public class Account_Executive_Statement extends JFrame{
         frame.setVisible(true);
     }
 
-    public static class StatementFrame extends JFrame {
+    public class StatementFrame extends JFrame {
         public StatementFrame(Statement statement) {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -285,7 +294,7 @@ public class Account_Executive_Statement extends JFrame{
         }
     }
 
-    public static class IssueFrame extends JFrame {
+    public class IssueFrame extends JFrame {
         public IssueFrame(Account_Executive_Function.Account_Executive accountExecutive) throws FileNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -351,13 +360,18 @@ public class Account_Executive_Statement extends JFrame{
             issueButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Statement statement = new Statement(statementIDField.getText(), issuerPositionField.getText(), LocalDate.parse(dateField.getText(), formatter), descriptionArea.getText(), receiverComboBox.getSelectedItem().toString());
-                    try {
-                        accountExecutive.issue_Statement(statement);
-                        JOptionPane.showMessageDialog(null, "Statement issued", "Statement issued", JOptionPane.INFORMATION_MESSAGE);
-                        dispose();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    if (!dateField.getText().equals("  .  .    ") && !descriptionArea.getText().equals("")){
+                        Statement statement = new Statement(statementIDField.getText(), issuerPositionField.getText(), LocalDate.parse(dateField.getText(), formatter), descriptionArea.getText(), receiverComboBox.getSelectedItem().toString());
+                        try {
+                            accountExecutive.issue_Statement(statement);
+                            JOptionPane.showMessageDialog(null, "Statement issued", "Statement issued", JOptionPane.INFORMATION_MESSAGE);
+                            new Account_Executive_Statement(executiveID).run(executiveID);
+                            dispose();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please fill in complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -365,7 +379,12 @@ public class Account_Executive_Statement extends JFrame{
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Account_Executive_Statement(executiveID).run(executiveID);
+                        dispose();
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

@@ -3,6 +3,7 @@ package Entity.Resident;
 import Entity.Complaint;
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -222,6 +223,7 @@ public class Resident_Complaint extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Visitor Pass", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("complaint", "complaint", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#38ef7d");
         frame.menu.colorLeft = Color.decode("#11998e");
@@ -242,21 +244,33 @@ public class Resident_Complaint extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
-                if (index == 0) {
-                    dispose();
+            public void selected(int index) throws IOException, ClassNotFoundException {
+                if (index == 0){
                     Resident_Interface residentInterface = new Resident_Interface(resident_Username);
-                    residentInterface.setPanelBorderRight(new Resident_Profile_Panel(residentInterface.getResident_Username()));
                     residentInterface.frame.setVisible(true);
-                } else if (index == 1) {
-                } else if (index == 2) {
+                    frame.dispose();
+                } else if (index == 1){
+                    new Resident_Payment_Frame(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 2){
                     new Entity.Resident.Resident_Deposit_Frame(resident_Username).run();
-                    dispose();
-                } else if (index == 3) {
-                } else if (index == 4) {
-                } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    frame.dispose();
+                } else if (index == 3){
+                    new Resident_Payment_History(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 4){
+                    new Entity.Resident.Resident_Statement_Frame(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 5){
+                    new Entity.Resident.Resident_Facility_Booking(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 6){
+                    new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                    frame.dispose();
+                } else if (index == 7){
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

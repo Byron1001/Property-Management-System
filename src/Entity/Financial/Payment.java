@@ -120,7 +120,11 @@ public class Payment {
         scanner.nextLine();
         while (scanner.hasNextLine()){
             String[] data = scanner.nextLine().split(":", 10);
-            Payment payment = new Payment(data[0], data[1], data[2], data[3], Integer.parseInt(data[4]), LocalDate.parse(data[5], formatter), data[6], data[7], LocalDate.parse(data[8], formatter), data[9]);
+            LocalDate date = null;
+            if (!(data[8].equals(""))){
+                date = LocalDate.parse(data[8], formatter);
+            }
+            Payment payment = new Payment(data[0], data[1], data[2], data[3], Integer.parseInt(data[4]), LocalDate.parse(data[5], formatter), data[6], data[7], date, data[9]);
             paymentArrayList.add(payment);
         }
         scanner.close();
@@ -139,7 +143,14 @@ public class Payment {
         if (!payment.getIssuerID().equals("")){
             status = "RECEIVED";
         }
-        String[] data = {payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), payment.getIssuerID(), payment.getIssuedDate().format(formatter), status};
+        String issuer = "";
+        if (payment.getIssuerID() != null)
+            issuer = payment.getIssuerID();
+        String issuedDate = "";
+        if (payment.getIssuedDate() != null){
+            issuedDate = payment.getIssuedDate().format(formatter);
+        }
+        String[] data = {payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), issuer, issuedDate, status};
         return data;
     }
 
@@ -155,13 +166,20 @@ public class Payment {
             num += 1;
         }
         String str = "Pay" + num.toString();
-        System.out.println(str);
         return str;
     }
 
     public String getDataString(Payment payment){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-        String[] data = {payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), payment.getIssuerID(), payment.getIssuedDate().format(formatter), payment.getDescription()};
+        String issuer = "";
+        if (payment.getIssuerID() != null)
+            issuer = payment.getIssuerID();
+        String issuedDate = "";
+        if (payment.getIssuedDate() != null){
+            issuedDate = payment.getIssuedDate().format(formatter);
+        }
+
+        String[] data = {payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), issuer, issuedDate, payment.getDescription()};
         String dataLine = "";
         for (String dd : data){
             dataLine += dd + ":";
@@ -474,7 +492,6 @@ public class Payment {
                 num += 1;
             }
             String str = "Exp" + num.toString();
-            System.out.println(str);
             return str;
         }
 

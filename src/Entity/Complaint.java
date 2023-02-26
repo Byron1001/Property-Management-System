@@ -118,7 +118,6 @@ public class Complaint {
             num += 1;
         }
         String str = "Com" + num.toString();
-        System.out.println(str);
         return str;
     }
 

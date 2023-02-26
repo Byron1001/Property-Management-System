@@ -9,6 +9,7 @@ import Entity.Vendor.Vendor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -27,12 +28,13 @@ public class Admin_Executive_Function {
 
         public void update_Admin_Executive_Info(Admin_Executive adminExecutive, String executiveID) throws IOException {
             ArrayList<Admin_Executive> adminExecutiveArrayList = adminExecutive.getArrayList();
+            ArrayList<Admin_Executive> adminExecutiveArrayList1 = new ArrayList<>();
             for (Admin_Executive adminExecutive1 : adminExecutiveArrayList){
-                if (adminExecutive1.getExecutiveID().equals(executiveID))
-                    adminExecutiveArrayList.remove(adminExecutive1);
+                if (!(adminExecutive1.getExecutiveID().equals(executiveID)))
+                    adminExecutiveArrayList1.add(adminExecutive1);
             }
-            adminExecutiveArrayList.add(adminExecutive);
-            adminExecutive.save_All_Admin_Executive(adminExecutiveArrayList);
+            adminExecutiveArrayList1.add(adminExecutive);
+            adminExecutive.save_All_Admin_Executive(adminExecutiveArrayList1);
         }
 
         //Unit management
@@ -46,7 +48,7 @@ public class Admin_Executive_Function {
                 unit_Delete(unitID);
                 unit_Add(unit);
                 unit.sort_All_Unit();
-                System.out.println("Successfully modify unit.");
+                JOptionPane.showMessageDialog(null, "Unit Details Modification success", "Modifying success added", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         public void unit_Delete(String unitID) throws IOException {
@@ -71,7 +73,7 @@ public class Admin_Executive_Function {
             if (resident.check_Resident_Availability(resident_Username)){
                 resident_Delete(resident_Username);
                 resident_Add(resident);
-                System.out.println("Successfully modify resident information.");
+                JOptionPane.showMessageDialog(null, "Resident Information modifying success", "Resident information modifying success", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         public void resident_Delete(String resident_Username) throws IOException {
@@ -298,7 +300,7 @@ public class Admin_Executive_Function {
             if (vendor.check_Vendor_Availability(vendor_Username)){
                 vendor_Delete(vendor_Username);
                 vendor_Add(vendor);
-                System.out.println("Successfully modify vendor information.");
+                JOptionPane.showMessageDialog(null, "Vendor Information modifying success", "Vendor information modifying success", JOptionPane.INFORMATION_MESSAGE);
             }
         }
         public void vendor_Delete(String vendor_Username) throws IOException {
@@ -351,5 +353,14 @@ public class Admin_Executive_Function {
             g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
             super.paintComponent(g);
         }
+    }
+    public static ImageIcon toIcon(ImageIcon imgIcon, int w, int h){
+        Image srcImg = imgIcon.getImage();
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return new ImageIcon(resizedImg);
     }
 }

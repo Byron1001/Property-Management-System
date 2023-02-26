@@ -115,7 +115,6 @@ public class UIFrame extends JFrame {
         setSize(new Dimension(1186, 621));
         setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
         setLocationRelativeTo(null);
-        setVisible(true);
 
         header.searchText.addKeyListener(new KeyListener() {
             @Override
@@ -166,7 +165,6 @@ public class UIFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int index = frame.menu.listMenu.locationToIndex(e.getPoint());
-                System.out.println(index);
                 super.mouseClicked(e);
             }
         });

@@ -3,6 +3,7 @@ package Entity.Executive.Building_Executive;
 import Entity.Complaint;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Interface;
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -159,7 +160,9 @@ public class Building_Executive_Complaint_Management extends JFrame {
                     if (result == JOptionPane.YES_OPTION) {
                         try {
                             new Building_Executive_Function.Building_Executive().mark_Complaint_Solved(complaintSelected.getComplaintID());
-                        } catch (IOException ex) {
+                            new Building_Executive_Complaint_Management(executiveID).run(executiveID);
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     }
@@ -219,20 +222,28 @@ public class Building_Executive_Complaint_Management extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface("BE01");
-                    building_Executive_Interface.setPanelBorderRight(new Building_Executive_Interface.Building_Executive_Profile_Panel(building_Executive_Interface.getExecutiveID()));
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
                     building_Executive_Interface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
                 } else if (index == 3) {
+                    new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

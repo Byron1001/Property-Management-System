@@ -43,7 +43,7 @@ public class ListMenu<E extends Object> extends JList<E> {
                                     throw new RuntimeException(ex);
                                 }
                             } else {
-                                System.out.println("hello");}
+                                System.out.println("event equal null");}
                         }
                     }else {
                         selectedIndex = index;

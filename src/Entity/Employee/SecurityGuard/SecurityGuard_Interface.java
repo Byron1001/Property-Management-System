@@ -1,6 +1,7 @@
 package Entity.Employee.SecurityGuard;
 
 import Entity.Login.Login;
+import Entity.Login.Login_Frame;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Model.Model_Menu;
 import UIPackage.main.UIFrame;
@@ -30,9 +31,10 @@ public class SecurityGuard_Interface extends JFrame {
         frame.repaint();
     }
 
-    public SecurityGuard_Interface(String employeeID) throws FileNotFoundException {
+    public SecurityGuard_Interface(String employeeID) throws IOException, ClassNotFoundException {
         this.employeeID = employeeID;
         frame = new UIFrame(employeeID);
+        setPanelBorderRight(new SecurityGuard_Interface.SecurityGuard_Profile_Panel(employeeID));
 
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
@@ -49,10 +51,6 @@ public class SecurityGuard_Interface extends JFrame {
             @Override
             public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Entity.Employee.SecurityGuard.SecurityGuard_Interface SecurityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface(employeeID);
-                    SecurityGuardInterface.setPanelBorderRight(new SecurityGuard_Interface.SecurityGuard_Profile_Panel(SecurityGuardInterface.getemployeeID()));
-                    SecurityGuardInterface.frame.setVisible(true);
-                    frame.dispose();
                 } else if (index == 1) {
                     new Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check(employeeID).run(employeeID);
                     frame.dispose();
@@ -60,18 +58,20 @@ public class SecurityGuard_Interface extends JFrame {
                     new SecurityGuard_Visitor_Entry_Record(employeeID).run(employeeID);
                     frame.dispose();
                 } else if (index == 3) {
-                    new Entity.Employee.SecurityGuard.SecurityGuard_CheckPoint("SG001").run("SG001");
+                    new Entity.Employee.SecurityGuard.SecurityGuard_CheckPoint(employeeID).run(employeeID);
                     frame.dispose();
                 } else if (index == 4) {
                     new SecurityGuard_Incident(employeeID).run(employeeID);
                     frame.dispose();
                 } else if (index == 5) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
     }
 
-    public static class SecurityGuard_Profile_Panel extends JPanel {
+    public class SecurityGuard_Profile_Panel extends JPanel {
         private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public SecurityGuard.Button updateButton;
         public SecurityGuard_Profile_Panel(String securityGuard_EmployeeID) throws IOException, ClassNotFoundException {
@@ -130,7 +130,7 @@ public class SecurityGuard_Interface extends JFrame {
             });
         }
 
-        public static class UpdateInfo extends JFrame{
+        public class UpdateInfo extends JFrame{
             private Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private SecurityGuard.Button updateButton;
             private SecurityGuard.Button cancelButton;
@@ -234,6 +234,9 @@ public class SecurityGuard_Interface extends JFrame {
                                     securityGuardUpdated.update_SecurityGuard_Info(securityGuardUpdated, ori_Username);
                                     JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, SecurityGuard.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
                                     dispose();
+                                    Entity.Employee.SecurityGuard.SecurityGuard_Interface securityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface(employeeID);
+                                    securityGuardInterface.frame.setVisible(true);
+                                    frame.dispose();
                                 } catch (IOException | ClassNotFoundException ex) {
                                     throw new RuntimeException(ex);
                                 }
@@ -253,7 +256,6 @@ public class SecurityGuard_Interface extends JFrame {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Entity.Employee.SecurityGuard.SecurityGuard_Interface securityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface("SG001");
-        securityGuardInterface.setPanelBorderRight(new SecurityGuard_Interface.SecurityGuard_Profile_Panel(securityGuardInterface.getemployeeID()));
         securityGuardInterface.frame.setVisible(true);
     }
 }

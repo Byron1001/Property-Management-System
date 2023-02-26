@@ -6,6 +6,7 @@ import Entity.Executive.Building_Executive.Building_Executive_Function;
 import Entity.Executive.Executive;
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -144,6 +145,7 @@ public class Building_Manager_Operation extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new addFrame(buildingManagerID).setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -158,6 +160,7 @@ public class Building_Manager_Operation extends JFrame {
                     try {
                         Building_Manager_Function.Building_Manager.Operation operationSelected = operationArrayList.get(row);
                         new modifyFrame(operationSelected).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -179,6 +182,8 @@ public class Building_Manager_Operation extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             operationSelected.delete_Operation(operationSelected.getOperationID());
                             JOptionPane.showMessageDialog(null, "Operation deleted", "Operation delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                            dispose();
                         }
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
@@ -265,20 +270,24 @@ public class Building_Manager_Operation extends JFrame {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface("BM01");
-                    Building_ManagerInterface.setPanelBorderRight(new Building_Manager_Interface.Building_Executive_Profile_Panel(Building_ManagerInterface.getBuildingManagerID()));
+                    Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface(buildingManagerID);
                     Building_ManagerInterface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new Building_Manager_Report(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 3) {
                 } else if (index == 4) {
+                    new Entity.Building_Manager.Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -286,7 +295,7 @@ public class Building_Manager_Operation extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         public addFrame(String buildingManagerID) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -375,6 +384,9 @@ public class Building_Manager_Operation extends JFrame {
                             JOptionPane.showMessageDialog(null, "Fund Amount not enough", "Fund amount not enough", JOptionPane.ERROR_MESSAGE);
                         } else {
                             operationNew.add_Operation(operationNew);
+                            JOptionPane.showMessageDialog(null, "Operation added", "Opeartion added", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                            dispose();
                         }
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
@@ -384,13 +396,18 @@ public class Building_Manager_Operation extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                        dispose();
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         public modifyFrame(Building_Manager_Function.Building_Manager.Operation operation) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -478,6 +495,9 @@ public class Building_Manager_Operation extends JFrame {
                             JOptionPane.showMessageDialog(null, "Fund Amount not enough", "Fund amount not enough", JOptionPane.ERROR_MESSAGE);
                         } else {
                             operationNew.modify_Operation(operationNew, operation.getOperationID());
+                            JOptionPane.showMessageDialog(null, "Operation modified", "Operation modified", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                            dispose();
                         }
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
@@ -487,7 +507,12 @@ public class Building_Manager_Operation extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                        dispose();
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

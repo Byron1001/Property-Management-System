@@ -2,6 +2,7 @@ package Entity.Vendor;
 
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import Entity.Vendor.Vendor;
 import Entity.Vendor.Vendor_Interface;
 import Entity.Vendor.Vendor_Payment_Frame;
@@ -27,6 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -147,6 +149,26 @@ public class Vendor_Payment_Frame extends JFrame {
                 }
             }
         });
+        Vendor finalVendor = vendor;
+        payButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tableData.getSelectedRow();
+                if (row != -1){
+                    Invoice invoiceSelected = invoiceArrayList.get(row);
+                    try {
+                        finalVendor.make_Payment(invoiceSelected, vendor_Username);
+                        JOptionPane.showMessageDialog(null, "Invoice Paid", "Payment success", JOptionPane.INFORMATION_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 80, 80));
+                        new Entity.Vendor.Vendor_Payment_Frame(vendor_Username).run(vendor_Username);
+                        dispose();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please choose the invoice", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
+                }
+            }
+        });
         header.searchText.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -213,20 +235,24 @@ public class Vendor_Payment_Frame extends JFrame {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    dispose();
                     Vendor_Interface vendorInterface = new Vendor_Interface(vendor_Username);
-                    vendorInterface.setPanelBorderRight(new Vendor_Interface.Vendor_Profile_Panel(vendorInterface.getVendor_Username()));
                     vendorInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
                 } else if (index == 2) {
-                    dispose();
+                    new Entity.Vendor.Vendor_Payment_History(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Vendor.Vendor_Statement_Frame(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Vendor.Vendor_Complaint(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

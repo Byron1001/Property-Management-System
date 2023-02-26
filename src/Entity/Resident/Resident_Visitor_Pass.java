@@ -1,6 +1,6 @@
 package Entity.Resident;
 
-import Entity.Facility;
+import Entity.Login.Login_Frame;
 import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -143,6 +143,7 @@ public class Resident_Visitor_Pass extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new addFrame(resident_Username).setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -154,8 +155,13 @@ public class Resident_Visitor_Pass extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     int row = tableData.getSelectedRow();
-                    Visitor_Pass visitorPassSelected = visitorPassArrayList.get(row);
-                    new updateFrame(visitorPassSelected).setVisible(true);
+                    if (row != -1){
+                        Visitor_Pass visitorPassSelected = visitorPassArrayList.get(row);
+                        new updateFrame(visitorPassSelected).setVisible(true);
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
+                    }
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -168,8 +174,21 @@ public class Resident_Visitor_Pass extends JFrame {
                 int row = tableData.getSelectedRow();
                 int column = tableData.getSelectedColumn();
                 if (row != -1 || column != -1) {
-                    Visitor_Pass visitorPass = visitorPassArrayList.get(row);
-                    new cancelFrame(visitorPass).setVisible(true);
+                    Visitor_Pass visitorPassSelected = visitorPassArrayList.get(row);
+                    int result = JOptionPane.showConfirmDialog(null, "Do you sure to cancel this visitor pass?", "Get Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (result == JOptionPane.YES_OPTION) {
+                        try {
+                            new Resident().cancel_Visitor_Pass(visitorPassSelected.getVisitor_Pass_ID());
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+                    try {
+                        new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
@@ -183,6 +202,7 @@ public class Resident_Visitor_Pass extends JFrame {
                 if (row != -1 || column != -1) {
                     Visitor_Pass visitorPass = visitorPassArrayList.get(row);
                     new viewFrame(visitorPass).setVisible(true);
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
@@ -220,6 +240,7 @@ public class Resident_Visitor_Pass extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Visitor Pass", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("complaint", "complaint", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#38ef7d");
         frame.menu.colorLeft = Color.decode("#11998e");
@@ -240,21 +261,33 @@ public class Resident_Visitor_Pass extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
-                if (index == 0) {
-                    dispose();
+            public void selected(int index) throws IOException, ClassNotFoundException {
+                if (index == 0){
                     Resident_Interface residentInterface = new Resident_Interface(resident_Username);
-                    residentInterface.setPanelBorderRight(new Resident_Profile_Panel(residentInterface.getResident_Username()));
                     residentInterface.frame.setVisible(true);
-                } else if (index == 1) {
-                } else if (index == 2) {
+                    frame.dispose();
+                } else if (index == 1){
+                    new Resident_Payment_Frame(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 2){
                     new Entity.Resident.Resident_Deposit_Frame(resident_Username).run();
-                    dispose();
-                } else if (index == 3) {
-                } else if (index == 4) {
-                } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    frame.dispose();
+                } else if (index == 3){
+                    new Resident_Payment_History(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 4){
+                    new Entity.Resident.Resident_Statement_Frame(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 5){
+                    new Entity.Resident.Resident_Facility_Booking(resident_Username).run();
+                    frame.dispose();
+                } else if (index == 6){
+                } else if (index == 7){
+                    new Entity.Resident.Resident_Complaint(resident_Username).run(resident_Username);
+                    frame.dispose();
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -262,7 +295,7 @@ public class Resident_Visitor_Pass extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         public addFrame(String resident_Username) throws IOException, ClassNotFoundException, ParseException {
             Resident resident = new Resident();
             resident = resident.get_Resident_Info(resident_Username);
@@ -342,34 +375,45 @@ public class Resident_Visitor_Pass extends JFrame {
             applyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Visitor_Pass visitorPass = new Visitor_Pass(visitorPassIDField.getText(), visitorNameField.getText(), residentUsernameField.getText(), unitIDField.getText(), genderComboBox.getSelectedItem().toString().charAt(0), contactNumberField.getText(), LocalDate.parse(dateStartField.getText(), formatter), LocalDate.parse(dateEndField.getText(), formatter), "Disapproved");
-                    try {
-                        boolean check = new Resident().check_Resident_Availability(visitorPass.getResident_Username());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = visitorPass.check_Visitor_Pass_Availability(visitorPass);
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "Visitor Pass already exists", "Visitor Pass exists", JOptionPane.ERROR_MESSAGE);
+                    if (visitorNameField.getText().equals("") || contactNumberField.getText().equals("   -       ") || dateEndField.getText().equals("  .  .    ") || dateStartField.getText().equals("  .  .    ")){
+                        JOptionPane.showMessageDialog(null, "Please enter all the information", "Information lost", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        Visitor_Pass visitorPass = new Visitor_Pass(visitorPassIDField.getText(), visitorNameField.getText(), residentUsernameField.getText(), unitIDField.getText(), genderComboBox.getSelectedItem().toString().charAt(0), contactNumberField.getText(), LocalDate.parse(dateStartField.getText(), formatter), LocalDate.parse(dateEndField.getText(), formatter), "Disapproved");
+                        try {
+                            boolean check = new Resident().check_Resident_Availability(visitorPass.getResident_Username());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                new Resident().apply_Visitor_Pass(visitorPass);
+                                check = visitorPass.check_Visitor_Pass_Availability(visitorPass);
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "Visitor Pass already exists", "Visitor Pass exists", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Resident().apply_Visitor_Pass(visitorPass);
+                                    new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                                    dispose();
+                                }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
                     }
                 }
             });
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class updateFrame extends JFrame {
+    private class updateFrame extends JFrame {
         public updateFrame(Visitor_Pass visitorPass) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -462,8 +506,10 @@ public class Resident_Visitor_Pass extends JFrame {
                             JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
                         } else {
                             new Resident().update_Visitor_Pass(visitorPass);
+                            new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                            dispose();
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -471,89 +517,18 @@ public class Resident_Visitor_Pass extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
-                }
-            });
-        }
-    }
-
-    private static class cancelFrame extends JFrame {
-        public cancelFrame(Visitor_Pass visitorPass) {
-            JPanel panel1 = new JPanel();
-            JPanel panel2 = new JPanel();
-            JPanel panel3 = new JPanel();
-            panel1.setLayout(new BorderLayout());
-            panel3.setLayout(new GridLayout(4, 1, 15, 15));
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-
-            JLabel frameTitle = new JLabel("VISITOR PASS");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
-            JLabel[] jLabelLeft = {new JLabel("Visitor Pass ID"), new JLabel("Visitor name"),
-                    new JLabel("Resident Username"), new JLabel("Unit ID"),
-                    new JLabel("Gender"), new JLabel("Contact Number"),
-                    new JLabel("Date start (MM.dd.yyyy)"), new JLabel("Date end (MM.dd.yyyy)")};
-            panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            JLabel[] jLabelRight = {new JLabel(visitorPass.getVisitor_Pass_ID()), new JLabel(visitorPass.getVisitor_Name()),
-                    new JLabel(visitorPass.getResident_Username()), new JLabel(visitorPass.getUnitID()),
-                    new JLabel(Character.toString(visitorPass.getGender())), new JLabel(visitorPass.getContact_Number()),
-                    new JLabel(visitorPass.getDate_Start().format(formatter)), new JLabel(visitorPass.getDate_End().format(formatter))};
-            Resident.Button cancelVisitorPassButton = new Resident.Button("Cancel Visitor Pass");
-            Resident.Button cancelButton = new Resident.Button("Back");
-            cancelVisitorPassButton.setAlignmentX(JButton.CENTER);
-            cancelButton.setAlignmentX(JButton.CENTER);
-            frameTitle.setFont(new Font("sansserif", Font.BOLD, 24));
-            frameTitle.setHorizontalAlignment(JLabel.CENTER);
-            issuedBy.setFont(new Font("sansserif", Font.PLAIN, 10));
-            issuedBy.setHorizontalAlignment(JLabel.CENTER);
-            panel1.add(frameTitle, BorderLayout.NORTH);
-            for (int i = 0; i < jLabelLeft.length; i++) {
-                jLabelLeft[i].setFont(new Font("sansserif", Font.BOLD, 16));
-                panel2.add(jLabelLeft[i]);
-                panel2.add(jLabelRight[i]);
-            }
-            panel1.add(panel2, BorderLayout.CENTER);
-
-            panel3.add(issuedBy);
-            panel3.add(cancelVisitorPassButton);
-            panel3.add(cancelButton);
-            panel1.add(panel3, BorderLayout.SOUTH);
-            setUndecorated(true);
-            panel1.setPreferredSize(new Dimension(1186 / 2, 621));
-            panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-            setPreferredSize(new Dimension(1186, 621));
-            pack();
-
-            setLocationRelativeTo(null);
-            setContentPane(panel1);
-            setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
-            setVisible(true);
-
-            cancelVisitorPassButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    int result = JOptionPane.showConfirmDialog(null, "Do you sure to cancel this visitor pass?", "Get Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    if (result == JOptionPane.YES_OPTION) {
-                        try {
-                            new Resident().cancel_Visitor_Pass(visitorPass.getVisitor_Pass_ID());
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else {
+                    try {
+                        new Resident_Visitor_Pass(resident_Username).run(resident_Username);
                         dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
                     }
                 }
             });
-            cancelButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dispose();
-                }
-            });
         }
     }
 
-    private static class viewFrame extends JFrame {
+    private class viewFrame extends JFrame {
         public viewFrame(Visitor_Pass visitorPass) {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -606,7 +581,12 @@ public class Resident_Visitor_Pass extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

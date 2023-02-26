@@ -1,5 +1,6 @@
 package Entity.Employee.SecurityGuard;
 
+import Entity.Login.Login_Frame;
 import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -151,10 +152,12 @@ public class SecurityGuard_Pass_Check extends JFrame {
                     Visitor_Pass visitorPass = visitorPassArrayList.get(row);
                     try {
                         new SecurityGuard().add_Visitor_Entry_Record(visitorPass.getVisitor_Pass_ID());
-                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null, "Visitor entry record added", "Visitor entry", JOptionPane.INFORMATION_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 80, 80));
+                        new Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check(securityGuard_Username).run(securityGuard_Username);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
-                    JOptionPane.showMessageDialog(null, "Visitor entry record added", "Visitor entry", JOptionPane.INFORMATION_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 80, 80));
                 } else {
                     JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
@@ -181,9 +184,9 @@ public class SecurityGuard_Pass_Check extends JFrame {
         });
     }
 
-    public void run(String SecurityGuard_Username) throws IOException, ClassNotFoundException {
+    public void run(String securityGuard_Username) throws IOException, ClassNotFoundException {
         final String[] column = {"Visitor Pass ID", "Visitor Name", "Resident Username", "Unit ID", "Gender", "Contact Number", "Date Start", "Date End", "Status"};
-        Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check frame = new Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check(SecurityGuard_Username);
+        Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check frame = new Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check(securityGuard_Username);
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Visitor Pass Check", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("entry", "Visitor Entry", Model_Menu.MenuType.MENU));
@@ -211,18 +214,22 @@ public class SecurityGuard_Pass_Check extends JFrame {
             @Override
             public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    dispose();
-                    SecurityGuard_Interface SecurityGuardInterface = new SecurityGuard_Interface(SecurityGuard_Username);
-                    SecurityGuardInterface.setPanelBorderRight(new SecurityGuard_Interface.SecurityGuard_Profile_Panel(SecurityGuardInterface.getemployeeID()));
+                    Entity.Employee.SecurityGuard.SecurityGuard_Interface SecurityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface(securityGuard_Username);
                     SecurityGuardInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
                 } else if (index == 2) {
-                    dispose();
+                    new SecurityGuard_Visitor_Entry_Record(securityGuard_Username).run(securityGuard_Username);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Employee.SecurityGuard.SecurityGuard_CheckPoint(securityGuard_Username).run(securityGuard_Username);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new SecurityGuard_Incident(securityGuard_Username).run(securityGuard_Username);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

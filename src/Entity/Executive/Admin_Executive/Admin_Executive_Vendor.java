@@ -1,5 +1,6 @@
 package Entity.Executive.Admin_Executive;
 
+import Entity.Login.Login_Frame;
 import Entity.Vendor.Vendor;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -138,6 +139,7 @@ public class Admin_Executive_Vendor extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Entity.Executive.Admin_Executive.Admin_Executive_Vendor.addFrame().setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -146,12 +148,17 @@ public class Admin_Executive_Vendor extends JFrame {
         modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    int row = tableData.getSelectedRow();
-                    Vendor vendorSelected = vendorArrayList.get(row);
-                    new Entity.Executive.Admin_Executive.Admin_Executive_Vendor.modifyFrame(vendorSelected).setVisible(true);
-                } catch (IOException | ClassNotFoundException | ParseException ex) {
-                    throw new RuntimeException(ex);
+                int row = tableData.getSelectedRow();
+                if (row != -1){
+                    try {
+                        Vendor vendorSelected = vendorArrayList.get(row);
+                        new Entity.Executive.Admin_Executive.Admin_Executive_Vendor.modifyFrame(vendorSelected).setVisible(true);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException | ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please choose the vendor", "Choice error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -167,8 +174,10 @@ public class Admin_Executive_Vendor extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             new Admin_Executive_Function.Admin_Executive().vendor_Delete(vendorSelected.getVendor_Username());
                             JOptionPane.showMessageDialog(null, "Vendor deleted", "Vendor delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                            dispose();
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 } else {
@@ -246,20 +255,33 @@ public class Admin_Executive_Vendor extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                     Admin_Executive_Interface adminExecutiveInterface = new Admin_Executive_Interface(executiveID);
-                    adminExecutiveInterface.setPanelBorderRight(new Admin_Executive_Interface.Admin_Executive_Profile_Panel(adminExecutiveInterface.getExecutiveID()));
                     adminExecutiveInterface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Admin_Executive_Unit_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 6) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 7) {
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -267,7 +289,7 @@ public class Admin_Executive_Vendor extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<Vendor> vendorArrayList = new Vendor().getArrayList();
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
@@ -382,9 +404,11 @@ public class Admin_Executive_Vendor extends JFrame {
                             } else {
                                 new Admin_Executive_Function.Admin_Executive().vendor_Add(vendor);
                                 JOptionPane.showMessageDialog(null, "Vendor registration successful.Please ask Vendor to sign up.", "Vendor adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                                dispose();
                             }
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -392,13 +416,18 @@ public class Admin_Executive_Vendor extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Vendor(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<Vendor> vendorArrayList = new Vendor().getArrayList();
 
         public modifyFrame(Vendor vendor) throws IOException, ClassNotFoundException, ParseException {
@@ -543,9 +572,11 @@ public class Admin_Executive_Vendor extends JFrame {
                             } else {
                                 new Admin_Executive_Function.Admin_Executive().vendor_Modify(vendorModify, vendor.getVendor_Username());
                                 JOptionPane.showMessageDialog(null, "Vendor modification successful.Please ask Vendor to sign up and remember to register new unit if needed.", "Vendor adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                                dispose();
                             }
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -553,7 +584,11 @@ public class Admin_Executive_Vendor extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Vendor(executiveID).run(executiveID);
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

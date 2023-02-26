@@ -5,6 +5,7 @@ import Entity.Executive.Account_Executive.Account_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
 import Entity.Executive.Executive;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -153,6 +154,7 @@ public class Building_Manager_User_Management extends JFrame {
                 if (selection != null) {
                     try {
                         new addFrame(selection.toString()).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -162,12 +164,17 @@ public class Building_Manager_User_Management extends JFrame {
         modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    int row = tableData.getSelectedRow();
-                    Executive userSelected = userArrayList.get(row);
-                    new Building_Manager_User_Management.modifyFrame(userSelected).setVisible(true);
-                } catch (IOException | ClassNotFoundException | ParseException ex) {
-                    throw new RuntimeException(ex);
+                int row = tableData.getSelectedRow();
+                if (row != -1){
+                    try {
+                        Executive userSelected = userArrayList.get(row);
+                        new Building_Manager_User_Management.modifyFrame(userSelected).setVisible(true);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException | ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please choose the user", "choice error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -190,8 +197,10 @@ public class Building_Manager_User_Management extends JFrame {
                                 new Building_Manager_Function.Building_Manager().delete_Building_Executive(userSelected.getExecutiveID());
                             }
                             JOptionPane.showMessageDialog(null, "User deleted", "User delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                            dispose();
                         }
-                    } catch (IOException ex) {
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 } else {
@@ -264,20 +273,24 @@ public class Building_Manager_User_Management extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                     Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface(buildingManagerID);
-                    Building_ManagerInterface.setPanelBorderRight(new Building_Manager_Interface.Building_Executive_Profile_Panel(Building_ManagerInterface.getBuildingManagerID()));
                     Building_ManagerInterface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
                 } else if (index == 2) {
-                    dispose();
+                    new Building_Manager_Report(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Building_Manager.Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -285,7 +298,7 @@ public class Building_Manager_User_Management extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         public addFrame(String position_Name) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -389,8 +402,10 @@ public class Building_Manager_User_Management extends JFrame {
                             } else {
                                 new Building_Manager_Function.Building_Manager().add_Account_Executive(accountExecutive);
                                 JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                dispose();
                             }
-                        } catch (IOException ex) {
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     } else if (finalPosition == 2) {
@@ -402,8 +417,10 @@ public class Building_Manager_User_Management extends JFrame {
                             } else {
                                 new Building_Manager_Function.Building_Manager().add_Admin_Executive(adminExecutive);
                                 JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                dispose();
                             }
-                        } catch (IOException ex) {
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     } else if (finalPosition == 3) {
@@ -415,8 +432,9 @@ public class Building_Manager_User_Management extends JFrame {
                             } else {
                                 new Building_Manager_Function.Building_Manager().add_Building_Executive(buildingExecutive);
                                 JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
                             }
-                        } catch (IOException ex) {
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     }
@@ -425,13 +443,18 @@ public class Building_Manager_User_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         public modifyFrame(Executive executive) throws IOException, ClassNotFoundException, ParseException {
             String[] positionNameArray = {"Account Executive", "Admin Executive", "Building Executive"};
 
@@ -545,8 +568,10 @@ public class Building_Manager_User_Management extends JFrame {
                             } else {
                                 new Building_Manager_Function.Building_Manager().modify_Account_Executive(accountExecutive, executive.getExecutiveID());
                                 JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                dispose();
                             }
-                        } catch (IOException ex) {
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     } else if (finalPosition == 2) {
@@ -558,8 +583,10 @@ public class Building_Manager_User_Management extends JFrame {
                             } else {
                                 new Building_Manager_Function.Building_Manager().modify_Admin_Executive(adminExecutive, executive.getExecutiveID());
                                 JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                dispose();
                             }
-                        } catch (IOException ex) {
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     } else if (finalPosition == 3) {
@@ -571,8 +598,10 @@ public class Building_Manager_User_Management extends JFrame {
                             } else {
                                 new Building_Manager_Function.Building_Manager().modify_Building_Executive(buildingExecutive, executive.getExecutiveID());
                                 JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                dispose();
                             }
-                        } catch (IOException ex) {
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     }
@@ -581,13 +610,18 @@ public class Building_Manager_User_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class viewFrame extends JFrame {
+    private class viewFrame extends JFrame {
         public viewFrame(Executive executive) throws ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();

@@ -1,8 +1,8 @@
 package Entity.Executive.Account_Executive;
 
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
-import Entity.Resident.Resident_Profile_Panel;
 import Entity.Vendor.Vendor;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -207,6 +208,7 @@ public class Account_Executive_Pending_fees extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("paymentHistory", "Receipt", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("statement", "Statement", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Outstanding fees", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#ad5389");
         frame.menu.colorLeft = Color.decode("#3c1053");
@@ -238,21 +240,27 @@ public class Account_Executive_Pending_fees extends JFrame {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException {
                 if (index == 0) {
-                    dispose();
                     Account_Executive_Interface accountExecutiveInterface = new Account_Executive_Interface(executiveID);
-                    accountExecutiveInterface.setPanelBorderRight(new Resident_Profile_Panel(accountExecutiveInterface.getExecutiveID()));
                     accountExecutiveInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Account_Executive_Invoice(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-
-                    dispose();
+                    new Account_Executive_Payment(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Account_Executive.Account_Executive_Receipt(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Account_Executive_Statement(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                } else if (index == 6){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

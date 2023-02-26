@@ -1,4 +1,4 @@
 Visitor PassID:Visitor Name:resident Username: unitID:Gender:Contact_Number:Date Start:Date End:Status
 VI1:Edmund:Mike1001:A401:M:012-3456789:12.26.2022:12.27.2022:APPROVED
 VI2:Aikka:Andrew1123:A402:M:011-1212345:12.26.2022:12.27.2022:Disapproved
-VI3:Ed sheeran:Mike1001:A401:M:012-2346789:12.26.2022:12.27.2022:PENDING
+VI3:Ed sheerann:Mike1001:A401:M:012-2346789:12.26.2022:12.27.2022:Disapproved

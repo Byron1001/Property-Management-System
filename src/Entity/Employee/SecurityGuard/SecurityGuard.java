@@ -97,7 +97,7 @@ public class SecurityGuard extends Employee implements Serializable{
         FileWriter fileWriter = new FileWriter(visitor_Entry_Record_txt, true);
         fileWriter.write(data);
         fileWriter.close();
-        System.out.println("add Successful");
+        JOptionPane.showMessageDialog(null, "Visitor Entry Record add success", "Record success added", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void add_Visitor_Entry_Record(String visitor_Pass_ID, String dateTime) throws IOException {
@@ -105,7 +105,7 @@ public class SecurityGuard extends Employee implements Serializable{
         FileWriter fileWriter = new FileWriter(visitor_Entry_Record_txt, true);
         fileWriter.write(data);
         fileWriter.close();
-        System.out.println("add Successful");
+        JOptionPane.showMessageDialog(null, "Visitor Entry Record add success", "Record success added", JOptionPane.INFORMATION_MESSAGE);
     }
     public void delete_Visitor_Entry_Record(String visitor_Pass_ID) throws IOException {
         ArrayList<String[]> record = get_all_Visitor_Entry_Record();
@@ -250,7 +250,7 @@ public class SecurityGuard extends Employee implements Serializable{
             FileWriter fileWriter = new FileWriter(incident_Report, true);
             fileWriter.write(data);
             fileWriter.close();
-            System.out.println("add Successful");
+            JOptionPane.showMessageDialog(null, "Incident Record add success", "Incident success added", JOptionPane.INFORMATION_MESSAGE);
         }
         public void delete_Incident_Record(String incident_ID) throws IOException {
             ArrayList<Incident> incidentArrayList = get_all_Incident_Report();
@@ -315,7 +315,6 @@ public class SecurityGuard extends Employee implements Serializable{
                 num += 1;
             }
             String str = "Inc" + num.toString();
-            System.out.println(str);
             return str;
         }
     }

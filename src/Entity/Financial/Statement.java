@@ -98,7 +98,6 @@ public class Statement {
             num += 1;
         }
         String str = "State" + num.toString();
-        System.out.println(str);
         return str;
     }
 

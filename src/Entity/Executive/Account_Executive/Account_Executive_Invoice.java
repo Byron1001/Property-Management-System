@@ -2,10 +2,8 @@ package Entity.Executive.Account_Executive;
 
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
-import Entity.Resident.Resident_Interface;
-import Entity.Resident.Resident_Payment_Frame;
-import Entity.Resident.Resident_Profile_Panel;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -161,6 +159,7 @@ public class Account_Executive_Invoice extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new IssueFrame(finalAccountExecutive).setVisible(true);
+                    dispose();
                 } catch (FileNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -196,6 +195,7 @@ public class Account_Executive_Invoice extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("paymentHistory", "Receipt", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("statement", "Statement", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Outstanding fees", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#ad5389");
         frame.menu.colorLeft = Color.decode("#3c1053");
@@ -233,21 +233,27 @@ public class Account_Executive_Invoice extends JFrame {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException {
                 if (index == 0) {
-                    dispose();
                     Account_Executive_Interface accountExecutiveInterface = new Account_Executive_Interface(executiveID);
-                    accountExecutiveInterface.setPanelBorderRight(new Resident_Profile_Panel(accountExecutiveInterface.getExecutiveID()));
                     accountExecutiveInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
                 } else if (index == 2) {
-
-                    dispose();
+                    new Account_Executive_Payment(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Account_Executive.Account_Executive_Receipt(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Account_Executive_Statement(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Entity.Executive.Account_Executive.Account_Executive_Pending_fees(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 6){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -255,7 +261,7 @@ public class Account_Executive_Invoice extends JFrame {
         frame.setVisible(true);
     }
 
-    public static class InvoiceFrame extends JFrame {
+    public class InvoiceFrame extends JFrame {
         public InvoiceFrame(Invoice invoice) {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -311,7 +317,7 @@ public class Account_Executive_Invoice extends JFrame {
         }
     }
 
-    public static class IssueFrame extends JFrame {
+    public class IssueFrame extends JFrame {
         public IssueFrame(Account_Executive_Function.Account_Executive accountExecutive) throws FileNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -343,7 +349,7 @@ public class Account_Executive_Invoice extends JFrame {
             for (String unit : unitList){
                 unitComboBox.addItem(unit);
             }
-            MaskFormatter amountMask = new MaskFormatter("####.##");
+            MaskFormatter amountMask = new MaskFormatter("####.00");
             MaskFormatter dateMask = new MaskFormatter("##.##.####");
             JFormattedTextField amountField = new JFormattedTextField(amountMask);
             JFormattedTextField dueDateField = new JFormattedTextField(dateMask);
@@ -385,13 +391,19 @@ public class Account_Executive_Invoice extends JFrame {
             issueButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Invoice invoice = new Invoice(invoiceIDField.getText(), issuerIDField.getText(), unitComboBox.getSelectedItem().toString(), Integer.parseInt(amountField.getText()), LocalDate.parse(dueDateField.getText(), formatter), paymentTypesField.getText(), descriptionArea.getText(), "unpaid");
-                    try {
-                        accountExecutive.issue_Unit_Invoice(invoice);
-                        JOptionPane.showMessageDialog(null, "Invoice issued", "Invoice issued", JOptionPane.INFORMATION_MESSAGE);
-                        dispose();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    if (!amountField.getText().equals("    .00") && !dueDateField.getText().equals("    .  ") && !paymentTypesField.getText().equals("") && !descriptionArea.getText().equals("")){
+                        try {
+                            Invoice invoice = new Invoice(invoiceIDField.getText(), issuerIDField.getText(), unitComboBox.getSelectedItem().toString(), Integer.parseInt(amountField.getText().substring(0, amountField.getText().length() - 3)), LocalDate.parse(dueDateField.getText(), formatter), paymentTypesField.getText(), descriptionArea.getText(), "unpaid");
+                            accountExecutive.issue_Unit_Invoice(invoice);
+                            JOptionPane.showMessageDialog(null, "Invoice issued", "Invoice issued", JOptionPane.INFORMATION_MESSAGE);
+                            new Account_Executive_Invoice(executiveID).run(executiveID);
+                            dispose();
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(null, "Input Error", "Input Error", JOptionPane.ERROR_MESSAGE);
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please complete the information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -399,7 +411,12 @@ public class Account_Executive_Invoice extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Account_Executive_Invoice(executiveID).run(executiveID);
+                        dispose();
+                    } catch (FileNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

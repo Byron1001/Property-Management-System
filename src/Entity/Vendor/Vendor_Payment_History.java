@@ -1,6 +1,7 @@
 package Entity.Vendor;
 
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -22,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -191,20 +193,24 @@ public class Vendor_Payment_History extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    dispose();
-                    Vendor_Interface VendorInterface = new Vendor_Interface(vendor_Username);
-                    VendorInterface.setPanelBorderRight(new Vendor_Interface.Vendor_Profile_Panel(VendorInterface.getVendor_Username()));
-                    VendorInterface.frame.setVisible(true);
+                    Vendor_Interface vendorInterface = new Vendor_Interface(vendor_Username);
+                    vendorInterface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Entity.Vendor.Vendor_Payment_Frame(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
                 } else if (index == 3) {
+                    new Entity.Vendor.Vendor_Statement_Frame(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Vendor.Vendor_Complaint(vendor_Username).run(vendor_Username);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

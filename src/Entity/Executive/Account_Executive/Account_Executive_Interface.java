@@ -1,6 +1,7 @@
 package Entity.Executive.Account_Executive;
 
 import Entity.Login.Login;
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Model.Model_Menu;
@@ -38,6 +39,7 @@ public class Account_Executive_Interface {
     public Account_Executive_Interface(String executiveID) throws FileNotFoundException {
         this.executiveID = executiveID;
         frame = new UIFrame(executiveID);
+        setPanelBorderRight(new Account_Executive_Interface.Account_Executive_Profile_Panel(executiveID));
 
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
@@ -46,31 +48,39 @@ public class Account_Executive_Interface {
         frame.menu.listMenu.addItem(new Model_Menu("paymentHistory", "Receipt", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("statement", "Statement", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Outstanding fees", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#ad5389");
         frame.menu.colorLeft = Color.decode("#3c1053");
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException {
                 if (index == 0) {
                 } else if (index == 1) {
-
+                    new Account_Executive_Invoice(executiveID).run(executiveID);
                     frame.dispose();
                 } else if (index == 2) {
-
+                    new Account_Executive_Payment(executiveID).run(executiveID);
                     frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Account_Executive.Account_Executive_Receipt(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Account_Executive_Statement(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Entity.Executive.Account_Executive.Account_Executive_Pending_fees(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 6){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
     }
 
-    public static class Account_Executive_Profile_Panel extends JPanel {
+    public class Account_Executive_Profile_Panel extends JPanel {
         private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Account_Executive_Function.AcExButton updateButton;
         public Account_Executive_Profile_Panel(String executiveID) throws FileNotFoundException {
@@ -129,7 +139,7 @@ public class Account_Executive_Interface {
             });
         }
 
-        public static class UpdateInfo_Frame extends JFrame{
+        public class UpdateInfo_Frame extends JFrame{
             private Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private Account_Executive_Function.AcExButton updateButton;
             private Account_Executive_Function.AcExButton cancelButton;
@@ -217,7 +227,7 @@ public class Account_Executive_Interface {
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(executive_ID_TextField.getText())) {
+                                if (login.check_Username_Availability(executive_ID_TextField.getText()) && !executive_ID_TextField.getText().equals(executiveID)) {
                                     JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
@@ -237,6 +247,9 @@ public class Account_Executive_Interface {
                                 acUpdated.update_Account_Executive_Info(acUpdated, accountExecutive.getExecutiveID());
                                 JOptionPane.showMessageDialog(null, "Information Updated", "Information Update", JOptionPane.INFORMATION_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 60, 60));
                                 dispose();
+                                Account_Executive_Interface accountExecutiveInterface = new Account_Executive_Interface(executiveID);
+                                accountExecutiveInterface.frame.setVisible(true);
+                                frame.dispose();
                             } catch (IOException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -253,7 +266,6 @@ public class Account_Executive_Interface {
 
     public static void main(String[] args) throws FileNotFoundException {
         Account_Executive_Interface accountExecutiveInterface = new Account_Executive_Interface("AC01");
-        accountExecutiveInterface.setPanelBorderRight(new Account_Executive_Profile_Panel(accountExecutiveInterface.getExecutiveID()));
         accountExecutiveInterface.frame.setVisible(true);
     }
 }

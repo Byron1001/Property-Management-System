@@ -2,5 +2,6 @@ paymentID:invoiceID:pay Username:unitID:amount:payment date:payment Types:issuer
 Pay1:INV1:Mike1001:A401:300:01.22.2023:rental:AC01:01.23.2023:January 2023
 Pay2:INV2:Mike1001:A401:200:01.23.2023:utility:AC01:01.24.2023:January 2023
 Pay3:INV3:Mike1001:A401:200:01.23.2023:services:AC01:01.24.2023:January 2023
-Pay3:INV5:VE001:floor 1 canteen:200:01.23.2023:services::01.24.2023:January 2023
-Pay3:INV6:VE001:floor 1 canteen:200:01.23.2023:services:AC01:01.24.2023:January 2023
+Pay4:INV5:VE001:floor 1 canteen:200:01.23.2023:services:::January 2023
+Pay5:INV6:VE001:floor 1 canteen:200:01.23.2023:services:AC01:01.24.2023:January 2023
+Pay6:INV7:Mike1001:A401:1200:01.23.2023:deposit:AC01:01.24.2023:January 2023

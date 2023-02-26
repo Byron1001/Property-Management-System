@@ -119,7 +119,6 @@ public class Invoice {
             num += 1;
         }
         String str = "INV" + num.toString();
-        System.out.println(str);
         return str;
     }
 
@@ -154,7 +153,7 @@ public class Invoice {
 
     public void save_All_Invoice(ArrayList<Invoice> invoiceArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(invoice_txt, false);
-        fileWriter.write("invoiceID:issuerID:unitID:amount:dueDate:paymentTypes:description:status");
+        fileWriter.write("invoiceID:issuerID:unitID:amount:dueDate:paymentTypes:description:status\n");
         for (Invoice invoice : invoiceArrayList){
             fileWriter.write(invoice.getDataString(invoice));
         }

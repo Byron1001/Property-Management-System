@@ -2,6 +2,7 @@ package Entity.Executive.Admin_Executive;
 
 import Entity.Employee.Employee;
 import Entity.Facility;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -138,6 +139,7 @@ public class Admin_Executive_Facility_Management extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management.addFrame().setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -151,6 +153,7 @@ public class Admin_Executive_Facility_Management extends JFrame {
                     try {
                         Facility facilitySelected = facilityArrayList.get(row);
                         new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management.modifyFrame(facilitySelected).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -171,6 +174,8 @@ public class Admin_Executive_Facility_Management extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             new Admin_Executive_Function.Admin_Executive().delete_Employee(facilitySelected.getFacilityID());
                             JOptionPane.showMessageDialog(null, "Facility deleted", "Facility delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -250,20 +255,33 @@ public class Admin_Executive_Facility_Management extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                     Admin_Executive_Interface adminExecutiveInterface = new Admin_Executive_Interface(executiveID);
-                    adminExecutiveInterface.setPanelBorderRight(new Admin_Executive_Interface.Admin_Executive_Profile_Panel(adminExecutiveInterface.getExecutiveID()));
                     adminExecutiveInterface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Admin_Executive_Unit_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 5) {
                 } else if (index == 6) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 7) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -271,7 +289,7 @@ public class Admin_Executive_Facility_Management extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<Facility> facilityArrayList = new Facility().getArrayList();
 
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
@@ -333,6 +351,8 @@ public class Admin_Executive_Facility_Management extends JFrame {
                         } else {
                             new Admin_Executive_Function.Admin_Executive().add_Facility(facilityNew);
                             JOptionPane.showMessageDialog(null, "Facility registration successful.", "Facility adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -342,13 +362,18 @@ public class Admin_Executive_Facility_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<Facility> facilityArrayList = new Facility().getArrayList();
 
         public modifyFrame(Facility facility) throws IOException, ClassNotFoundException, ParseException {
@@ -411,6 +436,8 @@ public class Admin_Executive_Facility_Management extends JFrame {
                         } else {
                             new Admin_Executive_Function.Admin_Executive().update_Facility(facilityNew, facility.getFacilityID());
                             JOptionPane.showMessageDialog(null, "Facility update successful.", "Facility adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -420,7 +447,12 @@ public class Admin_Executive_Facility_Management extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

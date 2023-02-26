@@ -166,7 +166,6 @@ public class Patrolling {
             num += 1;
         }
         String str = "Patrol" + num.toString();
-        System.out.println(str);
         return str;
     }
 

@@ -2,6 +2,7 @@ package Entity.Executive.Building_Executive;
 
 import Entity.Employee.Employee;
 import Entity.CheckPoint;
+import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -138,6 +139,7 @@ public class Building_Executive_CheckPoint extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Building_Executive_CheckPoint.addFrame().setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -151,6 +153,7 @@ public class Building_Executive_CheckPoint extends JFrame {
                     try {
                         CheckPoint checkPointSelected = checkPointArrayList.get(row);
                         new Building_Executive_CheckPoint.modifyFrame(checkPointSelected).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -171,6 +174,8 @@ public class Building_Executive_CheckPoint extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             new Building_Executive_Function.Building_Executive().delete_CheckPoint(checkPointSelected.getCheckPointID());
                             JOptionPane.showMessageDialog(null, "CheckPoint deleted", "CheckPoint delete success", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -248,20 +253,28 @@ public class Building_Executive_CheckPoint extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Building_Executive_Interface buildingExecutiveInterface = new Building_Executive_Interface(executiveID);
-                    buildingExecutiveInterface.setPanelBorderRight(new Building_Executive_Interface.Building_Executive_Profile_Panel(buildingExecutiveInterface.getExecutiveID()));
-                    buildingExecutiveInterface.frame.setVisible(true);
-                    dispose();
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new Building_Executive_Complaint_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                    frame.dispose();
                 } else if (index == 4) {
                 } else if (index == 5) {
+                    Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.frame.setVisible(true);
+                    frame.dispose();
                 } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -269,7 +282,7 @@ public class Building_Executive_CheckPoint extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<CheckPoint> checkPointArrayList = new CheckPoint().getArrayList();
 
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
@@ -333,6 +346,8 @@ public class Building_Executive_CheckPoint extends JFrame {
                         } else {
                             new Building_Executive_Function.Building_Executive().add_New_CheckPoint(newCheckPoint);
                             JOptionPane.showMessageDialog(null, "CheckPoint adding successful", "CheckPoint adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                            dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
@@ -342,13 +357,18 @@ public class Building_Executive_CheckPoint extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<CheckPoint> checkPointArrayList = new CheckPoint().getArrayList();
 
         public modifyFrame(CheckPoint checkPoint) throws IOException, ClassNotFoundException, ParseException {
@@ -411,6 +431,8 @@ public class Building_Executive_CheckPoint extends JFrame {
                     try {
                         new Building_Executive_Function.Building_Executive().modify_CheckPoint(newCheckPoint, checkPoint.getCheckPointID());
                         JOptionPane.showMessageDialog(null, "CheckPoint modifying successful", "CheckPoint modifying successful", JOptionPane.INFORMATION_MESSAGE);
+                        new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                        dispose();
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -419,7 +441,12 @@ public class Building_Executive_CheckPoint extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }

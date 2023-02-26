@@ -7,6 +7,7 @@ import Entity.Financial.Statement;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -101,12 +102,13 @@ public class Vendor {
 
     public void update_Vendor_Info(Vendor vendor, String vendor_Username) throws IOException {
         ArrayList<Vendor> vendorArrayList = vendor.getArrayList();
+        ArrayList<Vendor> vendorArrayList1 = new ArrayList<>();
         for (Vendor vendor1 : vendorArrayList){
-            if (vendor1.getVendor_Username().equals(vendor_Username))
-                vendorArrayList.remove(vendor1);
+            if (!(vendor1.getVendor_Username().equals(vendor_Username)))
+                vendorArrayList1.add(vendor1);
         }
-        vendorArrayList.add(vendor);
-        vendor.save_All_Vendor(vendorArrayList);
+        vendorArrayList1.add(vendor);
+        vendor.save_All_Vendor(vendorArrayList1);
     }
 
     public ArrayList<Vendor> getArrayList() throws FileNotFoundException {
@@ -190,7 +192,7 @@ public class Vendor {
             Invoice invoice = new Invoice();
             ArrayList<Invoice> invoiceArrayList = invoice.getArrayList();
             for (Invoice invoice1 : invoiceArrayList){
-                if (invoice1.getUnitID().equals(vendor_Unit) && invoice.getStatus().equals("unpaid")){
+                if (invoice1.getUnitID().equals(vendor_Unit) && invoice1.getStatus().equals("unpaid")){
                     total += invoice1.getAmount();
                 }
             }
@@ -298,11 +300,12 @@ public class Vendor {
     public void cancel_Complaint(String complaintID) throws IOException {
         Complaint complaint = new Complaint();
         ArrayList<Complaint> complaintArrayList = complaint.getArrayList();
+        ArrayList<Complaint> complaintArrayList1 = new ArrayList<>();
         for (Complaint com : complaintArrayList){
-            if (com.getComplaintID().equals(complaintID))
-                complaintArrayList.remove(com);
+            if (!(com.getComplaintID().equals(complaintID)))
+                complaintArrayList1.add(com);
         }
-        complaint.save_All_Complaint(complaintArrayList);
+        complaint.save_All_Complaint(complaintArrayList1);
     }
 
     public static class Button extends JButton {
@@ -326,4 +329,13 @@ public class Vendor {
         }
     }
 
+    public static ImageIcon toIcon(ImageIcon imgIcon, int w, int h){
+        Image srcImg = imgIcon.getImage();
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return new ImageIcon(resizedImg);
+    }
 }

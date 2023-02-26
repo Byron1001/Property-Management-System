@@ -2,6 +2,7 @@ package Entity.Resident;
 
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
+import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -21,6 +22,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -110,6 +112,7 @@ public class Resident_Payment_Frame extends JFrame {
         add(panelBorderRight, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(Color.white);
         buttonPanel.setLayout(new GridLayout(1, 2, 40, 15));
 
         receiptButton = new Resident.Button("View Invoice");
@@ -136,6 +139,27 @@ public class Resident_Payment_Frame extends JFrame {
                 if (row != -1 || column != -1){
                     Invoice invoice = invoiceArrayList.get(row);
                     new InvoiceFrame(invoice).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please choose the invoice", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
+                }
+            }
+        });
+
+        Resident finalResident = resident;
+        payButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tableData.getSelectedRow();
+                if (row != -1) {
+                    Invoice invoiceSelected = invoiceArrayList.get(row);
+                    try {
+                        finalResident.make_Payment(invoiceSelected, resident_Username);
+                        JOptionPane.showMessageDialog(null, "Invoice Paid", "Payment success", JOptionPane.INFORMATION_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 80, 80));
+                        new Entity.Resident.Resident_Payment_Frame(resident_Username).run();
+                        dispose();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please choose the invoice", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
@@ -173,6 +197,7 @@ public class Resident_Payment_Frame extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Visitor Pass", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("complaint", "complaint", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#38ef7d");
         frame.menu.colorLeft = Color.decode("#11998e");
@@ -209,21 +234,33 @@ public class Resident_Payment_Frame extends JFrame {
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws FileNotFoundException {
+            public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0){
-                    dispose();
                     Resident_Interface residentInterface = new Resident_Interface(resident_Username);
-                    residentInterface.setPanelBorderRight(new Resident_Profile_Panel(residentInterface.getResident_Username()));
                     residentInterface.frame.setVisible(true);
-                } else if (index == 1) {
+                    frame.dispose();
+                } else if (index == 1){
                 } else if (index == 2){
-                    new Entity.Resident.Resident_Deposit_Frame("Mike1001").run();
-                    dispose();
+                    new Entity.Resident.Resident_Deposit_Frame(resident_Username).run();
+                    frame.dispose();
                 } else if (index == 3){
+                    new Resident_Payment_History(resident_Username).run();
+                    frame.dispose();
                 } else if (index == 4){
+                    new Entity.Resident.Resident_Statement_Frame(resident_Username).run();
+                    frame.dispose();
                 } else if (index == 5){
+                    new Entity.Resident.Resident_Facility_Booking(resident_Username).run();
+                    frame.dispose();
                 } else if (index == 6){
+                    new Resident_Visitor_Pass(resident_Username).run(resident_Username);
+                    frame.dispose();
                 } else if (index == 7){
+                    new Entity.Resident.Resident_Complaint(resident_Username).run(resident_Username);
+                    frame.dispose();
+                } else if (index == 8){
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });

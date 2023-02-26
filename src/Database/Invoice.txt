@@ -5,3 +5,5 @@ INV3:AC01:A401:100:03.30.2023:services:January 2023:paid
 INV4:AC01:A401:100:03.30.2023:services:January 2023:unpaid
 INV5:AC01:floor 1 canteen:100:03.30.2023:rental:January 2023:unpaid
 INV6:AC01:floor 1 canteen:100:03.30.2023:rental:January 2023:unpaid
+INV7:AC01:A401:1200:03.30.2023:deposit:Rental:paid
+INV8:AC01:A403:10:06.30.2023:random:random:unpaid

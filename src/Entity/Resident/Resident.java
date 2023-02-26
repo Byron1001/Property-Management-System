@@ -95,12 +95,13 @@ public class Resident {
 
     public void update_Resident_Info(Resident resident, String resident_Username) throws IOException {
         ArrayList<Resident> residentArrayList = resident.getArrayList();
+        ArrayList<Resident> residentArrayList1 = new ArrayList<>();
         for (Resident resident1 : residentArrayList){
-            if (resident1.getResident_Username().equals(resident_Username))
-                residentArrayList.remove(resident1);
+            if (!(resident1.getResident_Username().equals(resident_Username)))
+                residentArrayList1.add(resident1);
         }
-        residentArrayList.add(resident);
-        resident.save_All_Resident(residentArrayList);
+        residentArrayList1.add(resident);
+        resident.save_All_Resident(residentArrayList1);
     }
 
     public ArrayList<Resident> getArrayList() throws FileNotFoundException {
@@ -163,20 +164,22 @@ public class Resident {
 
     public ArrayList<Invoice> get_Unit_All_Unpaid_Invoice(String unitID) throws FileNotFoundException {
         ArrayList<Invoice> invoiceArrayList = new Invoice().getArrayList();
+        ArrayList<Invoice> invoiceArrayList1 = new ArrayList<>();
         for (Invoice invoice : invoiceArrayList){
-            if (!(invoice.getUnitID().equals(unitID)) && invoice.getStatus().equals("unpaid"))
-                invoiceArrayList.remove(invoice);
+            if (invoice.getUnitID().equals(unitID) && invoice.getStatus().equals("unpaid"))
+                invoiceArrayList1.add(invoice);
         }
-        return invoiceArrayList;
+        return invoiceArrayList1;
     }
 
     public ArrayList<Invoice> get_Unit_All_Invoice(String unitID) throws FileNotFoundException {
         ArrayList<Invoice> invoiceArrayList = new Invoice().getArrayList();
+        ArrayList<Invoice> invoiceArrayList1 = new ArrayList<>();
         for (Invoice invoice : invoiceArrayList){
-            if (!(invoice.getUnitID().equals(unitID)))
-                invoiceArrayList.remove(invoice);
+            if (invoice.getUnitID().equals(unitID))
+                invoiceArrayList1.add(invoice);
         }
-        return invoiceArrayList;
+        return invoiceArrayList1;
     }
 
     public int get_Unpaid_Amount(String resident_Username, String unitID) throws FileNotFoundException {
@@ -188,7 +191,7 @@ public class Resident {
             Invoice invoice = new Invoice();
             ArrayList<Invoice> invoiceArrayList = invoice.getArrayList();
             for (Invoice invoice1 : invoiceArrayList){
-                if (invoice1.getUnitID().equals(unitID) && invoice.getStatus().equals("unpaid")){
+                if (invoice1.getUnitID().equals(unitID) && invoice1.getStatus().equals("unpaid")){
                     total += invoice1.getAmount();
                 }
             }
@@ -237,26 +240,29 @@ public class Resident {
         ArrayList<Facility.Booking> bookingArrayList = booking.getArrayList();
         if (new Facility().check_Facility_Availability(booking.getFacilityID()) && booking.check_TimeSlot_Availability(booking)){
             bookingArrayList.add(booking);
+            System.out.println("pass");
             booking.save_All_Facility_Booking(bookingArrayList);
         }
     }
 
     public ArrayList<Facility.Booking> view_Resident_Booking(String resident_Username) throws IOException, ClassNotFoundException {
         ArrayList<Facility.Booking> bookingArrayList = new Facility.Booking().getArrayList();
+        ArrayList<Facility.Booking> bookingArrayList1 = new ArrayList<>();
         for (Facility.Booking booking : bookingArrayList) {
-            if (!(booking.getResident_Username().equals(resident_Username)))
-                bookingArrayList.remove(booking);
+            if (booking.getResident_Username().equals(resident_Username))
+                bookingArrayList1.add(booking);
         }
-        return bookingArrayList;
+        return bookingArrayList1;
     }
 
     public void cancel_Facility_Booking(String bookingID) throws IOException, ClassNotFoundException {
         ArrayList<Facility.Booking> bookingArrayList = new Facility.Booking().getArrayList();
+        ArrayList<Facility.Booking> bookingArrayList1 = new ArrayList<>();
         for (Facility.Booking booking : bookingArrayList){
-            if (booking.getBookingID().equals(bookingID))
-                bookingArrayList.remove(booking);
+            if (!(booking.getBookingID().equals(bookingID)))
+                bookingArrayList1.add(booking);
         }
-        new Facility.Booking().save_All_Facility_Booking(bookingArrayList);
+        new Facility.Booking().save_All_Facility_Booking(bookingArrayList1);
     }
 
     public void update_Facility_Booking(Facility.Booking booking, String bookingID) throws IOException, ClassNotFoundException {
@@ -285,11 +291,12 @@ public class Resident {
     public void cancel_Visitor_Pass(String visitor_Pass_ID) throws IOException {
         Visitor_Pass visitorPass = new Visitor_Pass();
         ArrayList<Visitor_Pass> visitorPassArrayList = visitorPass.getArrayList();
+        ArrayList<Visitor_Pass> visitorPassArrayList1 = new ArrayList<>();
         for (Visitor_Pass visitorPass1 : visitorPassArrayList){
-            if (visitorPass1.getVisitor_Pass_ID().equals(visitor_Pass_ID))
-                visitorPassArrayList.remove(visitorPass1);
+            if (!(visitorPass1.getVisitor_Pass_ID().equals(visitor_Pass_ID)))
+                visitorPassArrayList1.add(visitorPass1);
         }
-        visitorPass.save_All_Visitor(visitorPassArrayList);
+        visitorPass.save_All_Visitor(visitorPassArrayList1);
     }
 
     public void update_Visitor_Pass(Visitor_Pass visitorPass) throws IOException {
@@ -305,12 +312,13 @@ public class Resident {
     public ArrayList<Complaint> view_Complaint(String resident_Username) throws FileNotFoundException {
         Complaint complaint = new Complaint();
         ArrayList<Complaint> complaintArrayList =  complaint.getArrayList();
+        ArrayList<Complaint> complaintArrayList1 = new ArrayList<>();
         for (Complaint complaint1 : complaintArrayList){
-            if (!(complaint1.getResident_Username().equals(resident_Username))){
-                complaintArrayList.remove(complaint1);
+            if (complaint1.getResident_Username().equals(resident_Username)){
+                complaintArrayList1.add(complaint1);
             }
         }
-        return complaintArrayList;
+        return complaintArrayList1;
     }
     public void update_Complaint(Complaint complaint) throws IOException {
         if (complaint.check_Complaint_Availability(complaint.getComplaintID())){

@@ -1,5 +1,6 @@
 package Entity.Employee.SecurityGuard;
 
+import Entity.Login.Login_Frame;
 import Entity.Vendor.Vendor;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -133,6 +134,7 @@ public class SecurityGuard_Incident extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new addFrame(securityGuard_EmployeeID).setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -146,6 +148,7 @@ public class SecurityGuard_Incident extends JFrame {
                     try {
                         SecurityGuard.Incident incidentSelected = incidentArrayList.get(row);
                         new modifyFrame(incidentSelected).setVisible(true);
+                        dispose();
                     } catch (IOException | ClassNotFoundException | ParseException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -223,18 +226,22 @@ public class SecurityGuard_Incident extends JFrame {
             @Override
             public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Entity.Employee.SecurityGuard.SecurityGuard_Interface SecurityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface("SG001");
-                    SecurityGuardInterface.setPanelBorderRight(new SecurityGuard_Interface.SecurityGuard_Profile_Panel(SecurityGuardInterface.getemployeeID()));
+                    Entity.Employee.SecurityGuard.SecurityGuard_Interface SecurityGuardInterface = new Entity.Employee.SecurityGuard.SecurityGuard_Interface(securityGuard_EmployeeID);
                     SecurityGuardInterface.frame.setVisible(true);
-                    dispose();
+                    frame.dispose();
                 } else if (index == 1) {
+                    new Entity.Employee.SecurityGuard.SecurityGuard_Pass_Check(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                    frame.dispose();
                 } else if (index == 2) {
-                    dispose();
+                    new SecurityGuard_Visitor_Entry_Record(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                    frame.dispose();
                 } else if (index == 3) {
+                    new Entity.Employee.SecurityGuard.SecurityGuard_CheckPoint(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                    frame.dispose();
                 } else if (index == 4) {
                 } else if (index == 5) {
-                } else if (index == 6) {
-                } else if (index == 7) {
+                    new Login_Frame();
+                    frame.dispose();
                 }
             }
         });
@@ -242,7 +249,7 @@ public class SecurityGuard_Incident extends JFrame {
         frame.setVisible(true);
     }
 
-    private static class addFrame extends JFrame {
+    private class addFrame extends JFrame {
         private final ArrayList<SecurityGuard.Incident> incidentArrayList = new SecurityGuard.Incident().get_all_Incident_Report();
 
         public addFrame(String securityGuardEmployeeID) throws IOException, ClassNotFoundException, ParseException {
@@ -320,7 +327,9 @@ public class SecurityGuard_Incident extends JFrame {
                     try {
                         new SecurityGuard.Incident().add_Incident_Record(newIncident);
                         JOptionPane.showMessageDialog(null, "Incident adding successful", "Incident adding successful", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (IOException ex) {
+                        new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -328,13 +337,18 @@ public class SecurityGuard_Incident extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
     }
 
-    private static class modifyFrame extends JFrame {
+    private class modifyFrame extends JFrame {
         private final ArrayList<SecurityGuard.Incident> incidentArrayList = new SecurityGuard.Incident().get_all_Incident_Report();
 
         public modifyFrame(SecurityGuard.Incident incident) throws IOException, ClassNotFoundException, ParseException {
@@ -411,7 +425,9 @@ public class SecurityGuard_Incident extends JFrame {
                     try {
                         new SecurityGuard.Incident().update_Incident_Report(newIncident, incident.getIncident_ID());
                         JOptionPane.showMessageDialog(null, "Incident adding successful", "Incident adding successful", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (IOException ex) {
+                        new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
                 }
@@ -419,7 +435,12 @@ public class SecurityGuard_Incident extends JFrame {
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
