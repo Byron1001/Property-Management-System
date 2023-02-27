@@ -73,6 +73,16 @@ public class Login {
         return false;
     }
 
+    public boolean check_Login_Availability(String username) throws FileNotFoundException {
+        boolean result = false;
+        ArrayList<Login> loginArrayList = getArrayList();
+        for (Login login1 : loginArrayList) {
+            if (login1.getUsername().equals(username) && !login1.getPassword().equals(""))
+                result = true;
+        }
+        return result;
+    }
+
     public ArrayList<Login> getArrayList() throws FileNotFoundException {
         ArrayList<Login> loginCredentialArrayList = new ArrayList<>();
         FileReader reader = new FileReader(login_Credentials_txt);
@@ -126,16 +136,6 @@ public class Login {
             }
         }
         return result.getPassword();
-    }
-
-    public boolean check_Login_Availability(String username) throws FileNotFoundException {
-        boolean result = false;
-        ArrayList<Login> loginArrayList = getArrayList();
-        for (Login login1 : loginArrayList) {
-            if (login1.getUsername().equals(username) && !login1.getPassword().equals(""))
-                result = true;
-        }
-        return result;
     }
 
     public void add_Login(Login login) throws IOException {//add when team no login

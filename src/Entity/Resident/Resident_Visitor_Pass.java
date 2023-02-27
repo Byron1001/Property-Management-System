@@ -202,7 +202,6 @@ public class Resident_Visitor_Pass extends JFrame {
                 if (row != -1 || column != -1) {
                     Visitor_Pass visitorPass = visitorPassArrayList.get(row);
                     new viewFrame(visitorPass).setVisible(true);
-                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
@@ -240,7 +239,7 @@ public class Resident_Visitor_Pass extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("pass", "Visitor Pass", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("complaint", "complaint", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout Booking", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#38ef7d");
         frame.menu.colorLeft = Color.decode("#11998e");
@@ -581,12 +580,7 @@ public class Resident_Visitor_Pass extends JFrame {
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        new Resident_Visitor_Pass(resident_Username).run(resident_Username);
                         dispose();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
-                    }
                 }
             });
         }

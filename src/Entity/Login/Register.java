@@ -98,25 +98,21 @@ public class Register extends JFrame {
                 }
                 Login newLogin = new Login(username, password);
                 try {
-                    boolean check = login.check_Login_Availability(username);
-                    if (check){
-                        check = login.login(newLogin);
-                        if (check){
-                            check = login.checkUsername_Registration_Availability(newLogin.getUsername());
-                            if (check){
-                                JOptionPane.showMessageDialog(null,"Registration success.Please login using your credentials", "Registration success", JOptionPane.INFORMATION_MESSAGE);
-                                dispose();
-                            } else {
-                                JOptionPane.showMessageDialog(null,"Username already been registered.Please login using your credentials", "Registration finish", JOptionPane.INFORMATION_MESSAGE);
-                                dispose();
-                            }
+                    boolean check = login.check_Punctuation(username) && login.check_Punctuation(password) && login.check_Username_Availability(username);
+                    if (!check){
+                        check = login.checkUsername_Registration_Availability(newLogin.getUsername());
+                        if (!check){
+                            login.register(newLogin);
+                            JOptionPane.showMessageDialog(null,"Registration success.Please login using your credentials", "Registration success", JOptionPane.INFORMATION_MESSAGE);
                         } else {
-                            JOptionPane.showMessageDialog(null, "Punctuation is not allowed", "Punctuation error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null,"Username already been registered.Please login using your credentials", "Registration finish", JOptionPane.INFORMATION_MESSAGE);
                         }
+                        new Login_Frame();
+                        dispose();
                     } else {
-                        JOptionPane.showMessageDialog(null, "Username not found", "Username error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Punctuation is not allowed", "Punctuation error", JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (IOException ex) {
+                } catch (IOException | ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
 
@@ -127,7 +123,12 @@ public class Register extends JFrame {
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                try {
+                    new Login_Frame();
+                    dispose();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

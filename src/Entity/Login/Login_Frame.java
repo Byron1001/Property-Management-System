@@ -3,6 +3,9 @@ package Entity.Login;
 import Entity.Employee.SecurityGuard.SecurityGuard;
 import Entity.Employee.SecurityGuard.SecurityGuard_Incident;
 import Entity.Employee.SecurityGuard.SecurityGuard_Visitor_Entry_Record;
+import Entity.Resident.Resident;
+import Entity.Resident.Resident_Visitor_Pass;
+import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -31,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.format.DateTimeFormatter;
 
 public class Login_Frame extends JFrame {
     public Header header = new Header();
@@ -153,7 +157,18 @@ public class Login_Frame extends JFrame {
         viewVisitorPassButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                try {
+                    String id = JOptionPane.showInputDialog("Please enter your visitor Pass ID:");
+                    id = id.toUpperCase();
+                    if (new Visitor_Pass().check_Visitor_Pass_Availability(id)){
+                        Visitor_Pass visitorPass = new Visitor_Pass().search_Visitor_Pass_Info(id);
+                        new viewFrame(visitorPass).setAlwaysOnTop(true);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Visitor Pass ID not found", "ID error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 
@@ -244,6 +259,65 @@ public class Login_Frame extends JFrame {
 //                g2.fillRect(0, 0, getWidth(), getHeight());
                 super.paintComponent(g);
             }
+        }
+    }
+
+    private class viewFrame extends JFrame {
+        public viewFrame(Visitor_Pass visitorPass) {
+            JPanel panel1 = new JPanel();
+            JPanel panel2 = new JPanel();
+            JPanel panel3 = new JPanel();
+            panel1.setLayout(new BorderLayout());
+            panel3.setLayout(new GridLayout(3, 1, 15, 15));
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
+
+            JLabel formTitle = new JLabel("VISITOR PASS");
+            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel[] jLabelLeft = {new JLabel("Visitor Pass ID"), new JLabel("Visitor name"),
+                    new JLabel("Resident Username"), new JLabel("Unit ID"),
+                    new JLabel("Gender"), new JLabel("Contact Number"),
+                    new JLabel("Date Start (MM.dd.yyyyy)"), new JLabel("Date End(MM.dd.yyyy)"), new JLabel("Status")};
+            panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
+            JLabel[] jLabelRight = {new JLabel(visitorPass.getVisitor_Pass_ID()), new JLabel(visitorPass.getVisitor_Name()),
+                    new JLabel(visitorPass.getResident_Username()), new JLabel(visitorPass.getUnitID()),
+                    new JLabel(Character.toString(visitorPass.getGender())), new JLabel(visitorPass.getContact_Number()),
+                    new JLabel(visitorPass.getDate_Start().format(formatter)), new JLabel(visitorPass.getDate_End().format(formatter)),
+                    new JLabel(visitorPass.getStatus())};
+            Resident.Button button = new Resident.Button("Close");
+            button.setAlignmentX(JButton.CENTER);
+            formTitle.setFont(new Font("sansserif", Font.BOLD, 24));
+            formTitle.setHorizontalAlignment(JLabel.CENTER);
+            issuedBy.setFont(new Font("sansserif", Font.PLAIN, 10));
+            issuedBy.setHorizontalAlignment(JLabel.CENTER);
+            panel1.add(formTitle, BorderLayout.NORTH);
+            for (int i = 0; i < jLabelLeft.length; i++) {
+                jLabelLeft[i].setFont(new Font("sansserif", Font.BOLD, 16));
+                panel2.add(jLabelLeft[i]);
+                panel2.add(jLabelRight[i]);
+            }
+            panel1.add(panel2, BorderLayout.CENTER);
+
+            panel3.add(issuedBy);
+            panel3.add(button);
+            panel1.add(panel3, BorderLayout.SOUTH);
+            setUndecorated(true);
+            panel1.setPreferredSize(new Dimension(1186 / 2, 621));
+            panel1.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+            setPreferredSize(new Dimension(1186, 621));
+            pack();
+
+            setLocationRelativeTo(null);
+            setContentPane(panel1);
+            setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
+            setVisible(true);
+
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dispose();
+                }
+            });
         }
     }
 
