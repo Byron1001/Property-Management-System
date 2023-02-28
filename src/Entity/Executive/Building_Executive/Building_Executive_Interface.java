@@ -37,9 +37,13 @@ public class Building_Executive_Interface {
         this.executiveID = executiveID;
     }
 
-    public void setPanelBorderRight(JPanel panel) {
+    public void setPanelBorderRight(int num) throws FileNotFoundException {
         frame.panelBorderRight.removeAll();
-        frame.panelBorderRight.add(panel);
+        if (num == 1){
+            frame.panelBorderRight.add(new Building_Executive_Profile_Panel(executiveID));
+        } else {
+            frame.panelBorderRight.add(new Building_Executive_JobReport_Panel(executiveID));
+        }
         frame.panelBorderRight.revalidate();
         frame.repaint();
     }
@@ -47,7 +51,6 @@ public class Building_Executive_Interface {
     public Building_Executive_Interface(String executiveID) throws FileNotFoundException {
         this.executiveID = executiveID;
         frame = new UIFrame(executiveID);
-        setPanelBorderRight(new Building_Executive_Profile_Panel(executiveID));
 
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
@@ -65,6 +68,7 @@ public class Building_Executive_Interface {
             @Override
             public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
+                    run(1);
                 } else if (index == 1) {
                     new Building_Executive_Employee_Task(executiveID).run(executiveID);
                     frame.dispose();
@@ -79,7 +83,7 @@ public class Building_Executive_Interface {
                     frame.dispose();
                 } else if (index == 5) {
                     Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
-                    building_Executive_Interface.setPanelBorderRight(new Building_Executive_JobReport_Panel(building_Executive_Interface.getExecutiveID()));
+                    building_Executive_Interface.run(2);
                     building_Executive_Interface.frame.setVisible(true);
                     frame.dispose();
                 } else if (index == 6) {
@@ -283,7 +287,6 @@ public class Building_Executive_Interface {
         public Building_Executive_JobReport_Panel(String executiveID) throws FileNotFoundException {
             setPreferredSize(new Dimension(1000, 500));
             setLayout(new BorderLayout());
-            setPanelBorderRight(new Building_Executive_Interface.Building_Executive_JobReport_Panel(executiveID));
 
             JPanel imgPanel = new JPanel();
             buttonPanel img3 = null;
@@ -613,9 +616,13 @@ public class Building_Executive_Interface {
         }
     }
 
+    public void run(int num) throws FileNotFoundException {
+        setPanelBorderRight(num);
+    }
+
     public static void main(String[] args) throws IOException, ParseException, ClassNotFoundException {
         Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface("BE01");
-//        building_Executive_Interface.setPanelBorderRight(new Building_Executive_JobReport_Panel(building_Executive_Interface.getExecutiveID()));
+        building_Executive_Interface.run(1);
         building_Executive_Interface.frame.setVisible(true);
 
 //        new Building_Executive_JobReport_Panel.Visitor_Entry_Frame().setVisible(true);

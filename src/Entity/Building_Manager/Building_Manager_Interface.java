@@ -263,7 +263,7 @@ public class Building_Manager_Interface extends JFrame {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface("BM01");
-        Building_ManagerInterface.frame.setVisible(true);
+        Building_Manager_Interface building_ManagerInterface = new Building_Manager_Interface("BM01");
+        building_ManagerInterface.frame.setVisible(true);
     }
 }

@@ -1,6 +1,5 @@
 package Entity.Executive.Admin_Executive;
 
-import Entity.Employee.Employee;
 import Entity.Facility;
 import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
@@ -280,6 +279,9 @@ public class Admin_Executive_Facility_Management extends JFrame {
                     new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
                     frame.dispose();
                 } else if (index == 8){
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Visitor_Pass(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 9){
                     new Login_Frame();
                     frame.dispose();
                 }

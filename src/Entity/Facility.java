@@ -202,15 +202,20 @@ public class Facility {
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
             LocalTime closeTime = LocalTime.parse("220000", timeFormatter);
             LocalTime openTime = LocalTime.parse("090000", timeFormatter);
-            boolean result = false;
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             ArrayList<Facility.Booking> bookingArrayList = new_booking.getArrayList();
-            for (Booking booking1 : bookingArrayList){
-                if (!booking1.getFacilityID().equals(new_booking.getFacilityID()) && !new_booking.getStart_Time().isBefore(openTime) && !new_booking.getEnd_Time().isAfter(closeTime) && new_booking.getEnd_Time().isAfter(new_booking.getStart_Time())){
-                    if (new_booking.getStart_Time().isAfter(booking1.getEnd_Time()) || new_booking.getEnd_Time().isBefore(booking1.getStart_Time())){
-                        result = true;
-                    } else {
-                        result = false;
+            boolean result = true;
+            if ((new_booking.getEnd_Time().isAfter(closeTime)) || (new_booking.getStart_Time().isBefore(openTime))) {
+                result = false;
+            } else {
+                for (Booking booking1 : bookingArrayList) {
+                    if (booking1.getDate().equals(new_booking.getDate())){
+                        System.out.println("yo");
+                    }
+                    if (booking1.getFacilityID().equals(new_booking.getFacilityID()) && booking1.getDate().equals(new_booking.getDate())) {
+                        if (!(booking1.getEnd_Time().isAfter(new_booking.getStart_Time())) || !(booking1.getStart_Time().isBefore(new_booking.getEnd_Time()))) {
+                        } else {
+                            result = false;
+                        }
                     }
                 }
             }

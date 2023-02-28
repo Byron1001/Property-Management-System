@@ -275,8 +275,8 @@ public class Building_Manager_User_Management extends JFrame {
             @Override
             public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
-                    Building_Manager_Interface Building_ManagerInterface = new Building_Manager_Interface(buildingManagerID);
-                    Building_ManagerInterface.frame.setVisible(true);
+                    Building_Manager_Interface building_ManagerInterface = new Building_Manager_Interface(buildingManagerID);
+                    building_ManagerInterface.frame.setVisible(true);
                     frame.dispose();
                 } else if (index == 1) {
                 } else if (index == 2) {

@@ -46,7 +46,7 @@ public class Building_Manager_Operation extends JFrame {
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
-    public Building_Manager_Function.Button addButton, deleteButton, viewButton, modifyButton;
+    public Building_Manager_Function.Button addButton, deleteButton, viewButton, modifyButton, payButton;
 
     public Building_Manager_Operation(String buildingManagerID) throws FileNotFoundException {
         this.buildingManagerID = buildingManagerID;
@@ -120,17 +120,19 @@ public class Building_Manager_Operation extends JFrame {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(Color.white);
-        buttonPanel.setLayout(new GridLayout(2, 2, 40, 15));
+        buttonPanel.setLayout(new GridLayout(3, 2, 40, 15));
 
         addButton = new Building_Manager_Function.Button("Add Operation Bugetting");
         deleteButton = new Building_Manager_Function.Button("Delete Operation Budgetting");
         viewButton = new Building_Manager_Function.Button("View Operation Info");
         modifyButton = new Building_Manager_Function.Button("Update Operation Info");
+        payButton = new Building_Manager_Function.Button("Pay for operation");
 
         buttonPanel.add(addButton);
         buttonPanel.add(modifyButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(viewButton);
+        buttonPanel.add(payButton);
         constraints.gridy++;
         panelBorderIn.add(buttonPanel, constraints);
 
@@ -223,6 +225,31 @@ public class Building_Manager_Operation extends JFrame {
                 TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) tableData.getModel());
                 tableData.setRowSorter(sorter);
                 sorter.setRowFilter(RowFilter.regexFilter(query));
+            }
+        });
+
+        payButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = tableData.getSelectedRow();
+                if (row != -1){
+                    Building_Manager_Function.Building_Manager.Operation operationSelected = operationArrayList.get(row);
+                    int result = JOptionPane.showConfirmDialog(null, "Are you sure to make payment for this operation", "Payment confirmation", JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.YES_OPTION){
+                        try {
+                            new Building_Manager_Function.Building_Manager.Operation().pay_for_Operation(operationSelected);
+                            JOptionPane.showMessageDialog(null, "Payment success", "Payment success", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                            dispose();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Payment cancelled", "Payment cancelled", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please choose the operation for payment", "Choice error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }

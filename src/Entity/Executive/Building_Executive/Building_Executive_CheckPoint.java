@@ -256,6 +256,7 @@ public class Building_Executive_CheckPoint extends JFrame {
             public void selected(int index) throws IOException, ClassNotFoundException {
                 if (index == 0) {
                     Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.run(1);
                     building_Executive_Interface.frame.setVisible(true);
                     frame.dispose();
                 } else if (index == 1) {
@@ -270,6 +271,7 @@ public class Building_Executive_CheckPoint extends JFrame {
                 } else if (index == 4) {
                 } else if (index == 5) {
                     Entity.Executive.Building_Executive.Building_Executive_Interface building_Executive_Interface = new Entity.Executive.Building_Executive.Building_Executive_Interface(executiveID);
+                    building_Executive_Interface.run(2);
                     building_Executive_Interface.frame.setVisible(true);
                     frame.dispose();
                 } else if (index == 6) {

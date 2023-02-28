@@ -340,6 +340,8 @@ public class Building_Manager_Function{
             public void pay_for_Operation(Operation operation) throws IOException {
                 Payment.Expenses expenses = new Payment.Expenses();
                 Payment.Expenses.add_Expenses(new Payment.Expenses(expenses.get_Auto_ExpensesID(), operation.getOperationID(), operation.getBuilding_Manager_ID(), operation.getBudget_Amount(), LocalDate.now(), operation.getOperationTitle(), operation.getDescription()));
+                operation.setBudget_Amount(0);
+                modify_Operation(operation, operation.getOperationID());
             }
 
             public int get_All_Available_Operation_Budget_Amount() throws FileNotFoundException {

@@ -1,5 +1,6 @@
 package Entity.Executive.Admin_Executive;
 
+import Entity.Building_Manager.Building_Manager_Function;
 import Entity.Facility;
 import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
@@ -239,6 +240,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("facility", "Facility Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("vendor", "Vendor", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("entry", "Visitor Pass", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#243B55");
@@ -283,7 +285,10 @@ public class Admin_Executive_Unit_Management extends JFrame {
                 } else if (index == 7) {
                     new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
                     frame.dispose();
-                } else if (index == 8){
+                } else if (index == 8) {
+                    new Entity.Executive.Admin_Executive.Admin_Executive_Visitor_Pass(executiveID).run(executiveID);
+                    frame.dispose();
+                } else if (index == 9){
                     new Login_Frame();
                     frame.dispose();
                 }
@@ -323,6 +328,25 @@ public class Admin_Executive_Unit_Management extends JFrame {
             JTextField parkingUnitField = new JTextField();
             JTextField ownerUsernameField = new JTextField();
             JTextField residentUsernameField = new JTextField();
+            completeYearField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9'){
+                    } else {
+                        e.consume();
+                    }
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+
+                }
+            });
             floorField.addKeyListener(new KeyListener() {
                 @Override
                 public void keyTyped(KeyEvent e) {
@@ -365,7 +389,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
             panel2.add(parkingUnitField);
             panel2.add(jLabelLeft[5]);
             panel2.add(ownerUsernameField);
-            panel2.add(jLabelLeft[5]);
+            panel2.add(jLabelLeft[6]);
             panel2.add(residentUsernameField);
             panel1.add(panel2, BorderLayout.CENTER);
 
@@ -628,5 +652,6 @@ public class Admin_Executive_Unit_Management extends JFrame {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
         new Admin_Executive_Unit_Management("AD01").run("AD01");
+        Building_Manager_Function.Building_Manager.Team_Leader teamLeader = new Building_Manager_Function.Building_Manager.Team_Leader();
     }
 }
