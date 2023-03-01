@@ -34,7 +34,7 @@ public class Account_Executive_Receipt extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -226,7 +226,7 @@ public class Account_Executive_Receipt extends JFrame {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             JLabel receiptTitle = new JLabel("RECEIPT");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Payment ID"), new JLabel("Invoice ID"),
                     new JLabel("Pay Username"), new JLabel("Unit ID"),
                     new JLabel("Amount"), new JLabel("Payment date"),

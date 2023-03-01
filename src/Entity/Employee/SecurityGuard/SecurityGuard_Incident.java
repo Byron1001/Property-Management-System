@@ -1,7 +1,6 @@
 package Entity.Employee.SecurityGuard;
 
 import Entity.Login.Login_Frame;
-import Entity.Vendor.Vendor;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -23,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -31,7 +29,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SecurityGuard_Incident extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -40,7 +37,7 @@ public class SecurityGuard_Incident extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String securityGuard_EmployeeID = "Employee ID";
+    public String securityGuard_EmployeeID;
     public JScrollPane scrollPane;
     public JPanel panel;
     SecurityGuard.Button addButton, viewButton, updateButton;
@@ -250,8 +247,6 @@ public class SecurityGuard_Incident extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<SecurityGuard.Incident> incidentArrayList = new SecurityGuard.Incident().get_all_Incident_Report();
-
         public addFrame(String securityGuardEmployeeID) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -322,15 +317,19 @@ public class SecurityGuard_Incident extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String dateTime = dateField.getText() + ":" + timeField.getText();
-                    SecurityGuard.Incident newIncident = new SecurityGuard.Incident(incidentIDField.getText(), LocalDateTime.parse(dateTime, dateTimeFormatter), securityGuardEmployeeIDField.getText(), descriptionArea.getText());
-                    try {
-                        new SecurityGuard.Incident().add_Incident_Record(newIncident);
-                        JOptionPane.showMessageDialog(null, "Incident adding successful", "Incident adding successful", JOptionPane.INFORMATION_MESSAGE);
-                        new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
-                        dispose();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    if (!dateField.getText().equals("  .  .    ") && !timeField.getText().equals("      ") && !descriptionArea.getText().equals("")){
+                        String dateTime = dateField.getText() + ":" + timeField.getText();
+                        SecurityGuard.Incident newIncident = new SecurityGuard.Incident(incidentIDField.getText(), LocalDateTime.parse(dateTime, dateTimeFormatter), securityGuardEmployeeIDField.getText(), descriptionArea.getText());
+                        try {
+                            new SecurityGuard.Incident().add_Incident_Record(newIncident);
+                            JOptionPane.showMessageDialog(null, "Incident adding successful", "Incident adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please fill in the complete information", "Information error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -349,8 +348,6 @@ public class SecurityGuard_Incident extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<SecurityGuard.Incident> incidentArrayList = new SecurityGuard.Incident().get_all_Incident_Report();
-
         public modifyFrame(SecurityGuard.Incident incident) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -420,15 +417,19 @@ public class SecurityGuard_Incident extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String dateTime = dateField.getText() + ":" + timeField.getText();
-                    SecurityGuard.Incident newIncident = new SecurityGuard.Incident(incidentIDField.getText(), LocalDateTime.parse(dateTime, dateTimeFormatter), securityGuardEmployeeIDField.getText(), descriptionArea.getText());
-                    try {
-                        new SecurityGuard.Incident().update_Incident_Report(newIncident, incident.getIncident_ID());
-                        JOptionPane.showMessageDialog(null, "Incident adding successful", "Incident adding successful", JOptionPane.INFORMATION_MESSAGE);
-                        new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
-                        dispose();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    if (!dateField.getText().equals("  .  .    ") && !timeField.getText().equals("      ") && !descriptionArea.getText().equals("")){
+                        String dateTime = dateField.getText() + ":" + timeField.getText();
+                        SecurityGuard.Incident newIncident = new SecurityGuard.Incident(incidentIDField.getText(), LocalDateTime.parse(dateTime, dateTimeFormatter), securityGuardEmployeeIDField.getText(), descriptionArea.getText());
+                        try {
+                            new SecurityGuard.Incident().update_Incident_Report(newIncident, incident.getIncident_ID());
+                            JOptionPane.showMessageDialog(null, "Incident modifying successful", "Incident modification successful", JOptionPane.INFORMATION_MESSAGE);
+                            new SecurityGuard_Incident(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please fill in the complete information", "Information error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

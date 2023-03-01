@@ -23,10 +23,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Admin_Executive_Employee_Management extends JFrame {
 
@@ -36,7 +36,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -322,7 +322,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
             positionComboBox.addItem("Cleaner");
             positionComboBox.addItem("Technician");
             for (int i = 0;i < 3;i++){
-                if (positionComboBox.getItemAt(i).toString().equals(positionName))
+                if (positionComboBox.getItemAt(i).equals(positionName))
                     positionComboBox.setSelectedIndex(i);
             }
             positionComboBox.setEnabled(false);
@@ -400,7 +400,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
                     if (femaleButton.isSelected())
                         gender = 'F';
                     Employee employee = new Employee();
-                    employee.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), positionComboBox.getSelectedItem().toString());
+                    employee.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), Objects.requireNonNull(positionComboBox.getSelectedItem()).toString());
                     try {
                         boolean check = false;
                         boolean contactNumberCheck = false;
@@ -463,7 +463,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
             positionComboBox.addItem("Cleaner");
             positionComboBox.addItem("Technician");
             for (int i = 0;i < 3;i++){
-                if (positionComboBox.getItemAt(i).toString().equals(employee.getPosition_Name()))
+                if (positionComboBox.getItemAt(i).equals(employee.getPosition_Name()))
                     positionComboBox.setSelectedIndex(i);
             }
             positionComboBox.setEnabled(false);
@@ -551,7 +551,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
                     if (femaleButton.isSelected())
                         gender = 'F';
                     Employee employeeNew = new Employee();
-                    employeeNew.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), positionComboBox.getSelectedItem().toString());
+                    employeeNew.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), Objects.requireNonNull(positionComboBox.getSelectedItem()).toString());
                     try {
                         boolean check = false;
                         boolean contactNumberCheck = false;
@@ -597,8 +597,6 @@ public class Admin_Executive_Employee_Management extends JFrame {
             JPanel panel3 = new JPanel();
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
-
-            MaskFormatter yearMask = new MaskFormatter("####");
 
             JLabel formTitle = new JLabel("Employee DETAILS");
             JLabel[] jLabelLeft = {new JLabel("Employee ID"),

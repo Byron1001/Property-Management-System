@@ -38,7 +38,7 @@ public class Account_Executive_Pending_fees extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -276,9 +276,8 @@ public class Account_Executive_Pending_fees extends JFrame {
             panel1.setLayout(new BorderLayout());
             panel2.setLayout(new GridLayout(8, 2, 15, 15));
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             JLabel invoiceTitle = new JLabel("PENDING DETAILS");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
 
             JLabel[] jLabelLeft = {new JLabel("Username"), new JLabel("Name"),
                     new JLabel("Gender"), new JLabel("Contact Number"),

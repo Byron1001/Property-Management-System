@@ -23,13 +23,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Resident_Visitor_Pass extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -38,7 +37,7 @@ public class Resident_Visitor_Pass extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String resident_Username = "resident Username";
+    public String resident_Username;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -323,7 +322,7 @@ public class Resident_Visitor_Pass extends JFrame {
             residentUsernameField.setEditable(false);
             JTextField unitIDField = new JTextField(resident.getUnitID());
             unitIDField.setEditable(false);
-            JComboBox genderComboBox = new JComboBox();
+            JComboBox<String> genderComboBox = new JComboBox<>();
             genderComboBox.addItem("Male");
             genderComboBox.addItem("Female");
             JFormattedTextField contactNumberField = new JFormattedTextField(contactNumberMask);
@@ -377,7 +376,7 @@ public class Resident_Visitor_Pass extends JFrame {
                     if (visitorNameField.getText().equals("") || contactNumberField.getText().equals("   -       ") || dateEndField.getText().equals("  .  .    ") || dateStartField.getText().equals("  .  .    ")){
                         JOptionPane.showMessageDialog(null, "Please enter all the information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        Visitor_Pass visitorPass = new Visitor_Pass(visitorPassIDField.getText(), visitorNameField.getText(), residentUsernameField.getText(), unitIDField.getText(), genderComboBox.getSelectedItem().toString().charAt(0), contactNumberField.getText(), LocalDate.parse(dateStartField.getText(), formatter), LocalDate.parse(dateEndField.getText(), formatter), "Disapproved");
+                        Visitor_Pass visitorPass = new Visitor_Pass(visitorPassIDField.getText(), visitorNameField.getText(), residentUsernameField.getText(), unitIDField.getText(), Objects.requireNonNull(genderComboBox.getSelectedItem()).toString().charAt(0), contactNumberField.getText(), LocalDate.parse(dateStartField.getText(), formatter), LocalDate.parse(dateEndField.getText(), formatter), "Disapproved");
                         try {
                             boolean check = new Resident().check_Resident_Availability(visitorPass.getResident_Username());
                             if (!check) {
@@ -498,7 +497,7 @@ public class Resident_Visitor_Pass extends JFrame {
             applyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Visitor_Pass visitorPass = new Visitor_Pass(visitorPassIDField.getText(), visitorNameField.getText(), residentUsernameField.getText(), unitIDField.getText(), genderComboBox.getSelectedItem().toString().charAt(0), contactNumberField.getText(), LocalDate.parse(dateStartField.getText(), formatter), LocalDate.parse(dateEndField.getText(), formatter), "Disapproved");
+                    Visitor_Pass visitorPass = new Visitor_Pass(visitorPassIDField.getText(), visitorNameField.getText(), residentUsernameField.getText(), unitIDField.getText(), Objects.requireNonNull(genderComboBox.getSelectedItem()).toString().charAt(0), contactNumberField.getText(), LocalDate.parse(dateStartField.getText(), formatter), LocalDate.parse(dateEndField.getText(), formatter), "Disapproved");
                     try {
                         boolean check = new Resident().check_Resident_Availability(visitorPass.getResident_Username());
                         if (!check) {
@@ -538,11 +537,11 @@ public class Resident_Visitor_Pass extends JFrame {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
 
             JLabel formTitle = new JLabel("VISITOR PASS");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Visitor Pass ID"), new JLabel("Visitor name"),
                     new JLabel("Resident Username"), new JLabel("Unit ID"),
                     new JLabel("Gender"), new JLabel("Contact Number"),
-                    new JLabel("Date Start (MM.dd.yyyyy)"), new JLabel("Date End(MM.dd.yyyy)"), new JLabel("Status")};
+                    new JLabel("Date Start (MM.dd.yyyy)"), new JLabel("Date End(MM.dd.yyyy)"), new JLabel("Status")};
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             JLabel[] jLabelRight = {new JLabel(visitorPass.getVisitor_Pass_ID()), new JLabel(visitorPass.getVisitor_Name()),
                     new JLabel(visitorPass.getResident_Username()), new JLabel(visitorPass.getUnitID()),

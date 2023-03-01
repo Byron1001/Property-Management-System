@@ -1,6 +1,5 @@
 package Entity.Resident;
 
-import Entity.Financial.Payment;
 import Entity.Financial.Statement;
 import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
@@ -11,7 +10,6 @@ import UIPackage.Model.Model_Menu;
 import UIPackage.swing.PanelBorder;
 import UIPackage.swing.Table;
 
-import javax.sql.StatementEvent;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -28,7 +26,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class Resident_Statement_Frame extends JFrame{
         public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -37,7 +34,7 @@ public class Resident_Statement_Frame extends JFrame{
         public Form_Home formHome = new Form_Home();
         public Table tableData = new Table();
         public Color backgroundColor = Color.WHITE;
-        public String resident_Username = "resident Username";
+        public String resident_Username;
         public JScrollPane scrollPane;
         public GridBagConstraints constraints;
         public JPanel panel;
@@ -242,7 +239,7 @@ public class Resident_Statement_Frame extends JFrame{
 
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
                 JLabel formTitle = new JLabel("Statement");
-                JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+                JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
                 JLabel[] jLabelLeft = {new JLabel("Issuer Position"),
                         new JLabel("Date"), new JLabel("Receiver ID"),
                         new JLabel("Description")};

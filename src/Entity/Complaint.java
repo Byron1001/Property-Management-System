@@ -1,7 +1,6 @@
 package Entity;
 
 import java.io.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,7 +9,7 @@ public class Complaint {
     private String resident_Username;
     private String description;
     private String status;
-    private static File complaint_txt = new File("src/Database/Complaint.txt");
+    private static final File complaint_txt = new File("src/Database/Complaint.txt");
 
     public Complaint() {}
 
@@ -54,8 +53,7 @@ public class Complaint {
     }
 
     public String[] getStringArray(Complaint complaint){
-        String[] data = {complaint.getComplaintID(), complaint.getResident_Username(), complaint.getDescription(), complaint.getStatus()};
-        return data;
+        return new String[]{complaint.getComplaintID(), complaint.getResident_Username(), complaint.getDescription(), complaint.getStatus()};
     }
 
     public ArrayList<Complaint> getArrayList() throws FileNotFoundException {
@@ -117,8 +115,7 @@ public class Complaint {
             num = Integer.parseInt(number);
             num += 1;
         }
-        String str = "Com" + num.toString();
-        return str;
+        return "Com" + num;
     }
 
     public boolean check_Complaint_Availability(String complaintID) throws FileNotFoundException {
@@ -126,8 +123,10 @@ public class Complaint {
         Complaint complaint = new Complaint();
         ArrayList<Complaint> complaintArrayList = complaint.getArrayList();
         for (Complaint com : complaintArrayList) {
-            if (com.getComplaintID().equals(complaintID))
+            if (com.getComplaintID().equals(complaintID)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }

@@ -1,31 +1,21 @@
 package Entity.Resident;
 
-import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
 import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Form.Form_Home;
-import UIPackage.Model.Model_Card;
 import UIPackage.Model.Model_Menu;
 import UIPackage.swing.PanelBorder;
-import UIPackage.swing.Table;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Resident_Deposit_Frame extends JFrame{
@@ -34,7 +24,7 @@ public class Resident_Deposit_Frame extends JFrame{
         public Form_Home formHome = new Form_Home();
         public Header header = new Header();
         public Color backgroundColor = Color.WHITE;
-        public String resident_Username = "resident Username";
+        public String resident_Username;
         public GridBagConstraints constraints;
         public Resident.Button checkPaymentButton;
 

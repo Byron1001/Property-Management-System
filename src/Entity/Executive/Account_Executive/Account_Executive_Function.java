@@ -18,8 +18,8 @@ import java.util.Scanner;
 
 public class Account_Executive_Function {
     public static class Account_Executive extends Executive {
-        private String position = "Account Executive";
-        private File account_Executive_Info_txt = new File("src/Database/Account_Executive_Information.txt");
+        private final String position = "Account Executive";
+        private final File account_Executive_Info_txt = new File("src/Database/Account_Executive_Information.txt");
         public Account_Executive(){}
         public Account_Executive(String account_Executive_ID, String name, char gender, String contact_Number){
             super();
@@ -89,8 +89,10 @@ public class Account_Executive_Function {
             Account_Executive accountExecutive = new Account_Executive();
             ArrayList<Account_Executive> accountExecutiveArrayList = accountExecutive.getArrayList();
             for (Account_Executive accountExecutive1 : accountExecutiveArrayList) {
-                if (accountExecutive1.getExecutiveID().equals(executiveID))
+                if (accountExecutive1.getExecutiveID().equals(executiveID)) {
                     result = true;
+                    break;
+                }
             }
             return result;
         }
@@ -163,10 +165,7 @@ public class Account_Executive_Function {
 
         public ArrayList<Invoice> get_Unit_All_Invoice(String unitID) throws FileNotFoundException {
             ArrayList<Invoice> invoiceArrayList = new Invoice().getArrayList();
-            for (Invoice invoice : invoiceArrayList){
-                if (!(invoice.getUnitID().equals(unitID)))
-                    invoiceArrayList.remove(invoice);
-            }
+            invoiceArrayList.removeIf(invoice -> !(invoice.getUnitID().equals(unitID)));
             return invoiceArrayList;
         }
 
@@ -182,10 +181,7 @@ public class Account_Executive_Function {
 
         public ArrayList<Invoice> get_Unit_All_Unpaid_Invoice(String unitID) throws FileNotFoundException {
             ArrayList<Invoice> invoiceArrayList = new Invoice().getArrayList();
-            for (Invoice invoice : invoiceArrayList){
-                if (!(invoice.getUnitID().equals(unitID)) && invoice.getStatus().equals("unpaid"))
-                    invoiceArrayList.remove(invoice);
-            }
+            invoiceArrayList.removeIf(invoice -> !(invoice.getUnitID().equals(unitID)) && invoice.getStatus().equals("unpaid"));
             return invoiceArrayList;
         }
 

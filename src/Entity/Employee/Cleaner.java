@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class Cleaner extends Employee{
     protected String position = "Cleaner";
-    private File cleaner_Info_txt = new File("src/Database/Cleaner_Information.txt");
+    private final File cleaner_Info_txt = new File("src/Database/Cleaner_Information.txt");
     public Cleaner(){}
     public Cleaner(String employeeID, String name, char gender, String contact_Number, int salary){
         super();
@@ -33,8 +33,9 @@ public class Cleaner extends Employee{
         boolean result = false;
         ArrayList<Cleaner> cleanerArrayList = this.getArrayList();
         for (Cleaner Cleaner : cleanerArrayList){
-            if (Cleaner.getEmployeeID().equals(employeeID)){
+            if (Cleaner.getEmployeeID().equals(employeeID)) {
                 result = true;
+                break;
             }
         }
         return result;
@@ -52,7 +53,7 @@ public class Cleaner extends Employee{
 
     public void save_All_Cleaner(ArrayList<Cleaner> cleanerArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(cleaner_Info_txt, false);
-        fileWriter.write("Employee ID:Name:Gender:contact_number:salary:position");
+        fileWriter.write("Employee ID:Name:Gender:contact_number:salary:position\n");
         for (Cleaner cleaner : cleanerArrayList){
             fileWriter.write(Cleaner.getDataString(cleaner));
         }

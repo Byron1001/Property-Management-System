@@ -2,21 +2,16 @@ package Entity.Login;
 
 import Entity.Building_Manager.Building_Manager_Function;
 import Entity.Building_Manager.Building_Manager_Interface;
-import Entity.Employee.Cleaner;
 import Entity.Employee.SecurityGuard.SecurityGuard;
-import Entity.Employee.SecurityGuard.SecurityGuard_Interface;
-import Entity.Employee.Technician;
 import Entity.Executive.Account_Executive.Account_Executive_Function;
 import Entity.Executive.Account_Executive.Account_Executive_Interface;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Interface;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
-import Entity.Executive.Building_Executive.Building_Executive_Interface;
 import Entity.Resident.Resident;
 import Entity.Resident.Resident_Interface;
 import Entity.Vendor.Vendor;
 import Entity.Vendor.Vendor_Interface;
-import Entity.Visitor_Pass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +26,7 @@ import java.util.regex.Pattern;
 public class Login {
     private String username;
     private String password;
-    private File login_Credentials_txt = new File("src/Database/Login_Credentials.txt");
+    private final File login_Credentials_txt = new File("src/Database/Login_Credentials.txt");
     public Login(){}
 
     public Login(String username, String password) {
@@ -77,8 +72,10 @@ public class Login {
         boolean result = false;
         ArrayList<Login> loginArrayList = getArrayList();
         for (Login login1 : loginArrayList) {
-            if (login1.getUsername().equals(username) && !login1.getPassword().equals(""))
+            if (login1.getUsername().equals(username) && !login1.getPassword().equals("")) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -149,11 +146,7 @@ public class Login {
 
     public void delete_Login(String login_Username) throws IOException {//delete all login of team or the specific login
         ArrayList<Login> loginArrayList = getArrayList();
-        for (Login login : loginArrayList){
-            if (login.getUsername().equals(login_Username)){
-                loginArrayList.remove(login);
-            }
-        }
+        loginArrayList.removeIf(login -> login.getUsername().equals(login_Username));
         save_All_Login(loginArrayList);
     }
 
@@ -163,7 +156,7 @@ public class Login {
     }
 
     public Integer check_User_Types(String username) throws FileNotFoundException {
-        Integer result = 0;
+        Integer result;
         HashMap<String, Integer> map = new HashMap<>();
         map.put("BM", 1);
         map.put("AC", 2);
@@ -216,8 +209,7 @@ public class Login {
 
     public boolean login(Login login) throws FileNotFoundException {
         if (check_Login_Availability(login.getUsername())){
-            if (get_Login_Credentials(login.getUsername()).equals(login.getPassword()))
-                return true;
+            return get_Login_Credentials(login.getUsername()).equals(login.getPassword());
         }
         return false;
     }

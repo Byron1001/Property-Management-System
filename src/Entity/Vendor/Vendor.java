@@ -156,8 +156,10 @@ public class Vendor {
         Vendor vendor = new Vendor();
         ArrayList<Vendor> vendorArrayList = vendor.getArrayList();
         for (Vendor vendor1 : vendorArrayList) {
-            if (vendor1.getContact_Number().equals(contact_Number))
+            if (vendor1.getContact_Number().equals(contact_Number)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -167,8 +169,10 @@ public class Vendor {
         Vendor vendor = new Vendor();
         ArrayList<Vendor> vendorArrayList = vendor.getArrayList();
         for (Vendor uni : vendorArrayList) {
-            if (uni.getVendor_Username().equals(vendor_Username))
+            if (uni.getVendor_Username().equals(vendor_Username)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -178,8 +182,10 @@ public class Vendor {
         Vendor vendor = new Vendor();
         ArrayList<Vendor> vendorArrayList = vendor.getArrayList();
         for (Vendor uni : vendorArrayList) {
-            if (uni.getVendor_Unit().equals(vendor_Unit))
+            if (uni.getVendor_Unit().equals(vendor_Unit)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -225,8 +231,7 @@ public class Vendor {
 
     public ArrayList<Payment> get_All_Receipt(String vendor_Unit) throws FileNotFoundException {
         Payment payment = new Payment();
-        ArrayList<Payment> paymentArrayList = payment.get_All_Receipt(vendor_Unit);
-        return paymentArrayList;
+        return payment.get_All_Receipt(vendor_Unit);
     }
 
     public ArrayList<Payment> get_All_pending_Payment(String vendor_Unit) throws FileNotFoundException {

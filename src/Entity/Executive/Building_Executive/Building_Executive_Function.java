@@ -15,8 +15,8 @@ import java.util.Scanner;
 
 public class Building_Executive_Function{
     public static class Building_Executive extends Executive{
-        private String position = "Building Executive";
-        private File building_Executive_Info_txt = new File("src/Database/Building_Executive_Information.txt");
+        private final String position = "Building Executive";
+        private final File building_Executive_Info_txt = new File("src/Database/Building_Executive_Information.txt");
         public Building_Executive(){}
         public Building_Executive(String executiveID, String name, char gender, String contact_number){
             super();
@@ -85,8 +85,10 @@ public class Building_Executive_Function{
             Building_Executive building_Executive = new Building_Executive();
             ArrayList<Building_Executive> building_ExecutiveArrayList = building_Executive.getArrayList();
             for (Building_Executive building_Executive1 : building_ExecutiveArrayList) {
-                if (building_Executive1.getExecutiveID().equals(executiveID))
+                if (building_Executive1.getExecutiveID().equals(executiveID)) {
                     result = true;
+                    break;
+                }
             }
             return result;
         }
@@ -103,10 +105,7 @@ public class Building_Executive_Function{
         public void delete_Employee_Task(String taskID) throws IOException {
             Employee_Task employeeTask = new Employee_Task();
             ArrayList<Employee_Task> employeeTaskArrayList = employeeTask.getArrayList();
-            for (Employee_Task employeeTask1 : employeeTaskArrayList){
-                if (employeeTask1.getTaskID().equals(taskID))
-                    employeeTaskArrayList.remove(employeeTask1);
-            }
+            employeeTaskArrayList.removeIf(employeeTask1 -> employeeTask1.getTaskID().equals(taskID));
             employeeTask.save_All_Employee_Task(employeeTaskArrayList);
         }
 
@@ -117,8 +116,7 @@ public class Building_Executive_Function{
 
         //Complaint
         public ArrayList<Complaint> view_All_Complaint() throws FileNotFoundException {
-            ArrayList<Complaint> complaintArrayList = new Complaint().getArrayList();
-            return complaintArrayList;
+            return new Complaint().getArrayList();
         }
 
         public void mark_Complaint_Solved(String complaintID) throws IOException {
@@ -146,10 +144,7 @@ public class Building_Executive_Function{
         public void delete_Patrolling_Schedule(String patrolID) throws IOException, ClassNotFoundException {
             Patrolling patrolling = new Patrolling();
             ArrayList<Patrolling> patrollingArrayList = patrolling.getArrayList();
-            for (Patrolling patrolling1 : patrollingArrayList){
-                if (patrolling1.getPatrolID().equals(patrolID))
-                    patrollingArrayList.remove(patrolling1);
-            }
+            patrollingArrayList.removeIf(patrolling1 -> patrolling1.getPatrolID().equals(patrolID));
             patrolling.save_All_Patrolling(patrollingArrayList);
         }
 
@@ -168,10 +163,7 @@ public class Building_Executive_Function{
         public void delete_CheckPoint(String checkPointID) throws IOException, ClassNotFoundException {
             CheckPoint checkPoint = new CheckPoint();
             ArrayList<CheckPoint> checkPointArrayList = checkPoint.getArrayList();
-            for (CheckPoint checkPoint1 : checkPointArrayList){
-                if (checkPoint1.getCheckPointID().equals(checkPointID))
-                    checkPointArrayList.remove(checkPoint1);
-            }
+            checkPointArrayList.removeIf(checkPoint1 -> checkPoint1.getCheckPointID().equals(checkPointID));
             checkPoint.save_All_CheckPoint(checkPointArrayList);
         }
 
@@ -182,8 +174,7 @@ public class Building_Executive_Function{
 
         public ArrayList<CheckPoint> view_All_CheckPoint() throws IOException, ClassNotFoundException {
             CheckPoint checkPoint = new CheckPoint();
-            ArrayList<CheckPoint> checkPointArrayList = checkPoint.getArrayList();
-            return checkPointArrayList;
+            return checkPoint.getArrayList();
         }
 
     }

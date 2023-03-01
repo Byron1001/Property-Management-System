@@ -1,2 +1,3 @@
 operation ID:building manager ID:operation title:description:budget amount
 OP1:BM01:Fix swimming pool:swimming pool renovation:100
+OP2:BM01:see you:see you:100

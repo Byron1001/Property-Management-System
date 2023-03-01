@@ -1,10 +1,7 @@
 package Entity.Executive.Building_Executive;
 
 import Entity.Complaint;
-import Entity.Executive.Admin_Executive.Admin_Executive_Function;
-import Entity.Executive.Admin_Executive.Admin_Executive_Interface;
 import Entity.Login.Login_Frame;
-import Entity.Resident.Resident;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -19,14 +16,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -38,7 +33,7 @@ public class Building_Executive_Complaint_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -259,8 +254,6 @@ public class Building_Executive_Complaint_Management extends JFrame {
             JPanel panel3 = new JPanel();
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
-
-            MaskFormatter yearMask = new MaskFormatter("####");
 
             JLabel formTitle = new JLabel("COMPLAINT DETAILS");
             JLabel[] jLabelLeft = {new JLabel("Complaint ID"), new JLabel("Resident Username"),

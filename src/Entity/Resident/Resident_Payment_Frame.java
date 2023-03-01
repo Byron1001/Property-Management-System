@@ -3,19 +3,16 @@ package Entity.Resident;
 import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
 import Entity.Login.Login_Frame;
-import Entity.Resident.Resident;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Form.Form_Home;
 import UIPackage.Model.Model_Card;
 import UIPackage.Model.Model_Menu;
-import UIPackage.Model.StatusType;
 import UIPackage.swing.PanelBorder;
 import UIPackage.swing.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
 import java.awt.*;
@@ -23,7 +20,6 @@ import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -34,7 +30,7 @@ public class Resident_Payment_Frame extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String resident_Username = "resident Username";
+    public String resident_Username;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -230,7 +226,7 @@ public class Resident_Payment_Frame extends JFrame {
             total2 += pay.getAmount();
         }
         String paid = "RM " + total2;
-        frame.formHome.card3.setData(new Model_Card("payment", "Paid", paid, "Thks for payment"));
+        frame.formHome.card3.setData(new Model_Card("payment", "Paid", paid, "Thanks for payment"));
 
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
@@ -278,7 +274,7 @@ public class Resident_Payment_Frame extends JFrame {
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             JLabel invoiceTitle = new JLabel("INVOICE");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Invoice ID"), new JLabel("Issuer ID"),
                     new JLabel("Unit ID"), new JLabel("Amount"),
                     new JLabel("Due Date"), new JLabel("Payment Types"),

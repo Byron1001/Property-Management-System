@@ -92,7 +92,6 @@ public class Admin_Executive_Interface {
     }
 
     public class Admin_Executive_Profile_Panel extends JPanel {
-        private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Admin_Executive_Function.Button updateButton;
 
         public Admin_Executive_Profile_Panel(String executiveID) throws FileNotFoundException {
@@ -108,7 +107,7 @@ public class Admin_Executive_Interface {
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout(0, 20));
             JLabel profileLabel = new JLabel("Profile");
-            Font titleFont = new Font("Sansserif", Font.BOLD, 24);
+            Font titleFont = new Font("sansserif", Font.BOLD, 24);
             profileLabel.setFont(titleFont);
             profileLabel.setHorizontalAlignment(JLabel.CENTER);
             panel.add(profileLabel, BorderLayout.NORTH);
@@ -152,7 +151,7 @@ public class Admin_Executive_Interface {
         }
 
         public class UpdateInfo_Frame extends JFrame {
-            private Font labelFont = new Font("sansserif", Font.BOLD, 14);
+            private final Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private Admin_Executive_Function.Button updateButton;
             private Admin_Executive_Function.Button cancelButton;
 

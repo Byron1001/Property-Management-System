@@ -1,39 +1,20 @@
 package Entity.Login;
 
-import Entity.Employee.SecurityGuard.SecurityGuard;
-import Entity.Employee.SecurityGuard.SecurityGuard_Incident;
-import Entity.Employee.SecurityGuard.SecurityGuard_Visitor_Entry_Record;
 import Entity.Resident.Resident;
-import Entity.Resident.Resident_Visitor_Pass;
 import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
-import UIPackage.Event.EventMenuSelected;
 import UIPackage.Form.Form_Home;
-import UIPackage.Model.Model_Menu;
-import UIPackage.main.UIFrame;
-import UIPackage.swing.PanelBorder;
-import UIPackage.swing.Table;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 
 public class Login_Frame extends JFrame {
@@ -68,7 +49,9 @@ public class Login_Frame extends JFrame {
         icon2.setIcon(Login.toIcon(iconSize,iconSize, "password.png"));
         Login.Button loginButton = new Login.Button("Login");
         Login.Button registerButton = new Login.Button("Register");
+        Login.Button forgotButton = new Login.Button("Forgot Password");
         Login.Button viewVisitorPassButton = new Login.Button("View Visitor Pass");
+        Login.Button exitButton = new Login.Button("Exit System");
 
         Form_Home formHome1 = new Form_Home();
         formHome1.removeAll();
@@ -98,7 +81,11 @@ public class Login_Frame extends JFrame {
         constraints.gridy++;
         centerPanel.add(registerButton, constraints);
         constraints.gridy++;
+        centerPanel.add(forgotButton, constraints);
+        constraints.gridy++;
         centerPanel.add(viewVisitorPassButton, constraints);
+        constraints.gridy++;
+        centerPanel.add(exitButton, constraints);
 
         JPanel panelLeft = new JPanel();
         panelLeft.setBackground(new Color(255,255,255,0));
@@ -142,18 +129,29 @@ public class Login_Frame extends JFrame {
 
             }
         });
-
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     new Register().setVisible(true);
+                    dispose();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
             }
         });
-
+        forgotButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String username = JOptionPane.showInputDialog("Please enter the username for password changing:");
+                    new Register.Forgot_Password(username);
+                    dispose();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
         viewVisitorPassButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -171,6 +169,12 @@ public class Login_Frame extends JFrame {
                 }
             }
         });
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(1);
+            }
+        });
 
         setContentPane(contentPanel);
         new Menu().initMoving(this);
@@ -183,7 +187,7 @@ public class Login_Frame extends JFrame {
 
     public static class ImagePanel extends JPanel {
         private String imagePath;
-        public ImagePanel(String imagePath) throws IOException {
+        public ImagePanel(String imagePath) {
             this.imagePath = imagePath;
         }
 
@@ -195,7 +199,7 @@ public class Login_Frame extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            Image backgroundImage = null;
+            Image backgroundImage;
             try {
                 backgroundImage = ImageIO.read(new File("src/UIPackage/Icon/"+imagePath));
             } catch (IOException e) {
@@ -252,11 +256,6 @@ public class Login_Frame extends JFrame {
             }
             @Override
             protected void paintComponent(Graphics g) {
-//                Graphics2D g2 = (Graphics2D) g;
-//                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//                GradientPaint gradientPaint = new GradientPaint(0, 0, color1,getWidth(), 0, color2);
-//                g2.setPaint(gradientPaint);
-//                g2.fillRect(0, 0, getWidth(), getHeight());
                 super.paintComponent(g);
             }
         }
@@ -273,11 +272,11 @@ public class Login_Frame extends JFrame {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
 
             JLabel formTitle = new JLabel("VISITOR PASS");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Visitor Pass ID"), new JLabel("Visitor name"),
                     new JLabel("Resident Username"), new JLabel("Unit ID"),
                     new JLabel("Gender"), new JLabel("Contact Number"),
-                    new JLabel("Date Start (MM.dd.yyyyy)"), new JLabel("Date End(MM.dd.yyyy)"), new JLabel("Status")};
+                    new JLabel("Date Start (MM.dd.yyyy)"), new JLabel("Date End(MM.dd.yyyy)"), new JLabel("Status")};
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             JLabel[] jLabelRight = {new JLabel(visitorPass.getVisitor_Pass_ID()), new JLabel(visitorPass.getVisitor_Name()),
                     new JLabel(visitorPass.getResident_Username()), new JLabel(visitorPass.getUnitID()),

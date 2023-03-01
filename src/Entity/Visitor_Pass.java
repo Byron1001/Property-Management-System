@@ -105,8 +105,7 @@ public class Visitor_Pass {
 
     public String[] getStringArray(Visitor_Pass visitorPass){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-        String[] data = {visitorPass.getVisitor_Pass_ID(), visitorPass.getVisitor_Name(), visitorPass.getResident_Username(), visitorPass.getUnitID(), Character.toString(visitorPass.getGender()), visitorPass.getContact_Number(), visitorPass.getDate_Start().format(formatter), visitorPass.getDate_End().format(formatter), visitorPass.getStatus()};
-        return data;
+        return new String[]{visitorPass.getVisitor_Pass_ID(), visitorPass.getVisitor_Name(), visitorPass.getResident_Username(), visitorPass.getUnitID(), Character.toString(visitorPass.getGender()), visitorPass.getContact_Number(), visitorPass.getDate_Start().format(formatter), visitorPass.getDate_End().format(formatter), visitorPass.getStatus()};
     }
 
     public ArrayList<Visitor_Pass> getArrayList() throws FileNotFoundException {
@@ -127,8 +126,9 @@ public class Visitor_Pass {
         boolean result = false;
         ArrayList<Visitor_Pass> visitorPassArrayList = this.getArrayList();
         for (Visitor_Pass visitor_Pass : visitorPassArrayList){
-            if (visitor_Pass.getVisitor_Pass_ID().equals(visitor_Pass_ID)){
+            if (visitor_Pass.getVisitor_Pass_ID().equals(visitor_Pass_ID)) {
                 result = true;
+                break;
             }
         }
         return result;
@@ -138,8 +138,9 @@ public class Visitor_Pass {
         boolean result = false;
         ArrayList<Visitor_Pass> visitorPassArrayList = this.getArrayList();
         for (Visitor_Pass visitor_Pass : visitorPassArrayList){
-            if (visitor_Pass.getResident_Username().equals(visitorPass.getResident_Username()) || visitor_Pass.getVisitor_Name().equals(visitorPass.getVisitor_Name()) || visitor_Pass.getContact_Number().equals(visitorPass.getContact_Number())){
+            if (visitor_Pass.getResident_Username().equals(visitorPass.getResident_Username()) || visitor_Pass.getVisitor_Name().equals(visitorPass.getVisitor_Name()) || visitor_Pass.getContact_Number().equals(visitorPass.getContact_Number())) {
                 result = true;
+                break;
             }
         }
         return result;
@@ -150,8 +151,9 @@ public class Visitor_Pass {
         LocalDate dateNow = LocalDate.now();
         ArrayList<Visitor_Pass> visitorPassArrayList = this.getArrayList();
         for (Visitor_Pass visitor_Pass : visitorPassArrayList){
-            if (visitor_Pass.getDate_End().isAfter(dateNow) && visitor_Pass.getVisitor_Pass_ID().equals(visitor_Pass_ID)){
+            if (visitor_Pass.getDate_End().isAfter(dateNow) && visitor_Pass.getVisitor_Pass_ID().equals(visitor_Pass_ID)) {
                 result = true;
+                break;
             }
         }
         return result;
@@ -212,8 +214,7 @@ public class Visitor_Pass {
             num = Integer.parseInt(number);
             num += 1;
         }
-        String str = "VI" + num.toString();
-        return str;
+        return "VI" + num;
     }
 
 }

@@ -1,9 +1,5 @@
 package Entity;
 
-import Entity.Facility;
-import Entity.Resident.Resident;
-
-import javax.swing.text.DateFormatter;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,7 +10,7 @@ import java.util.Scanner;
 public class Facility {
     private String facilityID;
     private String name;
-    private File facility_Info_txt = new File("src/Database/Facility_Information.txt");
+    private final File facility_Info_txt = new File("src/Database/Facility_Information.txt");
     public Facility(){}
 
     public Facility(String facilityID, String name) {
@@ -58,8 +54,9 @@ public class Facility {
         boolean result = false;
         ArrayList<Facility> facilityArrayList = this.getArrayList();
         for (Facility facility : facilityArrayList){
-            if (facility.getFacilityID().equals(facilityID)){
+            if (facility.getFacilityID().equals(facilityID)) {
                 result = true;
+                break;
             }
         }
         return result;
@@ -77,7 +74,7 @@ public class Facility {
 
     public void save_All_Facility(ArrayList<Facility> facilityArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(facility_Info_txt, false);
-        fileWriter.write("FacilityID:Name");
+        fileWriter.write("FacilityID:Name\n");
         for (Facility facility : facilityArrayList){
             fileWriter.write(facility.getDataString(facility));
         }
@@ -191,10 +188,7 @@ public class Facility {
         private ArrayList<Facility.Booking> getFacilityAllBooking(String facilityID) throws IOException, ClassNotFoundException {
             Facility.Booking booking = new Booking();
             ArrayList<Facility.Booking> bookingArrayList = booking.getArrayList();
-            for (Facility.Booking booking1 : bookingArrayList){
-                if (!booking1.getBookingID().equals(facilityID))
-                    bookingArrayList.remove(booking1);
-            }
+            bookingArrayList.removeIf(booking1 -> !booking1.getBookingID().equals(facilityID));
             return bookingArrayList;
         }
 
@@ -208,14 +202,11 @@ public class Facility {
                 result = false;
             } else {
                 for (Booking booking1 : bookingArrayList) {
-                    if (booking1.getDate().equals(new_booking.getDate())){
-                        System.out.println("yo");
-                    }
-                    if (booking1.getFacilityID().equals(new_booking.getFacilityID()) && booking1.getDate().equals(new_booking.getDate())) {
-                        if (!(booking1.getEnd_Time().isAfter(new_booking.getStart_Time())) || !(booking1.getStart_Time().isBefore(new_booking.getEnd_Time()))) {
-                        } else {
-                            result = false;
-                        }
+                    if (booking1.getDate().equals(new_booking.getDate()) && booking1.getFacilityID().equals(new_booking.getFacilityID())) {
+                            if (!(booking1.getEnd_Time().isAfter(new_booking.getStart_Time())) || !(booking1.getStart_Time().isBefore(new_booking.getEnd_Time()))) {
+                            } else {
+                                result = false;
+                            }
                     }
                 }
             }
@@ -233,15 +224,13 @@ public class Facility {
                 num = Integer.parseInt(number);
                 num += 1;
             }
-            String str = "Book" + num.toString();
-            return str;
+            return "Book" + num;
         }
 
         public String[] getStringArray(Booking booking){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
-            String[] data = {booking.getBookingID(), booking.getFacilityID(), booking.getResident_Username(), booking.getDate().format(formatter), booking.getStart_Time().format(timeFormatter), booking.getEnd_Time().format(timeFormatter)};
-            return data;
+            return new String[]{booking.getBookingID(), booking.getFacilityID(), booking.getResident_Username(), booking.getDate().format(formatter), booking.getStart_Time().format(timeFormatter), booking.getEnd_Time().format(timeFormatter)};
         }
 
 

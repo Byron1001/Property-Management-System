@@ -1,9 +1,6 @@
 package Entity;
 
-import Entity.Financial.Invoice;
-
 import java.io.*;
-import java.nio.file.StandardWatchEventKinds;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -14,8 +11,7 @@ public class CheckPoint {
     private String checkPointID;
     private String name;
     private String location;
-    private File checkPoint_Info_txt = new File("src/Database/CheckPoint_Information.txt");
-    private File checkPoint_Record_txt = new File("src/Database/CheckPoint_Record.txt");
+    private final File checkPoint_Info_txt = new File("src/Database/CheckPoint_Information.txt");
 
     public CheckPoint(){}
 
@@ -49,8 +45,7 @@ public class CheckPoint {
         this.location = location;
     }
     public String[] getStringArray(CheckPoint checkPoint){
-        String[] data = {checkPoint.getCheckPointID(), checkPoint.getName(), checkPoint.getLocation()};
-        return data;
+        return new String[]{checkPoint.getCheckPointID(), checkPoint.getName(), checkPoint.getLocation()};
     }
 
     public ArrayList<CheckPoint> getArrayList() throws IOException, ClassNotFoundException {
@@ -70,8 +65,10 @@ public class CheckPoint {
         boolean result = false;
         ArrayList<CheckPoint> checkPointArrayList = this.getArrayList();
         for (CheckPoint checkPoint : checkPointArrayList){
-            if (checkPoint.getCheckPointID().equals(checkPointID))
+            if (checkPoint.getCheckPointID().equals(checkPointID)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -89,7 +86,7 @@ public class CheckPoint {
 
     public void save_All_CheckPoint(ArrayList<CheckPoint> checkPointArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(checkPoint_Info_txt, false);
-        fileWriter.write("CheckPointID:Name:Location");
+        fileWriter.write("CheckPointID:Name:Location\n");
         for (CheckPoint checkPoint : checkPointArrayList){
             fileWriter.write(checkPoint.getDataString(checkPoint));
         }
@@ -101,7 +98,7 @@ public class CheckPoint {
         private String checkPointID;
         private LocalDate date;
         private LocalTime time;
-        private File checkPoint_Record_txt = new File("src/Database/CheckPoint_Record.txt");
+        private final File checkPoint_Record_txt = new File("src/Database/CheckPoint_Record.txt");
         public Record(){}
 
         public Record(String employeeID, String checkPointID, LocalDate date, LocalTime time) {
@@ -173,7 +170,7 @@ public class CheckPoint {
 
         public void save_All_Record(ArrayList<CheckPoint.Record> recordArrayList) throws IOException {
             FileWriter fileWriter = new FileWriter(checkPoint_Record_txt, false);
-            fileWriter.write("SecurityGuard Employee ID:CheckPointID:date:time");
+            fileWriter.write("SecurityGuard Employee ID:CheckPointID:date:time\n");
             for (CheckPoint.Record record : recordArrayList){
                 fileWriter.write(record.getDataString(record));
             }
@@ -196,19 +193,13 @@ public class CheckPoint {
         public ArrayList<CheckPoint.Record> search_Record(LocalDate date) throws IOException, ClassNotFoundException {
             CheckPoint.Record record = new Record();
             ArrayList<CheckPoint.Record> recordArrayList = record.getArrayList();
-            for (CheckPoint.Record record1 : recordArrayList){
-                if (!(record1.getDate().equals(date)))
-                    recordArrayList.remove(record1);
-            }
+            recordArrayList.removeIf(record1 -> !(record1.getDate().equals(date)));
             return recordArrayList;
         }
         public ArrayList<CheckPoint.Record> search_Record(LocalTime time) throws IOException, ClassNotFoundException {
             CheckPoint.Record record = new Record();
             ArrayList<CheckPoint.Record> recordArrayList = record.getArrayList();
-            for (CheckPoint.Record record1 : recordArrayList){
-                if (!(record1.getTime().equals(time)))
-                    recordArrayList.remove(record1);
-            }
+            recordArrayList.removeIf(record1 -> !(record1.getTime().equals(time)));
             return recordArrayList;
         }
 

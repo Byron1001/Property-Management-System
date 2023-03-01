@@ -4,4 +4,3 @@ floor:unitID:complete_Year:furnish:parking_Unit:owner_Username:resident_Username
 4:A403:2020:Fully:P01-003:Jay1030:Jay1030
 4:A404:2020:Not:P01-004:Ahmad4403:Ahmad4403
 4:A405:2020:Fully:P01-005:Joy101:Rain1031
-5:A506:2020:Half:P01-006:Foo1201:Foo1201

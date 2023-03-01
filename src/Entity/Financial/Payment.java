@@ -1,7 +1,6 @@
 package Entity.Financial;
 
 import Entity.Building_Manager.Building_Manager_Function;
-import Entity.Resident.Resident;
 import Entity.Unit;
 
 import java.io.*;
@@ -21,7 +20,7 @@ public class Payment {
     private String issuerID;
     private LocalDate issuedDate;
     private String description;
-    private File payment_txt = new File("src/Database/Payment.txt");
+    private final File payment_txt = new File("src/Database/Payment.txt");
     public Payment(){}
 
     public Payment(String paymentID, String invoiceID, String pay_Username, String unitID, int amount, LocalDate payment_Date, String paymentTypes, String issuerID, LocalDate issuedDate, String description) {
@@ -133,8 +132,19 @@ public class Payment {
 
     public String[] getStringArray(Payment payment){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-        String[] data = {payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), payment.getIssuerID(), payment.getIssuedDate().format(formatter), payment.getDescription()};
-        return data;
+        String paymentDate = "";
+        String issuer = "";
+        String issueDate = "";
+        if (payment.getPayment_Date() != null){
+            paymentDate = payment.getPayment_Date().format(formatter);
+        }
+        if (payment.getIssuerID() != null){
+            issuer = payment.getIssuerID();
+        }
+        if (payment.getIssuedDate() != null){
+            issueDate = payment.getIssuedDate().format(formatter);
+        }
+        return new String[]{payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), paymentDate, payment.getPaymentTypes(), issuer, issueDate, payment.getDescription()};
     }
 
     public String[] getStringArrayAddStatus(Payment payment){
@@ -150,8 +160,7 @@ public class Payment {
         if (payment.getIssuedDate() != null){
             issuedDate = payment.getIssuedDate().format(formatter);
         }
-        String[] data = {payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), issuer, issuedDate, status};
-        return data;
+        return new String[]{payment.getPaymentID(), payment.getInvoiceID(), payment.getPay_Username(), payment.getUnitID(), Integer.valueOf(payment.getAmount()).toString(), payment.getPayment_Date().format(formatter), payment.getPaymentTypes(), issuer, issuedDate, status};
     }
 
     public String get_Auto_PaymentID() throws FileNotFoundException {
@@ -165,8 +174,7 @@ public class Payment {
             num = Integer.parseInt(number);
             num += 1;
         }
-        String str = "Pay" + num.toString();
-        return str;
+        return "Pay" + num;
     }
 
     public String getDataString(Payment payment){
@@ -242,11 +250,7 @@ public class Payment {
     public ArrayList<Payment> get_All_unapproved_Payment() throws FileNotFoundException {
         Payment payment = new Payment();
         ArrayList<Payment> paymentArrayList = payment.getArrayList();
-        for (Payment payment1 : paymentArrayList)
-        {
-            if (!(payment1.getIssuerID().equals(null)))
-                paymentArrayList.remove(payment1);
-        }
+        paymentArrayList.removeIf(payment1 -> payment1.getIssuerID() != null);
         return paymentArrayList;
     }
 
@@ -276,7 +280,7 @@ public class Payment {
         private String username;
         private int amount;
         private String unitID;
-        private File deposit_txt = new File("src/Database/Deposit.txt");
+        private final File deposit_txt = new File("src/Database/Deposit.txt");
         public Deposit(){}
 
         public Deposit(String username, int amount, String unitID) {
@@ -376,7 +380,7 @@ public class Payment {
         private LocalDate payment_Date;
         private String paymentTypes;
         private String description;
-        private File expenses_txt = new File("src/Database/Expenses.txt");
+        private final File expenses_txt = new File("src/Database/Expenses.txt");
 
         public Expenses(){}
 
@@ -491,8 +495,7 @@ public class Payment {
                 num = Integer.parseInt(number);
                 num += 1;
             }
-            String str = "Exp" + num.toString();
-            return str;
+            return "Exp" + num;
         }
 
         public static void add_Expenses(Expenses expenses) throws IOException {

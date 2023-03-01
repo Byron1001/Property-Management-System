@@ -1,3 +1,3 @@
 PatrolID:Security EmployeeID:Day:Time Start:Time End
 Patrol1:SG001:Monday:130000:170000
-Patrol2:SG002:Tuesday:120000:150000
+Patrol2:SG002:Wednesday:120000:150000

@@ -34,7 +34,7 @@ public class Vendor_Statement_Frame extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String vendor_Username = "Vendor Username";
+    public String vendor_Username;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -227,7 +227,7 @@ public class Vendor_Statement_Frame extends JFrame {
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             JLabel formTitle = new JLabel("Statement");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Issuer Position"),
                     new JLabel("Date"), new JLabel("Receiver ID"),
                     new JLabel("Description")};

@@ -12,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -20,7 +19,7 @@ public class SecurityGuard_Interface extends JFrame {
     public UIFrame frame;
     private String employeeID;
 
-    public String getemployeeID() {
+    public String getEmployeeID() {
         return employeeID;
     }
 
@@ -72,7 +71,6 @@ public class SecurityGuard_Interface extends JFrame {
     }
 
     public class SecurityGuard_Profile_Panel extends JPanel {
-        private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public SecurityGuard.Button updateButton;
         public SecurityGuard_Profile_Panel(String securityGuard_EmployeeID) throws IOException, ClassNotFoundException {
             setPreferredSize(new Dimension(1000, 500));
@@ -118,7 +116,7 @@ public class SecurityGuard_Interface extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     setEnabled(false);
-                    SecurityGuard_Interface.SecurityGuard_Profile_Panel.UpdateInfo updateInfo = null;
+                    SecurityGuard_Interface.SecurityGuard_Profile_Panel.UpdateInfo updateInfo;
                     try {
                         updateInfo = new UpdateInfo(data);
                     } catch (ParseException ex) {
@@ -131,7 +129,7 @@ public class SecurityGuard_Interface extends JFrame {
         }
 
         public class UpdateInfo extends JFrame{
-            private Font labelFont = new Font("sansserif", Font.BOLD, 14);
+            private final Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private SecurityGuard.Button updateButton;
             private SecurityGuard.Button cancelButton;
 
@@ -227,7 +225,7 @@ public class SecurityGuard_Interface extends JFrame {
                                 gender = 'F';
                             }
                             String ori_Username = data[0];
-                            SecurityGuard securityGuardUpdated = null;
+                            SecurityGuard securityGuardUpdated;
                             try {
                                 securityGuardUpdated = new SecurityGuard(securityGuard_EmployeeID_TextField.getText(), name_TextField.getText(), gender, contact_FormattedTextField.getText(), Integer.parseInt(data[4]));
                                 try {

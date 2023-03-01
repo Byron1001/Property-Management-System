@@ -15,7 +15,6 @@ import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 
 public class Vendor_Interface {
     public UIFrame frame;
@@ -91,7 +90,7 @@ public class Vendor_Interface {
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout(0,20));
             JLabel profileLabel = new JLabel("Profile");
-            Font titleFont = new Font("Sansserif", Font.BOLD, 24);
+            Font titleFont = new Font("sansserif", Font.BOLD, 24);
             profileLabel.setFont(titleFont);
             profileLabel.setHorizontalAlignment(JLabel.CENTER);
             panel.add(profileLabel, BorderLayout.NORTH);
@@ -122,7 +121,7 @@ public class Vendor_Interface {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     setEnabled(false);
-                    UpdateInfo updateInfo = null;
+                    UpdateInfo updateInfo;
                     try {
                         updateInfo = new UpdateInfo(data);
                     } catch (ParseException ex) {
@@ -135,7 +134,7 @@ public class Vendor_Interface {
         }
 
         public class UpdateInfo extends JFrame{
-            private Font labelFont = new Font("sansserif", Font.BOLD, 14);
+            private final Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private Vendor.Button updateButton;
             private Vendor.Button cancelButton;
 

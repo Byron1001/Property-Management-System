@@ -34,7 +34,7 @@ public class Account_Executive_Payment extends JFrame{
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -147,11 +147,11 @@ public class Account_Executive_Payment extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = tableData.getSelectedRow();
-                Payment payment = paymentArrayList.get(row);
-                if (!payment.getIssuerID().equals("")){
-                    JOptionPane.showMessageDialog(null, "This payment has already been confirmed", "Payment confirmed", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    if (row != -1){
+                if (row != -1) {
+                    Payment payment = paymentArrayList.get(row);
+                    if (!payment.getIssuerID().equals("")) {
+                        JOptionPane.showMessageDialog(null, "This payment has already been confirmed", "Payment confirmed", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
                         int result = JOptionPane.showConfirmDialog(null, "Confirm payment received?", "Payment confirmation", JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
                             Account_Executive_Function.Account_Executive accountExecutive = new Account_Executive_Function.Account_Executive();
@@ -163,9 +163,9 @@ public class Account_Executive_Payment extends JFrame{
                                 throw new RuntimeException(ex);
                             }
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Please choose the payment details", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                     }
+                }else {
+                    JOptionPane.showMessageDialog(null, "Please choose the payment details", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
             }
         });
@@ -256,7 +256,7 @@ public class Account_Executive_Payment extends JFrame{
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             JLabel receiptTitle = new JLabel("Payment");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Payment ID"), new JLabel("Invoice ID"),
                     new JLabel("Pay Username"), new JLabel("Unit ID"),
                     new JLabel("Amount"), new JLabel("Payment date"),

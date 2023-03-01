@@ -1,11 +1,9 @@
 package Entity;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class Patrolling {
@@ -14,7 +12,7 @@ public class Patrolling {
     private String day;
     private LocalTime start_Time;
     private LocalTime end_Time;
-    private File patrolling_Schedule_Info_txt = new File("src/Database/Patrolling_Schedule_Information.txt");
+    private final File patrolling_Schedule_Info_txt = new File("src/Database/Patrolling_Schedule_Information.txt");
     public enum DayName{
         Mon(1, "Monday"), Tue(2, "Tuesday"), Wed(3, "Wednesday"), Thu(4, "Thursday"), Fri(5, "Friday"), Sat(6, "Saturday"), Sun(7, "Sunday");
         private int value;
@@ -112,8 +110,10 @@ public class Patrolling {
         boolean result = false;
         ArrayList<Patrolling> patrollingArrayList = this.getArrayList();
         for (Patrolling patrolling : patrollingArrayList){
-            if (patrolling.getPatrolID().equals(patrolID))
+            if (patrolling.getPatrolID().equals(patrolID)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -137,21 +137,11 @@ public class Patrolling {
 
     public void save_All_Patrolling(ArrayList<Patrolling> patrollingArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(patrolling_Schedule_Info_txt, false);
-        fileWriter.write("PatrolID:Security EmployeeID:Day:Time Start:Time End");
+        fileWriter.write("PatrolID:Security EmployeeID:Day:Time Start:Time End\n");
         for (Patrolling patrolling : patrollingArrayList){
             fileWriter.write(patrolling.getDataString(patrolling));
         }
         fileWriter.close();
-    }
-
-    public ArrayList<Patrolling> get_SG_All_Patrolling(String employeeID) throws IOException, ClassNotFoundException {
-        Patrolling patrolling = new Patrolling();
-        ArrayList<Patrolling> patrollingArrayList = patrolling.getArrayList();
-        for (Patrolling patrolling1 : patrollingArrayList){
-            if (!patrolling1.getEmployeeID().equals(employeeID))
-                patrollingArrayList.remove(patrolling1);
-        }
-        return patrollingArrayList;
     }
 
     public String get_Auto_PatrollingID() throws FileNotFoundException {
@@ -165,8 +155,7 @@ public class Patrolling {
             num = Integer.parseInt(number);
             num += 1;
         }
-        String str = "Patrol" + num.toString();
-        return str;
+        return "Patrol" + num;
     }
 
 }

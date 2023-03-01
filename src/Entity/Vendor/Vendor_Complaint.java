@@ -22,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
@@ -35,7 +34,7 @@ public class Vendor_Complaint extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String vendor_Username = "Vendor Username";
+    public String vendor_Username;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -251,7 +250,7 @@ public class Vendor_Complaint extends JFrame {
         frame.formHome.removeAll();
         frame.menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
-            public void selected(int index) throws IOException, ClassNotFoundException {
+            public void selected(int index) throws IOException {
                 if (index == 0) {
                     Vendor_Interface vendorInterface = new Vendor_Interface(vendor_Username);
                     vendorInterface.frame.setVisible(true);
@@ -453,12 +452,10 @@ public class Vendor_Complaint extends JFrame {
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-
             JLabel formTitle = new JLabel("Complaint logging Form");
             JLabel[] jLabelLeft = {new JLabel("Complaint ID"), new JLabel("Vendor Username"),
                     new JLabel("Description")};
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             JLabel[] jLabelRight = {new JLabel(complaint.getComplaintID()), new JLabel(complaint.getResident_Username()),
                     new JLabel(complaint.getDescription()), new JLabel(complaint.getStatus())};

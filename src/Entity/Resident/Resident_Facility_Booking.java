@@ -1,9 +1,7 @@
 package Entity.Resident;
 
 import Entity.Facility;
-import Entity.Financial.Payment;
 import Entity.Login.Login_Frame;
-import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -25,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -40,7 +37,7 @@ public class Resident_Facility_Booking extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String resident_Username = "resident Username";
+    public String resident_Username;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -367,7 +364,7 @@ public class Resident_Facility_Booking extends JFrame {
             bookButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (dateField.getText().equals("") || startTimeField.getText().equals("") || endTimeField.getText().equals("")){
+                    if (!dateField.getText().equals("  .  .    ") && !startTimeField.getText().equals("") && !endTimeField.getText().equals("")){
                         Facility.Booking booking = new Facility.Booking(bookingIDField.getText(), facility_Info.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), formatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
                         try {
                             boolean check = new Resident().check_Resident_Availability(booking.getResident_Username());
@@ -429,7 +426,7 @@ public class Resident_Facility_Booking extends JFrame {
             }
             JTextField bookingIDField = new JTextField(booking.getBookingID());
             bookingIDField.setEditable(false);
-            JComboBox facilityComboBox = new JComboBox();
+            JComboBox<String> facilityComboBox = new JComboBox<>();
             for (Facility facility : facility_Info){
                 facilityComboBox.addItem(facility.getName());
             }
@@ -532,7 +529,7 @@ public class Resident_Facility_Booking extends JFrame {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
             JLabel formTitle = new JLabel("BOOKING DETAILS");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Booking ID"), new JLabel("Facility ID"),
                     new JLabel("Resident Username"), new JLabel("Date (MM.dd.yyyy)"),
                     new JLabel("Start time (HHmmss)"), new JLabel("End time (HHmmss)")};

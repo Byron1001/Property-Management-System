@@ -1,3 +1,6 @@
 leader username:team:position
 AC01:Account Executive Team:Team Leader
 AC02:Account Executive Team:Team Vice Leader
+SG001:SecurityGuard Team:Team Leader
+CN001:Cleaner Team:Team Leader
+SG002:SecurityGuard Team:Team Vice Leader

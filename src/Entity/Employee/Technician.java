@@ -1,23 +1,16 @@
 package Entity.Employee;
 
-import Entity.Employee.Employee;
-import Entity.Visitor_Pass;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Technician extends Employee {
     protected String position_Name = "Technician";
-    private static File technician_Info_txt = new File("src/Database/Technician_Information.txt");
+    private static final File technician_Info_txt = new File("src/Database/Technician_Information.txt");
     public Technician(){}
-    public Technician(String employeeID){
-    }
     public Technician(String employeeID, String name, char gender, String contact_Number, int salary){
         super();
         super.set_Info(employeeID, name, gender, contact_Number, salary, position_Name);
@@ -40,8 +33,9 @@ public class Technician extends Employee {
         boolean result = false;
         ArrayList<Technician> technicianArrayList = this.getArrayList();
         for (Technician technician : technicianArrayList){
-            if (technician.getEmployeeID().equals(employeeID)){
+            if (technician.getEmployeeID().equals(employeeID)) {
                 result = true;
+                break;
             }
         }
         return result;
@@ -59,7 +53,7 @@ public class Technician extends Employee {
 
     public void save_All_Technician(ArrayList<Technician> technicianArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(technician_Info_txt, false);
-        fileWriter.write("Employee ID:Name:Gender:contact_number:salary:position");
+        fileWriter.write("Employee ID:Name:Gender:contact_number:salary:position\n");
         for (Technician technician : technicianArrayList){
             fileWriter.write(technician.getDataString(technician));
         }

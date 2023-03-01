@@ -23,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class Admin_Executive_Vendor extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -133,7 +132,6 @@ public class Admin_Executive_Vendor extends JFrame {
         setLocationRelativeTo(null);
 
         ArrayList<Vendor> vendorArrayList = new Vendor().getArrayList();
-        Vendor vendor = new Vendor();
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -294,7 +292,6 @@ public class Admin_Executive_Vendor extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<Vendor> vendorArrayList = new Vendor().getArrayList();
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -432,8 +429,6 @@ public class Admin_Executive_Vendor extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<Vendor> vendorArrayList = new Vendor().getArrayList();
-
         public modifyFrame(Vendor vendor) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -567,8 +562,8 @@ public class Admin_Executive_Vendor extends JFrame {
                     Vendor vendorModify = new Vendor(vendorUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), vendorUnitField.getText(), Integer.parseInt(monthlyPaymentField.getText()), Integer.parseInt(unpaidPaymentField.getText()));
                     try {
                         boolean check = vendorModify.check_Vendor_Availability(vendorModify.getVendor_Username()) && !vendorModify.getVendor_Username().equals(vendor.getVendor_Username());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Vendor Username already existed", "Vendor Username found", JOptionPane.ERROR_MESSAGE);
+                        if (!check) {
+                            JOptionPane.showMessageDialog(null, "Vendor Username not existed", "Vendor Username not found", JOptionPane.ERROR_MESSAGE);
                         } else {
                             check = vendorModify.check_Vendor_Contact_Number_Availability(vendorModify.getContact_Number()) && !vendorModify.getContact_Number().equals(vendor.getContact_Number());
                             if (check) {

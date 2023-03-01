@@ -1,6 +1,9 @@
 ComplaintID:resident_Username:description:status
-Com1:Mike1001:A beggar in front of condo:solved
+Com1:Mike1001:Rooftop water leakage:unsolved
 Com2:Andrew1123:Rooftop water leakage:unsolved
 Com3:Joy101:Earthquake:unsolved
 Com4:VE001:Earthquake:unsolved
 Com5:VE001:swimming pool has pee:unsolved
+Com6:Mike1001:Rooftop water leakage:unsolved
+Com7:Mike1001:Rooftop water leakage:unsolved
+Com8:Mike1001:Rooftop water leakage:unsolved

@@ -1,10 +1,5 @@
 package Entity.Building_Manager;
 
-import Entity.CheckPoint;
-import Entity.Complaint;
-import Entity.Executive.Building_Executive.Building_Executive_Function;
-import Entity.Executive.Executive;
-import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
 import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
@@ -42,7 +37,7 @@ public class Building_Manager_Operation extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String buildingManagerID = "resident Username";
+    public String buildingManagerID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -122,8 +117,8 @@ public class Building_Manager_Operation extends JFrame {
         buttonPanel.setBackground(Color.white);
         buttonPanel.setLayout(new GridLayout(3, 2, 40, 15));
 
-        addButton = new Building_Manager_Function.Button("Add Operation Bugetting");
-        deleteButton = new Building_Manager_Function.Button("Delete Operation Budgetting");
+        addButton = new Building_Manager_Function.Button("Add Operation Budgeting");
+        deleteButton = new Building_Manager_Function.Button("Delete Operation Budgeting");
         viewButton = new Building_Manager_Function.Button("View Operation Info");
         modifyButton = new Building_Manager_Function.Button("Update Operation Info");
         payButton = new Building_Manager_Function.Button("Pay for operation");
@@ -261,7 +256,7 @@ public class Building_Manager_Operation extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("employee", "User Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("report", "Report", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("deposit", "Operation and Budget Planning", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Sructure Management", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Structure Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#f4791f");
@@ -368,7 +363,7 @@ public class Building_Manager_Operation extends JFrame {
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             Resident.Button addButton = new Resident.Button("Add Operation Budget");
-            Resident.Button cancelButton = new Resident.Button("Cancel Budgetting");
+            Resident.Button cancelButton = new Resident.Button("Cancel Budgeting");
 
             addButton.setAlignmentX(JButton.CENTER);
             cancelButton.setAlignmentX(JButton.CENTER);
@@ -479,7 +474,7 @@ public class Building_Manager_Operation extends JFrame {
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             Resident.Button addButton = new Resident.Button("MODIFY Operation Budget");
-            Resident.Button cancelButton = new Resident.Button("Cancel Budgetting");
+            Resident.Button cancelButton = new Resident.Button("Cancel Budgeting");
 
             addButton.setAlignmentX(JButton.CENTER);
             cancelButton.setAlignmentX(JButton.CENTER);
@@ -552,8 +547,6 @@ public class Building_Manager_Operation extends JFrame {
             JPanel panel3 = new JPanel();
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
 
             JLabel formTitle = new JLabel("OPERATION DETAILS");
             JLabel[] jLabelLeft = {new JLabel("Operation ID"), new JLabel("Building Manager ID"),

@@ -1,7 +1,5 @@
 package Entity.Employee;
 
-import Entity.Resident.Resident;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -11,7 +9,7 @@ public class Employee_Task {
     private String employeeID;
     private String description;
     private String status;
-    private static File employee_Task_txt = new File("src/Database/Employee_Task.txt");
+    private static final File employee_Task_txt = new File("src/Database/Employee_Task.txt");
     public Employee_Task(){}
 
     public Employee_Task(String taskID, String employeeID, String description, String status) {
@@ -83,7 +81,7 @@ public class Employee_Task {
 
     public void save_All_Employee_Task(ArrayList<Employee_Task> employee_TaskArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(employee_Task_txt, false);
-        fileWriter.write("TaskID:EmployeeID:description:status");
+        fileWriter.write("TaskID:EmployeeID:description:status\n");
         for (Employee_Task employee_Task : employee_TaskArrayList){
             fileWriter.write(employee_Task.getDataString(employee_Task));
         }
@@ -101,8 +99,7 @@ public class Employee_Task {
             num = Integer.parseInt(number);
             num += 1;
         }
-        String str = "Task" + num.toString();
-        return str;
+        return "Task" + num;
     }
 
     public void add_Task(Employee_Task task) throws IOException {

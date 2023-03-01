@@ -1,6 +1,5 @@
 package Entity.Executive.Admin_Executive;
 
-import Entity.Facility;
 import Entity.Login.Login_Frame;
 import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
@@ -25,7 +24,6 @@ import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -36,7 +34,7 @@ public class Admin_Executive_Visitor_Pass extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;

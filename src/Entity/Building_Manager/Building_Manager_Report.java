@@ -2,23 +2,16 @@ package Entity.Building_Manager;
 
 import Entity.CheckPoint;
 import Entity.Complaint;
-import Entity.Employee.Employee;
 import Entity.Employee.Employee_Task;
 import Entity.Employee.SecurityGuard.SecurityGuard;
 import Entity.Executive.Account_Executive.Account_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
-import Entity.Executive.Executive;
 import Entity.Facility;
 import Entity.Login.Login_Frame;
-import UIPackage.Component.Header;
-import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
-import UIPackage.Form.Form_Home;
 import UIPackage.Model.Model_Menu;
 import UIPackage.main.UIFrame;
-import UIPackage.swing.PanelBorder;
-import UIPackage.swing.Table;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -30,24 +23,13 @@ import org.jfree.data.general.PieDataset;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class Building_Manager_Report extends JFrame {
@@ -79,7 +61,7 @@ public class Building_Manager_Report extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("employee", "User Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("report", "Report", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("deposit", "Operation and Budget Planning", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Sructure Management", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Structure Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#f4791f");
@@ -155,7 +137,7 @@ public class Building_Manager_Report extends JFrame {
             final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
             ArrayList<Object[]> checkPointRecordData = getCheckPointRecordData();
             for (Object[] data : checkPointRecordData){
-                dataset.addValue((Number) Integer.valueOf(data[0].toString()), data[1].toString(), data[2].toString());
+                dataset.addValue(Integer.valueOf(data[0].toString()), data[1].toString(), data[2].toString());
             }
             return dataset;
         }
@@ -224,7 +206,7 @@ public class Building_Manager_Report extends JFrame {
             final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
             ArrayList<Object[]> bookingRecordData = getBookingRecordData();
             for (Object[] data : bookingRecordData){
-                dataset.addValue((Number) Integer.valueOf(data[0].toString()), data[1].toString(), data[2].toString());
+                dataset.addValue(Integer.valueOf(data[0].toString()), data[1].toString(), data[2].toString());
             }
             return dataset;
         }

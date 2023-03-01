@@ -1,37 +1,28 @@
 package Entity.Resident;
 
 import Entity.Complaint;
-import Entity.Financial.Invoice;
-import Entity.Financial.Payment;
 import Entity.Login.Login_Frame;
-import Entity.Visitor_Pass;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
 import UIPackage.Form.Form_Home;
-import UIPackage.Model.Model_Card;
 import UIPackage.Model.Model_Menu;
 import UIPackage.swing.PanelBorder;
 import UIPackage.swing.Table;
-
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Resident_Complaint extends JFrame {
@@ -41,13 +32,13 @@ public class Resident_Complaint extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String resident_Username = "resident Username";
+    public String resident_Username;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
     public Resident.Button addButton, cancelButton, viewButton, updateButton;
 
-    public Resident_Complaint(String resident_Username) throws IOException, ClassNotFoundException {
+    public Resident_Complaint(String resident_Username) throws IOException {
         this.resident_Username = resident_Username;
         menu.initMoving(Entity.Resident.Resident_Complaint.this);
 
@@ -146,6 +137,7 @@ public class Resident_Complaint extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     new addFrame(resident_Username).setVisible(true);
+                    dispose();
                 } catch (IOException | ClassNotFoundException | ParseException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -155,12 +147,17 @@ public class Resident_Complaint extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    int row = tableData.getSelectedRow();
-                    Complaint complaintSelected = complaintArrayList.get(row);
-                    new updateFrame(complaintSelected).setVisible(true);
-                } catch (IOException | ClassNotFoundException | ParseException ex) {
-                    throw new RuntimeException(ex);
+                int row = tableData.getSelectedRow();
+                if (row != -1){
+                    try {
+                        Complaint complaintSelected = complaintArrayList.get(row);
+                        new updateFrame(complaintSelected).setVisible(true);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException | ParseException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select the complaint", "Choice error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -173,8 +170,9 @@ public class Resident_Complaint extends JFrame {
                 if (row != -1 || column != -1) {
                     Complaint complaintSelected = complaintArrayList.get(row);
                     new cancelFrame(complaintSelected).setVisible(true);
+                    dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
+                    JOptionPane.showMessageDialog(null, "Please choose the complaint", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
             }
         });
@@ -187,7 +185,7 @@ public class Resident_Complaint extends JFrame {
                     Complaint complaintSelected = complaintArrayList.get(row);
                     new viewFrame(complaintSelected).setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Please choose the visitor pass", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
+                    JOptionPane.showMessageDialog(null, "Please choose the complaint", "Choice error", JOptionPane.ERROR_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 80, 80));
                 }
             }
         });
@@ -232,7 +230,7 @@ public class Resident_Complaint extends JFrame {
         for (String col : column) {
             frame.tableData.model.addColumn(col);
         }
-        frame.tableData.preferredColumnWidth = 230;
+        frame.tableData.preferredColumnWidth = 220;
 
         Resident resident = new Resident();
         ArrayList<Complaint> complaintArrayList = resident.view_Complaint(resident_Username);
@@ -280,8 +278,6 @@ public class Resident_Complaint extends JFrame {
 
     private static class addFrame extends JFrame {
         public addFrame(String resident_Username) throws IOException, ClassNotFoundException, ParseException {
-            Resident resident = new Resident();
-            resident = resident.get_Resident_Info(resident_Username);
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
             JPanel panel3 = new JPanel();
@@ -315,8 +311,6 @@ public class Resident_Complaint extends JFrame {
             panel2.add(jLabelLeft[1]);
             panel2.add(residentUsernameField);
             panel2.add(jLabelLeft[2]);
-            panel2.add(residentUsernameField);
-            panel2.add(jLabelLeft[3]);
             panel2.add(descriptionArea);
             panel1.add(panel2, BorderLayout.CENTER);
 
@@ -337,23 +331,34 @@ public class Resident_Complaint extends JFrame {
             logButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Complaint complaint = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "Unsolved");
-                    try {
-                        boolean check = new Resident().check_Resident_Availability(complaint.getResident_Username());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Resident().log_Complaint(complaint);
+                    if (!descriptionArea.getText().equals("")){
+                        Complaint complaint = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "Unsolved");
+                        try {
+                            boolean check = new Resident().check_Resident_Availability(complaint.getResident_Username());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Resident().log_Complaint(complaint);
+                                new Entity.Resident.Resident_Complaint(resident_Username).run(resident_Username);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please enter complete description", "Description error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Resident_Complaint(resident_Username).run(resident_Username);
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
@@ -394,8 +399,6 @@ public class Resident_Complaint extends JFrame {
             panel2.add(jLabelLeft[1]);
             panel2.add(residentUsernameField);
             panel2.add(jLabelLeft[2]);
-            panel2.add(residentUsernameField);
-            panel2.add(jLabelLeft[3]);
             panel2.add(descriptionArea);
             panel1.add(panel2, BorderLayout.CENTER);
 
@@ -416,23 +419,34 @@ public class Resident_Complaint extends JFrame {
             updateButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Complaint complaint1 = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "Unsolved");
-                    try {
-                        boolean check = new Resident().check_Resident_Availability(complaint1.getResident_Username());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Resident().update_Complaint(complaint1);
+                    if (!descriptionArea.getText().equals("")){
+                        Complaint complaint1 = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "Unsolved");
+                        try {
+                            boolean check = new Resident().check_Resident_Availability(complaint1.getResident_Username());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Resident().update_Complaint(complaint1);
+                                new Resident_Complaint(complaint.getResident_Username()).run(complaint.getResident_Username());
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please enter complete description", "Description error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Resident_Complaint(complaint.getResident_Username()).run(complaint.getResident_Username());
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
@@ -446,12 +460,10 @@ public class Resident_Complaint extends JFrame {
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(4, 1, 15, 15));
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-
             JLabel frameTitle = new JLabel("Complaint");
             JLabel[] jLabelLeft = {new JLabel("Complaint ID"), new JLabel("Resident Username"),
                     new JLabel("Description")};
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             JLabel[] jLabelRight = {new JLabel(complaint.getComplaintID()), new JLabel(complaint.getResident_Username()),
                                     new JLabel(complaint.getDescription()), new JLabel(complaint.getStatus())};
@@ -493,18 +505,30 @@ public class Resident_Complaint extends JFrame {
                     if (result == JOptionPane.YES_OPTION) {
                         try {
                             new Resident().cancel_Complaint(complaint.getComplaintID());
-                        } catch (IOException ex) {
+                            new Resident_Complaint(complaint.getResident_Username()).run(complaint.getResident_Username());
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
                     } else {
-                        dispose();
+                        try {
+                            new Resident_Complaint(complaint.getResident_Username()).run(complaint.getResident_Username());
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
             });
             cancelButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Resident_Complaint(complaint.getResident_Username()).run(complaint.getResident_Username());
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
@@ -518,12 +542,10 @@ public class Resident_Complaint extends JFrame {
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-
             JLabel formTitle = new JLabel("Complaint logging Form");
             JLabel[] jLabelLeft = {new JLabel("Complaint ID"), new JLabel("Resident Username"),
                     new JLabel("Description")};
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             JLabel[] jLabelRight = {new JLabel(complaint.getComplaintID()), new JLabel(complaint.getResident_Username()),
                     new JLabel(complaint.getDescription()), new JLabel(complaint.getStatus())};
@@ -558,7 +580,12 @@ public class Resident_Complaint extends JFrame {
             closeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    dispose();
+                    try {
+                        new Resident_Complaint(complaint.getResident_Username()).run(complaint.getResident_Username());
+                        dispose();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
             });
         }
@@ -567,6 +594,5 @@ public class Resident_Complaint extends JFrame {
     public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
         new Entity.Resident.Resident_Complaint("Mike1001").run("Mike1001");
 //        new addFrame("Mike1001");
-//        new cancelFrame(new Visitor_Pass().getArrayList().get(0));
     }
 }

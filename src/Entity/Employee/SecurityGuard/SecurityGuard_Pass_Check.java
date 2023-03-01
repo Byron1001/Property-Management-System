@@ -16,17 +16,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -37,7 +34,7 @@ public class SecurityGuard_Pass_Check extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String SecurityGuard_Username = "SecurityGuard Username";
+    public String SecurityGuard_Username;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -248,11 +245,11 @@ public class SecurityGuard_Pass_Check extends JFrame {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
 
             JLabel formTitle = new JLabel("VISITOR PASS");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Visitor Pass ID"), new JLabel("Visitor name"),
                     new JLabel("Resident Username"), new JLabel("Unit ID"),
                     new JLabel("Gender"), new JLabel("Contact Number"),
-                    new JLabel("Date Start (MM.dd.yyyyy)"), new JLabel("Date End(MM.dd.yyyy)"), new JLabel("Status")};
+                    new JLabel("Date Start (MM.dd.yyyy)"), new JLabel("Date End(MM.dd.yyyy)"), new JLabel("Status")};
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             JLabel[] jLabelRight = {new JLabel(visitorPass.getVisitor_Pass_ID()), new JLabel(visitorPass.getVisitor_Name()),
                     new JLabel(visitorPass.getResident_Username()), new JLabel(visitorPass.getUnitID()),

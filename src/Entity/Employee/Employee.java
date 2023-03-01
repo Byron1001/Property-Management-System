@@ -90,16 +90,12 @@ public class Employee {
     public void mark_Task_Done(String taskID) throws IOException {
         Employee_Task employeeTask = new Employee_Task();
         ArrayList<Employee_Task> employeeTaskArrayList = employeeTask.getArrayList();
-        for (Employee_Task employeeTask1 : employeeTaskArrayList){
-            if (employeeTask1.getTaskID().equals(taskID)){
-                employeeTaskArrayList.remove(employeeTask1);
-            }
-        }
+        employeeTaskArrayList.removeIf(employeeTask1 -> employeeTask1.getTaskID().equals(taskID));
         employeeTask.save_All_Employee_Task(employeeTaskArrayList);
     }
 
     public Integer check_Employee_Position(String employeeID){
-        Integer result = 0;
+        Integer result;
         HashMap<String, Integer> map = new HashMap<>();
         map.put("SG", 1);
         map.put("CN", 2);
@@ -133,7 +129,7 @@ public class Employee {
 
     public boolean check_Employee_Availability(String employeeID) throws IOException, ClassNotFoundException {
         int result = check_Employee_Position(employeeID);
-        boolean check = false;
+        boolean check;
         switch (result){
             case 1:
                 check = new SecurityGuard().check_SecurityGuard_Availability(employeeID);

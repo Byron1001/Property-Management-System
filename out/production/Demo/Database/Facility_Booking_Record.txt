@@ -1,3 +1,4 @@
 BookingID:FacilityID:Resident Username:Date:Start time:End time
 Book1:BH1:Mike1001:01.22.2023:130000:150000
 Book2:BH1:Mike1001:01.24.2023:090000:110000
+Book3:BH1:Mike1001:12.12.2022:110000:120000

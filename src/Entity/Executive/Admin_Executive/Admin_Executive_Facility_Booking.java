@@ -3,7 +3,6 @@ package Entity.Executive.Admin_Executive;
 import Entity.Facility;
 import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
-import Entity.Unit;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
 import UIPackage.Event.EventMenuSelected;
@@ -18,7 +17,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.DateFormatter;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -26,8 +24,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.awt.print.Book;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -42,7 +38,7 @@ public class Admin_Executive_Facility_Booking extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -300,7 +296,6 @@ public class Admin_Executive_Facility_Booking extends JFrame {
     }
 
     private class bookFrame extends JFrame {
-        private final ArrayList<Facility.Booking> bookingArrayList = new Facility.Booking().getArrayList();
         private final ArrayList<Facility> facilityArrayList = new Facility().getArrayList();
 
         public bookFrame() throws IOException, ClassNotFoundException, ParseException {
@@ -507,7 +502,7 @@ public class Admin_Executive_Facility_Booking extends JFrame {
                             JOptionPane.showMessageDialog(null, "Facility not existed", "Facility not found", JOptionPane.ERROR_MESSAGE);
                         } else {
                             check = new Resident().check_Resident_Availability(newBooking.getResident_Username());
-                            if (check) {
+                            if (!check) {
                                 JOptionPane.showMessageDialog(null, "Resident username not existed", "Resident Username error", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 check = new Facility.Booking().check_TimeSlot_Availability(newBooking) && !newBooking.getDate().format(dateFormatter).equals(booking.getDate().format(dateFormatter)) && !newBooking.getStart_Time().format(timeFormatter).equals(booking.getStart_Time().format(timeFormatter)) && !newBooking.getEnd_Time().format(timeFormatter).equals(booking.getEnd_Time().format(timeFormatter));
@@ -541,7 +536,6 @@ public class Admin_Executive_Facility_Booking extends JFrame {
     }
 
     private static class viewFrame extends JFrame {
-        private final ArrayList<Facility.Booking> bookingArrayList = new Facility.Booking().getArrayList();
         private final ArrayList<Facility> facilityArrayList = new Facility().getArrayList();
         public viewFrame(Facility.Booking booking) throws ParseException, IOException, ClassNotFoundException {
             JPanel panel1 = new JPanel();
@@ -552,8 +546,6 @@ public class Admin_Executive_Facility_Booking extends JFrame {
 
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HHmmss");
-            MaskFormatter dateMask = new MaskFormatter("##.##.####");
-            MaskFormatter timeMask = new MaskFormatter("######");
 
             JLabel formTitle = new JLabel("FACILITY BOOKING FORM");
             JLabel[] jLabelLeft = {new JLabel("Booking ID"), new JLabel("Facility"),

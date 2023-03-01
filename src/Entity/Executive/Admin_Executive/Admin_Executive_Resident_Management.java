@@ -24,7 +24,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class Admin_Executive_Resident_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -295,8 +294,6 @@ public class Admin_Executive_Resident_Management extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<Resident> residentArrayList = new Resident().getArrayList();
-
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -412,8 +409,6 @@ public class Admin_Executive_Resident_Management extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<Resident> residentArrayList = new Resident().getArrayList();
-
         public modifyFrame(Resident resident) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -501,16 +496,15 @@ public class Admin_Executive_Resident_Management extends JFrame {
                         gender = 'F';
                     Resident residentModify = new Resident(residentUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), unitIDField.getText(), resident.getPayment());
                     try {
-                        boolean check = residentModify.check_Resident_Availability(residentModify.getResident_Username()) && !residentModify.getResident_Username().equals(resident.getResident_Username());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Resident Username already existed", "Resident Username found", JOptionPane.ERROR_MESSAGE);
+                        boolean check = residentModify.check_Resident_Availability(residentModify.getResident_Username()) && residentModify.getResident_Username().equals(resident.getResident_Username());
+                        if (!check) {
+                            JOptionPane.showMessageDialog(null, "Resident Username not existed", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
                         } else {
                             check = residentModify.check_Resident_Contact_Number_Availability(residentModify.getContact_Number())  && !residentModify.getContact_Number().equals(resident.getContact_Number());
                             if (check) {
                                 JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 new Admin_Executive_Function.Admin_Executive().resident_Modify(residentModify, resident.getResident_Username());
-                                JOptionPane.showMessageDialog(null, "Resident modification successful.Please ask resident to sign up and remember to register new unit if needed.", "Resident adding successful", JOptionPane.INFORMATION_MESSAGE);
                                 new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
                                 dispose();
                             }
@@ -541,8 +535,6 @@ public class Admin_Executive_Resident_Management extends JFrame {
             JPanel panel3 = new JPanel();
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
-
-            MaskFormatter yearMask = new MaskFormatter("####");
 
             JLabel formTitle = new JLabel("RESIDENT DETAILS");
             JLabel[] jLabelLeft = {new JLabel("Resident Username"), new JLabel("Name"),

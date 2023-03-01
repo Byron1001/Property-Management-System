@@ -1,11 +1,8 @@
 package Entity.Executive;
 
-import Entity.Building_Manager.Building_Manager_Function;
-import Entity.Employee.Employee;
 import Entity.Executive.Account_Executive.Account_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
-import Entity.Unit;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -68,7 +65,7 @@ public class Executive {
     }
 
     public Integer check_Executive_Position(String executiveID){
-        Integer result = 0;
+        Integer result;
         HashMap<String, Integer> map = new HashMap<>();
         map.put("AC", 1);
         map.put("AD", 2);

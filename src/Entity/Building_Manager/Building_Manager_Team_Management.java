@@ -2,7 +2,6 @@ package Entity.Building_Manager;
 
 import Entity.Employee.Cleaner;
 import Entity.Employee.Employee;
-import Entity.Employee.Employee_Task;
 import Entity.Employee.SecurityGuard.SecurityGuard;
 import Entity.Employee.Technician;
 import Entity.Executive.Account_Executive.Account_Executive_Function;
@@ -24,17 +23,16 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Building_Manager_Team_Management extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -43,7 +41,7 @@ public class Building_Manager_Team_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String buildingManagerID = "Executive ID";
+    public String buildingManagerID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -246,7 +244,7 @@ public class Building_Manager_Team_Management extends JFrame {
                         if (result == JOptionPane.YES_OPTION) {
                             teamLeader.delete_Team_Leader(teamLeader.getLeader_Username());
                             JOptionPane.showMessageDialog(null, "Leader deleted", "Leader delete success", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Manager_Team_Management(buildingManagerID).setVisible(true);
+                            new Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
                             dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
@@ -303,7 +301,7 @@ public class Building_Manager_Team_Management extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("employee", "User Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("report", "Report", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("deposit", "Operation and Budget Planning", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Sructure Management", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Structure Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#f4791f");
@@ -408,13 +406,13 @@ public class Building_Manager_Team_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String teamLeaderUsername = leaderUsernameComboBox.getSelectedItem().toString().split(" ", 2)[0];
+                    String teamLeaderUsername = Objects.requireNonNull(leaderUsernameComboBox.getSelectedItem()).toString().split(" ", 2)[0];
                     String teamName = teamNameField.getText();
-                    String position = positionComboBox.getSelectedItem().toString();
+                    String position = Objects.requireNonNull(positionComboBox.getSelectedItem()).toString();
                     Building_Manager_Function.Building_Manager.Team_Leader teamLeaderNew = new Building_Manager_Function.Building_Manager.Team_Leader(teamLeaderUsername, teamName, position);
                     boolean check = true;
                     try {
-                        if (teamLeaderNew.check_Team_Leader_Availability(teamLeaderUsername, position)){
+                        if (teamLeaderNew.check_Team_Leader_Availability(teamLeaderNew.getTeam(), position)){
                             int result = JOptionPane.showConfirmDialog(null, "The team has leader already.Are you sure to add more leader?", "Leader found", JOptionPane.YES_NO_OPTION);
                             if (result == JOptionPane.NO_OPTION)
                                 check = false;
@@ -422,7 +420,7 @@ public class Building_Manager_Team_Management extends JFrame {
                         if (check){
                             teamLeaderNew.add_Team_Leader(teamLeaderNew);
                             JOptionPane.showMessageDialog(null, "Team Leader added", "Team Leader adding success", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Manager_Team_Management(buildingManagerID).setVisible(true);
+                            new Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
                             dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
@@ -434,7 +432,7 @@ public class Building_Manager_Team_Management extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        new Building_Manager_Team_Management(buildingManagerID).setVisible(true);
+                        new Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }
@@ -520,6 +518,7 @@ public class Building_Manager_Team_Management extends JFrame {
             for (String[] data : userArrayList){
                 leaderUsernameComboBox.addItem(data[0]+ " " + data[1]);
             }
+            leaderUsernameComboBox.setEnabled(false);
             for (int i = 0;i < userArrayList.size();i++){
                 if (teamLeader.getLeader_Username().equals(userArrayList.get(i)[0]))
                     leaderUsernameComboBox.setSelectedIndex(i);
@@ -531,15 +530,15 @@ public class Building_Manager_Team_Management extends JFrame {
                 positionComboBox.addItem(name);
             }
             for (int i = 0;i < positionNameArray.length;i++){
-                if (positionNameArray[i].equals(teamLeader.getTeam()))
+                if (positionNameArray[i].equals(teamLeader.getPosition()))
                     positionComboBox.setSelectedIndex(i);
             }
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            Building_Manager_Function.Button addButton = new Building_Manager_Function.Button("Modify team leader info");
+            Building_Manager_Function.Button modifyButton = new Building_Manager_Function.Button("Modify team leader info");
             Building_Manager_Function.Button cancelButton = new Building_Manager_Function.Button("Cancel");
 
-            addButton.setAlignmentX(JButton.CENTER);
+            modifyButton.setAlignmentX(JButton.CENTER);
             cancelButton.setAlignmentX(JButton.CENTER);
             formTitle.setFont(new Font("sansserif", Font.BOLD, 24));
             formTitle.setHorizontalAlignment(JLabel.CENTER);
@@ -553,7 +552,7 @@ public class Building_Manager_Team_Management extends JFrame {
             panel2.add(positionComboBox);
             panel1.add(panel2, BorderLayout.CENTER);
 
-            panel3.add(addButton);
+            panel3.add(modifyButton);
             panel3.add(cancelButton);
             panel1.add(panel3, BorderLayout.SOUTH);
             setUndecorated(true);
@@ -566,24 +565,24 @@ public class Building_Manager_Team_Management extends JFrame {
             setContentPane(panel1);
             setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
             setVisible(true);
-            addButton.addActionListener(new ActionListener() {
+            modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String teamLeaderUsername = leaderUsernameComboBox.getSelectedItem().toString().split(" ", 2)[0];
+                    String teamLeaderUsername = Objects.requireNonNull(leaderUsernameComboBox.getSelectedItem()).toString().split(" ", 2)[0];
                     String teamName = teamNameField.getText();
-                    String position = positionComboBox.getSelectedItem().toString();
+                    String position = Objects.requireNonNull(positionComboBox.getSelectedItem()).toString();
                     Building_Manager_Function.Building_Manager.Team_Leader teamLeaderNew = new Building_Manager_Function.Building_Manager.Team_Leader(teamLeaderUsername, teamName, position);
                     boolean check = true;
                     try {
-                        if (teamLeaderNew.check_Team_Leader_Availability(teamLeaderUsername, position)){
+                        if (teamLeaderNew.check_Team_Leader_Availability(teamLeaderNew.getTeam(), position)){
                             int result = JOptionPane.showConfirmDialog(null, "The team has leader already.Are you sure to add more leader?", "Leader found", JOptionPane.YES_NO_OPTION);
                             if (result == JOptionPane.NO_OPTION)
                                 check = false;
                         }
                         if (check){
                             teamLeaderNew.modify_Team_Leader(teamLeaderNew);
-                            JOptionPane.showMessageDialog(null, "Team Leader added", "Team Leader adding success", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Manager_Team_Management(buildingManagerID).setVisible(true);
+                            JOptionPane.showMessageDialog(null, "Team Leader modified", "Team Leader modification success", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
                             dispose();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
@@ -595,7 +594,7 @@ public class Building_Manager_Team_Management extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        new Building_Manager_Team_Management(buildingManagerID).setVisible(true);
+                        new Building_Manager_Team_Management(buildingManagerID).run(buildingManagerID);
                     } catch (IOException | ClassNotFoundException ex) {
                         throw new RuntimeException(ex);
                     }

@@ -16,14 +16,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class Admin_Executive_Facility_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -292,8 +290,6 @@ public class Admin_Executive_Facility_Management extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<Facility> facilityArrayList = new Facility().getArrayList();
-
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -376,8 +372,6 @@ public class Admin_Executive_Facility_Management extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<Facility> facilityArrayList = new Facility().getArrayList();
-
         public modifyFrame(Facility facility) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -433,11 +427,11 @@ public class Admin_Executive_Facility_Management extends JFrame {
                     Facility facilityNew = new Facility(facilityIDField.getText(), nameField.getText());
                     try {
                         boolean check = facilityNew.check_Facility_Availability(facilityNew.getFacilityID());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Facility ID already existed", "Facility ID found", JOptionPane.ERROR_MESSAGE);
+                        if (!check) {
+                            JOptionPane.showMessageDialog(null, "Facility ID not existed", "Facility ID not found", JOptionPane.ERROR_MESSAGE);
                         } else {
                             new Admin_Executive_Function.Admin_Executive().update_Facility(facilityNew, facility.getFacilityID());
-                            JOptionPane.showMessageDialog(null, "Facility update successful.", "Facility adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Facility update successful.", "Facility update successful", JOptionPane.INFORMATION_MESSAGE);
                             new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
                             dispose();
                         }

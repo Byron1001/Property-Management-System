@@ -19,7 +19,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.DateFormatter;
 import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,12 +28,12 @@ import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Account_Executive_Invoice extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -43,7 +42,7 @@ public class Account_Executive_Invoice extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -271,7 +270,7 @@ public class Account_Executive_Invoice extends JFrame {
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             JLabel invoiceTitle = new JLabel("INVOICE");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Invoice ID"), new JLabel("Issuer ID"),
                     new JLabel("Unit ID"), new JLabel("Amount"),
                     new JLabel("Due Date"), new JLabel("Payment Types"),
@@ -393,7 +392,7 @@ public class Account_Executive_Invoice extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     if (!amountField.getText().equals("    .00") && !dueDateField.getText().equals("    .  ") && !paymentTypesField.getText().equals("") && !descriptionArea.getText().equals("")){
                         try {
-                            Invoice invoice = new Invoice(invoiceIDField.getText(), issuerIDField.getText(), unitComboBox.getSelectedItem().toString(), Integer.parseInt(amountField.getText().substring(0, amountField.getText().length() - 3)), LocalDate.parse(dueDateField.getText(), formatter), paymentTypesField.getText(), descriptionArea.getText(), "unpaid");
+                            Invoice invoice = new Invoice(invoiceIDField.getText(), issuerIDField.getText(), Objects.requireNonNull(unitComboBox.getSelectedItem()).toString(), Integer.parseInt(amountField.getText().substring(0, amountField.getText().length() - 3)), LocalDate.parse(dueDateField.getText(), formatter), paymentTypesField.getText(), descriptionArea.getText(), "unpaid");
                             accountExecutive.issue_Unit_Invoice(invoice);
                             JOptionPane.showMessageDialog(null, "Invoice issued", "Invoice issued", JOptionPane.INFORMATION_MESSAGE);
                             new Account_Executive_Invoice(executiveID).run(executiveID);

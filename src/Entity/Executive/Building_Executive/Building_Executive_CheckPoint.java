@@ -1,6 +1,5 @@
 package Entity.Executive.Building_Executive;
 
-import Entity.Employee.Employee;
 import Entity.CheckPoint;
 import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
@@ -24,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class Building_Executive_CheckPoint extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -285,8 +283,6 @@ public class Building_Executive_CheckPoint extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<CheckPoint> checkPointArrayList = new CheckPoint().getArrayList();
-
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -371,8 +367,6 @@ public class Building_Executive_CheckPoint extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<CheckPoint> checkPointArrayList = new CheckPoint().getArrayList();
-
         public modifyFrame(CheckPoint checkPoint) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();

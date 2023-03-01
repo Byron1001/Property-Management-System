@@ -14,7 +14,7 @@ public class Statement {
     private LocalDate date;
     private String description;
     private String receiverID;
-    private File statement_txt = new File("src/Database/Statement.txt");
+    private final File statement_txt = new File("src/Database/Statement.txt");
 
     public Statement(){}
 
@@ -46,7 +46,7 @@ public class Statement {
         return date;
     }
 
-    public void setDate(){
+    public void setDate(LocalDate date){
         this.date = date;
     }
 
@@ -82,8 +82,7 @@ public class Statement {
 
     public String[] getStringArray(Statement statement){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-        String[] data = {statement.getStatementID(), statement.getIssuer_Position(), statement.getDate().format(formatter), statement.getDescription(), statement.getReceiverID()};
-        return data;
+        return new String[]{statement.getStatementID(), statement.getIssuer_Position(), statement.getDate().format(formatter), statement.getDescription(), statement.getReceiverID()};
     }
 
     public String get_Auto_StatementID() throws FileNotFoundException {
@@ -97,8 +96,7 @@ public class Statement {
             num = Integer.parseInt(number);
             num += 1;
         }
-        String str = "State" + num.toString();
-        return str;
+        return "State" + num;
     }
 
     public String getDataString(Statement statement){
@@ -115,7 +113,7 @@ public class Statement {
 
     public void save_All_Statement(ArrayList<Statement> statementArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(statement_txt, false);
-        fileWriter.write("statement ID:issuer Position:date:description:receiverID");
+        fileWriter.write("statement ID:issuer Position:date:description:receiverID\n");
         for (Statement statement : statementArrayList){
             fileWriter.write(statement.getDataString(statement));
         }

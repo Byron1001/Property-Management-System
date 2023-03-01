@@ -2,9 +2,6 @@ package Entity.Executive.Building_Executive;
 
 import Entity.Employee.Employee;
 import Entity.Employee.Employee_Task;
-import Entity.Executive.Building_Executive.Building_Executive_Function;
-import Entity.Executive.Building_Executive.Building_Executive_Interface;
-import Entity.Employee.Employee_Task;
 import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
 import UIPackage.Component.Menu;
@@ -20,17 +17,16 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Building_Executive_Employee_Task extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -39,7 +35,7 @@ public class Building_Executive_Employee_Task extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -288,7 +284,6 @@ public class Building_Executive_Employee_Task extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<Employee_Task> employeeTaskArrayList = new Employee_Task().getArrayList();
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -373,8 +368,6 @@ public class Building_Executive_Employee_Task extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<Employee_Task> employeeTaskArrayList = new Employee_Task().getArrayList();
-
         public modifyFrame(Employee_Task employee_Task) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -399,7 +392,7 @@ public class Building_Executive_Employee_Task extends JFrame {
             statusComboBox.addItem("done");
             statusComboBox.addItem("undone");
             for (int i = 0;i < 2;i++){
-                if (employee_Task.getStatus().equals(statusComboBox.getItemAt(i).toString()))
+                if (employee_Task.getStatus().equals(statusComboBox.getItemAt(i)))
                     statusComboBox.setSelectedIndex(i);
             }
 
@@ -440,19 +433,21 @@ public class Building_Executive_Employee_Task extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Employee_Task employee_TaskModify = new Employee_Task(taskIDField.getText(), employeeIDField.getText(), descriptionArea.getText(), statusComboBox.getSelectedItem().toString());
-                    try {
-                        boolean check = new Employee().check_Employee_Availability(employeeIDField.getText());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Employee ID not existed", "Employee ID not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Building_Executive_Function.Building_Executive().update_Employee_Task(employee_TaskModify, employee_Task.getTaskID());
-                            JOptionPane.showMessageDialog(null, "Employee Task modification successful.Please ask employee to finish the task.", "Employee_Task modification successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Executive_Employee_Task(executiveID).run(executiveID);
-                            dispose();
+                    if (!employeeIDField.getText().equals("") && !descriptionArea.getText().equals("")){
+                        Employee_Task employee_TaskModify = new Employee_Task(taskIDField.getText(), employeeIDField.getText(), descriptionArea.getText(), Objects.requireNonNull(statusComboBox.getSelectedItem()).toString());
+                        try {
+                            boolean check = new Employee().check_Employee_Availability(employeeIDField.getText());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Employee ID not existed", "Employee ID not found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Building_Executive_Function.Building_Executive().update_Employee_Task(employee_TaskModify, employee_Task.getTaskID());
+                                JOptionPane.showMessageDialog(null, "Employee Task modification successful.Please ask employee to finish the task.", "Employee_Task modification successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
                     }
                 }
             });

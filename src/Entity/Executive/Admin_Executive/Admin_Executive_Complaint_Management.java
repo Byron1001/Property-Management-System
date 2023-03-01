@@ -24,10 +24,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Admin_Executive_Complaint_Management extends JFrame {
 
@@ -37,7 +37,7 @@ public class Admin_Executive_Complaint_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -314,8 +314,6 @@ public class Admin_Executive_Complaint_Management extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<Complaint> complaintArrayList = new Complaint().getArrayList();
-
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -404,8 +402,6 @@ public class Admin_Executive_Complaint_Management extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<Complaint> complaintArrayList = new Complaint().getArrayList();
-
         public modifyFrame(Complaint complaint) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -470,7 +466,7 @@ public class Admin_Executive_Complaint_Management extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Complaint complaintNew = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), statusComboBox.getSelectedItem().toString());
+                    Complaint complaintNew = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), Objects.requireNonNull(statusComboBox.getSelectedItem()).toString());
                     try {
                         boolean check = new Resident().check_Resident_Availability(residentUsernameField.getText());
                         if (!check) {
@@ -507,8 +503,6 @@ public class Admin_Executive_Complaint_Management extends JFrame {
             JPanel panel3 = new JPanel();
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
-
-            MaskFormatter yearMask = new MaskFormatter("####");
 
             JLabel formTitle = new JLabel("COMPLAINT DETAILS");
             JLabel[] jLabelLeft = {new JLabel("Complaint ID"), new JLabel("Resident Username"),

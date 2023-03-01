@@ -4,15 +4,12 @@ import Entity.Executive.Account_Executive.Account_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
 import Entity.Executive.Executive;
-import Entity.Financial.Invoice;
 import Entity.Financial.Payment;
-import Entity.Unit;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.time.LocalDate;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -121,17 +118,16 @@ public class Building_Manager_Function{
             Building_Manager buildingManager = new Building_Manager();
             ArrayList<Building_Manager_Function.Building_Manager> building_ManagerArrayList = buildingManager.getArrayList();
             for (Building_Manager buildingManager1 : building_ManagerArrayList) {
-                if (buildingManager1.getBuildingManagerID().equals(buildingManagerID))
+                if (buildingManager1.getBuildingManagerID().equals(buildingManagerID)) {
                     result = true;
+                    break;
+                }
             }
             return result;
         }
         public void update_Building_Manager_Info(Building_Manager buildingManager, String buildingManagerID) throws IOException {
             ArrayList<Building_Manager> buildingManagerArrayList = buildingManager.getArrayList();
-            for (Building_Manager buildingManager1 : buildingManagerArrayList){
-                if (buildingManager1.getBuildingManagerID().equals(buildingManagerID))
-                    buildingManagerArrayList.remove(buildingManager1);
-            }
+            buildingManagerArrayList.removeIf(buildingManager1 -> buildingManager1.getBuildingManagerID().equals(buildingManagerID));
             buildingManagerArrayList.add(buildingManager);
             buildingManager.save_All_Building_Manager(buildingManagerArrayList);
         }
@@ -147,10 +143,7 @@ public class Building_Manager_Function{
             Account_Executive_Function.Account_Executive accountExecutive = new Account_Executive_Function.Account_Executive();
             ArrayList<Account_Executive_Function.Account_Executive> account_executiveArrayList = accountExecutive.getArrayList();
             if (accountExecutive.check_Account_Executive_Availability(executiveID)){
-                for (Account_Executive_Function.Account_Executive accountExecutive1 : account_executiveArrayList){
-                    if (accountExecutive1.getExecutiveID().equals(executiveID))
-                        account_executiveArrayList.remove(accountExecutive1);
-                }
+                account_executiveArrayList.removeIf(accountExecutive1 -> accountExecutive1.getExecutiveID().equals(executiveID));
             }
             accountExecutive.save_All_Account_Executive(account_executiveArrayList);
         }
@@ -171,10 +164,7 @@ public class Building_Manager_Function{
             Building_Executive_Function.Building_Executive buildingExecutive = new Building_Executive_Function.Building_Executive();
             ArrayList<Building_Executive_Function.Building_Executive> buildingExecutiveArrayList = buildingExecutive.getArrayList();
             if (buildingExecutive.check_Building_Executive_Availability(executiveID)){
-                for (Building_Executive_Function.Building_Executive buildingExecutive1 : buildingExecutiveArrayList){
-                    if (buildingExecutive1.getExecutiveID().equals(executiveID))
-                        buildingExecutiveArrayList.remove(buildingExecutive1);
-                }
+                buildingExecutiveArrayList.removeIf(buildingExecutive1 -> buildingExecutive1.getExecutiveID().equals(executiveID));
             }
             buildingExecutive.save_All_Building_Executive(buildingExecutiveArrayList);
         }
@@ -195,10 +185,7 @@ public class Building_Manager_Function{
             Admin_Executive_Function.Admin_Executive adminExecutive = new Admin_Executive_Function.Admin_Executive();
             ArrayList<Admin_Executive_Function.Admin_Executive> adminExecutiveArrayList = adminExecutive.getArrayList();
             if (adminExecutive.check_Admin_Executive_Availability(executiveID)){
-                for (Admin_Executive_Function.Admin_Executive adminExecutive1 : adminExecutiveArrayList){
-                    if (adminExecutive1.getExecutiveID().equals(executiveID))
-                        adminExecutiveArrayList.remove(adminExecutive1);
-                }
+                adminExecutiveArrayList.removeIf(adminExecutive1 -> adminExecutive1.getExecutiveID().equals(executiveID));
             }
             adminExecutive.save_All_Admin_Executive(adminExecutiveArrayList);
         }
@@ -239,7 +226,7 @@ public class Building_Manager_Function{
             private String operationTitle;
             private String description;
             private int budget_Amount;
-            private File operation_Info_txt = new File("src/Database/Operation_Information.txt");
+            private final File operation_Info_txt = new File("src/Database/Operation_Information.txt");
 
             public Operation(){}
 
@@ -298,6 +285,7 @@ public class Building_Manager_Function{
                 scanner.nextLine();
                 while (scanner.hasNextLine()){
                     String[] data = scanner.nextLine().split(":", 5);
+                    System.out.println(data[3]);
                     operationArrayList.add(new Operation(data[0], data[1], data[2], data[3], Integer.parseInt(data[4])));
                 }
                 return operationArrayList;
@@ -319,15 +307,16 @@ public class Building_Manager_Function{
                 boolean result = false;
                 ArrayList<Operation> operationArrayList = getArrayList();
                 for (Operation operation : operationArrayList){
-                    if (operation.getOperationID().equals(operationID)){
+                    if (operation.getOperationID().equals(operationID)) {
                         result = true;
+                        break;
                     }
                 }
                 return result;
             }
 
             public String getDataString(Operation operation){
-                String[] data = {operation.getOperationID(), operation.getOperationTitle(), operation.getDescription(), Integer.valueOf(operation.getBudget_Amount()).toString()};
+                String[] data = {operation.getOperationID(), operation.getBuilding_Manager_ID(), operation.getOperationTitle(), operation.getDescription(), Integer.valueOf(operation.getBudget_Amount()).toString()};
                 String dataLine = "";
                 for (String dd : data){
                     dataLine += dd + ":";
@@ -357,11 +346,7 @@ public class Building_Manager_Function{
                 int fund = get_Fund_Amount();
                 int budget_total = get_All_Available_Operation_Budget_Amount();
                 int number = fund - budget_total - budget_Amount;
-                if (number > 0){
-                    return true;
-                } else {
-                    return false;
-                }
+                return number > 0;
             }
 
             public String get_Auto_OperationID() throws FileNotFoundException {
@@ -375,8 +360,7 @@ public class Building_Manager_Function{
                     num = Integer.parseInt(number);
                     num += 1;
                 }
-                String str = "OP" + num.toString();
-                return str;
+                return "OP" + num;
             }
 
             public void add_Operation(Operation operation) throws IOException {
@@ -391,10 +375,7 @@ public class Building_Manager_Function{
                 Operation operation = new Operation();
                 ArrayList<Operation> operationArrayList = operation.getArrayList();
                 if (check_Operation_Availability(operation.getOperationID())){
-                    for (Operation operation1 : operationArrayList){
-                        if (operation1.getOperationID().equals(operationID))
-                            operationArrayList.remove(operation1);
-                    }
+                    operationArrayList.removeIf(operation1 -> operation1.getOperationID().equals(operationID));
                 }
                 save_All_Operation(operationArrayList);
             }
@@ -410,7 +391,7 @@ public class Building_Manager_Function{
             private String leader_Username;
             private String team;
             private String position;
-            private File team_Leader_Info_txt = new File("src/Database/Team_Leader_Information.txt");
+            private final File team_Leader_Info_txt = new File("src/Database/Team_Leader_Information.txt");
             public Team_Leader(){}
 
             public Team_Leader(String leader_Username, String team, String position) {
@@ -489,8 +470,10 @@ public class Building_Manager_Function{
                 boolean result = false;
                 ArrayList<Team_Leader> leaderArrayList = getArrayList();
                 for (Team_Leader leader1 : leaderArrayList) {
-                    if (leader1.getTeam().equals(team) && leader1.getPosition().equals(position))
+                    if (leader1.getTeam().equals(team) && leader1.getPosition().equals(position)) {
                         result = true;
+                        break;
+                    }
                 }
                 return result;
             }
@@ -503,12 +486,13 @@ public class Building_Manager_Function{
 
             public void delete_Team_Leader(String leader_Username) throws IOException {//delete specific team leader
                 ArrayList<Team_Leader> leaderArrayList = getArrayList();
+                ArrayList<Team_Leader> leaderArrayList1 = new ArrayList<>();
                 for (Team_Leader leader : leaderArrayList){
-                    if (leader.getLeader_Username().equals(leader_Username)){
-                        leaderArrayList.remove(leader);
+                    if (!leader.getLeader_Username().equals(leader_Username)){
+                        leaderArrayList1.add(leader);
                     }
                 }
-                save_All_Team_Leader(leaderArrayList);
+                save_All_Team_Leader(leaderArrayList1);
             }
 
             public void modify_Team_Leader(Team_Leader leader) throws IOException {

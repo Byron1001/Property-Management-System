@@ -145,8 +145,10 @@ public class Resident {
         Resident Resident = new Resident();
         ArrayList<Resident> residentArrayList = Resident.getArrayList();
         for (Resident uni : residentArrayList) {
-            if (uni.getResident_Username().equals(resident_Username))
+            if (uni.getResident_Username().equals(resident_Username)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -156,8 +158,10 @@ public class Resident {
         Resident Resident = new Resident();
         ArrayList<Resident> residentArrayList = Resident.getArrayList();
         for (Resident uni : residentArrayList) {
-            if (uni.getContact_Number().equals(contact_Number))
+            if (uni.getContact_Number().equals(contact_Number)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -214,8 +218,7 @@ public class Resident {
 
     public ArrayList<Payment> get_All_Receipt(String unitID) throws FileNotFoundException {
         Payment payment = new Payment();
-        ArrayList<Payment> paymentArrayList = payment.get_All_Receipt(unitID);
-        return paymentArrayList;
+        return payment.get_All_Receipt(unitID);
     }
 
     public ArrayList<Payment> get_All_pending_Payment(String unitID) throws FileNotFoundException {
@@ -329,10 +332,7 @@ public class Resident {
     public void cancel_Complaint(String complaintID) throws IOException {
         Complaint complaint = new Complaint();
         ArrayList<Complaint> complaintArrayList = complaint.getArrayList();
-        for (Complaint com : complaintArrayList){
-            if (com.getComplaintID().equals(complaintID))
-                complaintArrayList.remove(com);
-        }
+        complaintArrayList.removeIf(com -> com.getComplaintID().equals(complaintID));
         complaint.save_All_Complaint(complaintArrayList);
     }
 

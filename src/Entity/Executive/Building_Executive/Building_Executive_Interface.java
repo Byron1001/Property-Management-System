@@ -42,7 +42,7 @@ public class Building_Executive_Interface {
         if (num == 1){
             frame.panelBorderRight.add(new Building_Executive_Profile_Panel(executiveID));
         } else {
-            frame.panelBorderRight.add(new Building_Executive_JobReport_Panel(executiveID));
+            frame.panelBorderRight.add(new Building_Executive_JobReport_Panel());
         }
         frame.panelBorderRight.revalidate();
         frame.repaint();
@@ -95,7 +95,6 @@ public class Building_Executive_Interface {
     }
 
     public class Building_Executive_Profile_Panel extends JPanel {
-        private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Building_Executive_Function.Button updateButton;
 
         public Building_Executive_Profile_Panel(String executiveID) throws FileNotFoundException {
@@ -111,7 +110,7 @@ public class Building_Executive_Interface {
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout(0, 20));
             JLabel profileLabel = new JLabel("Profile");
-            Font titleFont = new Font("Sansserif", Font.BOLD, 24);
+            Font titleFont = new Font("sansserif", Font.BOLD, 24);
             profileLabel.setFont(titleFont);
             profileLabel.setHorizontalAlignment(JLabel.CENTER);
             panel.add(profileLabel, BorderLayout.NORTH);
@@ -142,7 +141,7 @@ public class Building_Executive_Interface {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     setEnabled(false);
-                    Entity.Executive.Building_Executive.Building_Executive_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame updateInfo = null;
+                    Entity.Executive.Building_Executive.Building_Executive_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame updateInfo;
                     try {
                         updateInfo = new Entity.Executive.Building_Executive.Building_Executive_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame(buildingExecutive);
                     } catch (ParseException ex) {
@@ -155,7 +154,7 @@ public class Building_Executive_Interface {
         }
 
         public class UpdateInfo_Frame extends JFrame {
-            private Font labelFont = new Font("sansserif", Font.BOLD, 14);
+            private final Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private Building_Executive_Function.Button updateButton;
             private Building_Executive_Function.Button cancelButton;
 
@@ -281,15 +280,14 @@ public class Building_Executive_Interface {
     }
 
     public class Building_Executive_JobReport_Panel extends JPanel {
-        private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Building_Executive_Function.Button updateButton;
 
-        public Building_Executive_JobReport_Panel(String executiveID) throws FileNotFoundException {
+        public Building_Executive_JobReport_Panel() {
             setPreferredSize(new Dimension(1000, 500));
             setLayout(new BorderLayout());
 
             JPanel imgPanel = new JPanel();
-            buttonPanel img3 = null;
+            buttonPanel img3;
             imgPanel.setLayout(new GridLayout(1, 3, 20, 0));
             buttonPanel img1 = new buttonPanel(500, 352, "record1.jpg");
             imgPanel.add(img1);
@@ -372,7 +370,6 @@ public class Building_Executive_Interface {
         }
 
         public static class CheckPoint_Frame extends JFrame {
-            private Building_Executive_Function.Button closeButton;
             private JScrollPane scrollPane = new JScrollPane();
             private JPanel contentPane = new JPanel();
 
@@ -452,7 +449,6 @@ public class Building_Executive_Interface {
         }
 
         public static class Visitor_Entry_Frame extends JFrame {
-            private Building_Executive_Function.Button closeButton;
             private JScrollPane scrollPane = new JScrollPane();
             private JPanel contentPane = new JPanel();
 
@@ -536,7 +532,6 @@ public class Building_Executive_Interface {
         }
 
         public static class Incident_Frame extends JFrame {
-            private Building_Executive_Function.Button closeButton = new Building_Executive_Function.Button("close");
             private JScrollPane scrollPane = new JScrollPane();
             private JPanel contentPane = new JPanel();
 

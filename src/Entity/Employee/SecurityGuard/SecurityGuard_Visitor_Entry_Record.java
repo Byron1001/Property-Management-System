@@ -23,13 +23,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class SecurityGuard_Visitor_Entry_Record extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -38,7 +34,7 @@ public class SecurityGuard_Visitor_Entry_Record extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String securityGuard_EmployeeID = "SecurityGuard Username";
+    public String securityGuard_EmployeeID;
     public JScrollPane scrollPane;
     public JPanel panel;
     public SecurityGuard.Button viewButton, updateButton;
@@ -250,6 +246,7 @@ public class SecurityGuard_Visitor_Entry_Record extends JFrame {
             JTextField visitorPassIDField = new JTextField(entryRecord[0]);
             JFormattedTextField dateField = new JFormattedTextField(dateMask);
             dateField.setText(entryRecord[1]);
+            System.out.println(entryRecord[1]);
             JFormattedTextField timeField = new JFormattedTextField(timeMask);
             timeField.setText(entryRecord[2]);
 
@@ -292,8 +289,7 @@ public class SecurityGuard_Visitor_Entry_Record extends JFrame {
                         if (!check) {
                             JOptionPane.showMessageDialog(null, "Visitor Pass ID not found", "Visitor Pass ID not found", JOptionPane.ERROR_MESSAGE);
                         } else {
-                            new SecurityGuard().update_Visitor_Entry_Record(visitorPassIDField.getText(), dateField+":"+timeField);
-                            JOptionPane.showMessageDialog(null, "Visitor entry record updated", "Record updated", JOptionPane.INFORMATION_MESSAGE);
+                            new SecurityGuard().update_Visitor_Entry_Record(visitorPassIDField.getText(), dateField.getText()+":"+timeField.getText());
                             new SecurityGuard_Visitor_Entry_Record(securityGuard_EmployeeID).run(securityGuard_EmployeeID);
                             dispose();
                         }

@@ -24,12 +24,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Building_Executive_Patrolling_Management extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -38,7 +38,7 @@ public class Building_Executive_Patrolling_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -357,14 +357,18 @@ public class Building_Executive_Patrolling_Management extends JFrame {
             setupButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Patrolling newPatrolling = new Patrolling(patrollingIDField.getText(), employeeIDComboBox.getSelectedItem().toString(), dayComboBox.getSelectedItem().toString(), LocalTime.parse(timeStartField.getText(), timeFormatter), LocalTime.parse(timeEndField.getText(), timeFormatter));
-                    try {
-                        new Building_Executive_Function.Building_Executive().add_Patrolling_Schedule(newPatrolling);
-                        JOptionPane.showMessageDialog(null, "patrolling schedule adding successful", "patrolling schedule adding successful", JOptionPane.INFORMATION_MESSAGE);
-                        new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
-                        dispose();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    if (!timeStartField.getText().equals("") && !timeEndField.getText().equals("")){
+                        Patrolling newPatrolling = new Patrolling(patrollingIDField.getText(), Objects.requireNonNull(employeeIDComboBox.getSelectedItem()).toString(), Objects.requireNonNull(dayComboBox.getSelectedItem()).toString(), LocalTime.parse(timeStartField.getText(), timeFormatter), LocalTime.parse(timeEndField.getText(), timeFormatter));
+                        try {
+                            new Building_Executive_Function.Building_Executive().add_Patrolling_Schedule(newPatrolling);
+                            JOptionPane.showMessageDialog(null, "patrolling schedule adding successful", "patrolling schedule adding successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please enter complete information", "Information incomplete", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -463,14 +467,18 @@ public class Building_Executive_Patrolling_Management extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Patrolling newPatrolling = new Patrolling(patrollingIDField.getText(), employeeIDComboBox.getSelectedItem().toString(), dayComboBox.getSelectedItem().toString(), LocalTime.parse(timeStartField.getText(), timeFormatter), LocalTime.parse(timeEndField.getText(), timeFormatter));
-                    try {
-                        new Building_Executive_Function.Building_Executive().modify_Patrolling_Schedule(newPatrolling, patrolling.getPatrolID());
-                        JOptionPane.showMessageDialog(null, "patrolling schedule modifying successful", "patrolling schedule modifying successful", JOptionPane.INFORMATION_MESSAGE);
-                        new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
-                        dispose();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    if (!timeStartField.getText().equals("") && !timeEndField.getText().equals("")){
+                        Patrolling newPatrolling = new Patrolling(patrollingIDField.getText(), Objects.requireNonNull(employeeIDComboBox.getSelectedItem()).toString(), Objects.requireNonNull(dayComboBox.getSelectedItem()).toString(), LocalTime.parse(timeStartField.getText(), timeFormatter), LocalTime.parse(timeEndField.getText(), timeFormatter));
+                        try {
+                            new Building_Executive_Function.Building_Executive().modify_Patrolling_Schedule(newPatrolling, patrolling.getPatrolID());
+                            JOptionPane.showMessageDialog(null, "patrolling schedule modifying successful", "patrolling schedule modifying successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_Patrolling_Management(executiveID).run(executiveID);
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please enter the complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -489,7 +497,6 @@ public class Building_Executive_Patrolling_Management extends JFrame {
     }
 
     private static class viewFrame extends JFrame {
-        private final ArrayList<Patrolling> patrollingArrayList = new Patrolling().getArrayList();
         public viewFrame(Patrolling patrolling) throws ParseException, IOException, ClassNotFoundException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();

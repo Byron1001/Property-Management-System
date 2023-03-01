@@ -1,6 +1,5 @@
 package Entity.Executive.Account_Executive;
 
-import Entity.Financial.Invoice;
 import Entity.Financial.Statement;
 import Entity.Login.Login_Frame;
 import UIPackage.Component.Header;
@@ -30,6 +29,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Account_Executive_Statement extends JFrame{
 
@@ -39,7 +39,7 @@ public class Account_Executive_Statement extends JFrame{
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -249,7 +249,7 @@ public class Account_Executive_Statement extends JFrame{
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
             JLabel formTitle = new JLabel("Statement");
-            JLabel issuedBy = new JLabel("Issued by Parhill Residence");
+            JLabel issuedBy = new JLabel("Issued by Parkhill Residence");
             JLabel[] jLabelLeft = {new JLabel("Issuer Position"),
                     new JLabel("Date"), new JLabel("Receiver ID"),
                     new JLabel("Description")};
@@ -361,7 +361,7 @@ public class Account_Executive_Statement extends JFrame{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!dateField.getText().equals("  .  .    ") && !descriptionArea.getText().equals("")){
-                        Statement statement = new Statement(statementIDField.getText(), issuerPositionField.getText(), LocalDate.parse(dateField.getText(), formatter), descriptionArea.getText(), receiverComboBox.getSelectedItem().toString());
+                        Statement statement = new Statement(statementIDField.getText(), issuerPositionField.getText(), LocalDate.parse(dateField.getText(), formatter), descriptionArea.getText(), Objects.requireNonNull(receiverComboBox.getSelectedItem()).toString());
                         try {
                             accountExecutive.issue_Statement(statement);
                             JOptionPane.showMessageDialog(null, "Statement issued", "Statement issued", JOptionPane.INFORMATION_MESSAGE);

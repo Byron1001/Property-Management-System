@@ -87,7 +87,6 @@ public class Resident_Interface {
     }
 
     public class Resident_Profile_Panel extends JPanel {
-        private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Resident.Button updateButton;
         public Resident_Profile_Panel(String resident_Username) throws FileNotFoundException {
             setPreferredSize(new Dimension(1000, 500));
@@ -102,7 +101,7 @@ public class Resident_Interface {
             JPanel panel = new JPanel();
             panel.setLayout(new BorderLayout(0,20));
             JLabel profileLabel = new JLabel("Profile");
-            Font titleFont = new Font("Sansserif", Font.BOLD, 24);
+            Font titleFont = new Font("sansserif", Font.BOLD, 24);
             profileLabel.setFont(titleFont);
             profileLabel.setHorizontalAlignment(JLabel.CENTER);
             panel.add(profileLabel, BorderLayout.NORTH);
@@ -133,7 +132,7 @@ public class Resident_Interface {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     setEnabled(false);
-                    UpdateInfo updateInfo = null;
+                    UpdateInfo updateInfo;
                     try {
                         updateInfo = new UpdateInfo(data);
                     } catch (ParseException ex) {
@@ -146,7 +145,7 @@ public class Resident_Interface {
         }
 
         public class UpdateInfo extends JFrame{
-            private Font labelFont = new Font("sansserif", Font.BOLD, 14);
+            private final Font labelFont = new Font("sansserif", Font.BOLD, 14);
             private Resident.Button updateButton;
             private Resident.Button cancelButton;
 

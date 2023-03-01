@@ -1,11 +1,8 @@
 package Entity;
 
-import Entity.Resident.Resident;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class Unit {
     private int floor;
@@ -162,8 +159,10 @@ public class Unit {
         Unit unit = new Unit();
         ArrayList<Unit> unitArrayList = unit.getArrayList();
         for (Unit uni : unitArrayList) {
-            if (uni.getUnitID().equals(unitID))
+            if (uni.getUnitID().equals(unitID)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }
@@ -173,8 +172,10 @@ public class Unit {
         Unit unit = new Unit();
         ArrayList<Unit> unitArrayList = unit.getArrayList();
         for (Unit uni : unitArrayList) {
-            if (uni.getParking_Unit().equals(parking_Unit))
+            if (uni.getParking_Unit().equals(parking_Unit)) {
                 result = true;
+                break;
+            }
         }
         return result;
     }

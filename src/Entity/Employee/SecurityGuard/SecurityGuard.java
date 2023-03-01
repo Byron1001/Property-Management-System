@@ -1,8 +1,6 @@
 package Entity.Employee.SecurityGuard;
 import Entity.CheckPoint;
 import Entity.Employee.Employee;
-import Entity.Resident.Resident;
-import Entity.Visitor_Pass;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,10 +15,9 @@ import java.util.Scanner;
 
 public class SecurityGuard extends Employee implements Serializable{
     protected String position = "Security Guard";
-    private File security_Guard_Info_txt = new File("src/Database/SecurityGuard_Information.txt");
-    private File visitor_Entry_Record_txt = new File("src/Database/Visitors_Entry_Record.txt");
+    private final File security_Guard_Info_txt = new File("src/Database/SecurityGuard_Information.txt");
+    private final File visitor_Entry_Record_txt = new File("src/Database/Visitors_Entry_Record.txt");
     public  SecurityGuard(){}
-    public SecurityGuard(String employeeID){}
     public SecurityGuard(String employeeID, String name, char gender, String contact_Number, int salary) throws IOException, ClassNotFoundException, NotSerializableException {
         super();
         super.set_Info(employeeID, name, gender, contact_Number, salary, position);
@@ -71,7 +68,7 @@ public class SecurityGuard extends Employee implements Serializable{
 
     public void save_All_SecurityGuard(ArrayList<SecurityGuard> securityGuardArrayList) throws IOException {
         FileWriter fileWriter = new FileWriter(security_Guard_Info_txt, false);
-        fileWriter.write("Employee ID:Name:Gender:contact_number:salary:position");
+        fileWriter.write("Employee ID:Name:Gender:contact_number:salary:position\n");
         for (SecurityGuard securityGuard : securityGuardArrayList){
             fileWriter.write(securityGuard.getDataString(securityGuard));
         }
@@ -105,15 +102,10 @@ public class SecurityGuard extends Employee implements Serializable{
         FileWriter fileWriter = new FileWriter(visitor_Entry_Record_txt, true);
         fileWriter.write(data);
         fileWriter.close();
-        JOptionPane.showMessageDialog(null, "Visitor Entry Record add success", "Record success added", JOptionPane.INFORMATION_MESSAGE);
     }
     public void delete_Visitor_Entry_Record(String visitor_Pass_ID) throws IOException {
         ArrayList<String[]> record = get_all_Visitor_Entry_Record();
-        for (String[] data : record){
-            if (data[0].equals(visitor_Pass_ID)){
-                record.remove(data);
-            }
-        }
+        record.removeIf(data -> data[0].equals(visitor_Pass_ID));
         save_All_Visitor_Entry_Record(record);
     }
 
@@ -250,15 +242,10 @@ public class SecurityGuard extends Employee implements Serializable{
             FileWriter fileWriter = new FileWriter(incident_Report, true);
             fileWriter.write(data);
             fileWriter.close();
-            JOptionPane.showMessageDialog(null, "Incident Record add success", "Incident success added", JOptionPane.INFORMATION_MESSAGE);
         }
         public void delete_Incident_Record(String incident_ID) throws IOException {
             ArrayList<Incident> incidentArrayList = get_all_Incident_Report();
-            for (Incident incident : incidentArrayList){
-                if (incident.getIncident_ID().equals(incident_ID)){
-                    incidentArrayList.remove(incident);
-                }
-            }
+            incidentArrayList.removeIf(incident -> incident.getIncident_ID().equals(incident_ID));
             save_All_Incident_Report(incidentArrayList);
         }
 

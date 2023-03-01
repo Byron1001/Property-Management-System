@@ -15,7 +15,7 @@ public class Invoice {
     private String paymentTypes;
     private String description;
     private String status;
-    private File invoice_txt = new File("src/Database/Invoice.txt");
+    private final File invoice_txt = new File("src/Database/Invoice.txt");
     public Invoice(){}
 
     public Invoice(String invoiceID, String issuerID, String unitID, int amount, LocalDate dueDate, String paymentTypes, String description, String status) {
@@ -118,16 +118,16 @@ public class Invoice {
             num = Integer.parseInt(number);
             num += 1;
         }
-        String str = "INV" + num.toString();
-        return str;
+        return "INV" + num;
     }
 
     public boolean check_Invoice_Availability(String invoiceID) throws FileNotFoundException {
         boolean result = false;
         ArrayList<Invoice> invoiceArrayList = this.getArrayList();
         for (Invoice invoice : invoiceArrayList){
-            if (invoice.getInvoiceID().equals(invoiceID)){
+            if (invoice.getInvoiceID().equals(invoiceID)) {
                 result = true;
+                break;
             }
         }
         return result;
@@ -135,8 +135,7 @@ public class Invoice {
 
     public String[] getStringArray(Invoice invoice){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM.dd.yyyy");
-        String[] data = {invoice.getInvoiceID(), invoice.getIssuerID(), invoice.getUnitID(), Integer.valueOf(invoice.getAmount()).toString(), invoice.getDueDate().format(formatter), invoice.getPaymentTypes(), invoice.getDescription(), invoice.getStatus()};
-        return data;
+        return new String[]{invoice.getInvoiceID(), invoice.getIssuerID(), invoice.getUnitID(), Integer.valueOf(invoice.getAmount()).toString(), invoice.getDueDate().format(formatter), invoice.getPaymentTypes(), invoice.getDescription(), invoice.getStatus()};
     }
 
     public String getDataString(Invoice invoice){

@@ -16,13 +16,12 @@ import java.util.Scanner;
 
 public class Admin_Executive_Function {
     public static class Admin_Executive extends Executive {
-        private String position = "Admin Executive";
-        private File unit_Information_txt = new File("src/Database/Unit_Information.txt");
-        private File admin_Executive_Info_txt = new File("src/Database/Admin_Executive_Information.txt");
+        private final File admin_Executive_Info_txt = new File("src/Database/Admin_Executive_Information.txt");
 
         public Admin_Executive(){}
         public Admin_Executive(String admin_Executive_ID, String name, char gender, String contact_Number){
             super();
+            String position = "Admin Executive";
             super.set_Info(admin_Executive_ID, name, gender, contact_Number, position);
         }
 
@@ -54,10 +53,7 @@ public class Admin_Executive_Function {
         public void unit_Delete(String unitID) throws IOException {
             Unit unit = new Unit();
             ArrayList<Unit> unitArrayList = unit.getArrayList();
-            for (Unit uni : unitArrayList){
-                if (uni.getUnitID().equals(unitID))
-                    unitArrayList.remove(uni);
-            }
+            unitArrayList.removeIf(uni -> uni.getUnitID().equals(unitID));
             unit.save_All_Unit(unitArrayList);
             unit.sort_All_Unit();
         }
@@ -69,7 +65,6 @@ public class Admin_Executive_Function {
             resident.save_All_Resident(residentArrayList);
         }
         public void resident_Modify(Resident resident, String resident_Username) throws IOException {
-            String dataLine = resident.getDataString(resident);
             if (resident.check_Resident_Availability(resident_Username)){
                 resident_Delete(resident_Username);
                 resident_Add(resident);
@@ -79,10 +74,7 @@ public class Admin_Executive_Function {
         public void resident_Delete(String resident_Username) throws IOException {
             Resident resident = new Resident();
             ArrayList<Resident> residentArrayList = resident.getArrayList();
-            for (Resident re : residentArrayList){
-                if (re.getResident_Username().equals(resident_Username))
-                    residentArrayList.remove(re);
-            }
+            residentArrayList.removeIf(re -> re.getResident_Username().equals(resident_Username));
             resident.save_All_Resident(residentArrayList);
         }
 
@@ -101,10 +93,7 @@ public class Admin_Executive_Function {
         public void complaint_Delete(String complaintID) throws IOException {
             Complaint complaint = new Complaint();
             ArrayList<Complaint> complaintArrayList = complaint.getArrayList();
-            for (Complaint com : complaintArrayList){
-                if (com.getComplaintID().equals(complaintID))
-                    complaintArrayList.remove(com);
-            }
+            complaintArrayList.removeIf(com -> com.getComplaintID().equals(complaintID));
             complaint.save_All_Complaint(complaintArrayList);
         }
         public void complaint_Solved(String complaintID) throws IOException {
@@ -154,26 +143,17 @@ public class Admin_Executive_Function {
             if (condition.equals("SG")){
                 SecurityGuard securityGuard = new SecurityGuard();
                 ArrayList<SecurityGuard> securityGuardArrayList = securityGuard.getArrayList();
-                for (SecurityGuard securityGuard1 : securityGuardArrayList){
-                    if (securityGuard1.getEmployeeID().equals(employeeID))
-                        securityGuardArrayList.remove(securityGuard1);
-                }
+                securityGuardArrayList.removeIf(securityGuard1 -> securityGuard1.getEmployeeID().equals(employeeID));
                 securityGuard.save_All_SecurityGuard(securityGuardArrayList);
             }else if (condition.equals("CN")){
                 Cleaner cleaner = new Cleaner();
                 ArrayList<Cleaner> cleanerArrayList = cleaner.getArrayList();
-                for (Cleaner cleaner1 : cleanerArrayList){
-                    if (cleaner1.getEmployeeID().equals(employeeID))
-                        cleanerArrayList.remove(cleaner1);
-                }
+                cleanerArrayList.removeIf(cleaner1 -> cleaner1.getEmployeeID().equals(employeeID));
                 cleaner.save_All_Cleaner(cleanerArrayList);
             } else if (condition.equals("TN")){
                 Technician technician = new Technician();
                 ArrayList<Technician> technicianArrayList = technician.getArrayList();
-                for (Technician technician1 : technicianArrayList){
-                    if (technician1.getEmployeeID().equals(employeeID))
-                        technicianArrayList.remove(technician1);
-                }
+                technicianArrayList.removeIf(technician1 -> technician1.getEmployeeID().equals(employeeID));
                 technician.save_All_Technician(technicianArrayList);
             }
         }
@@ -193,10 +173,7 @@ public class Admin_Executive_Function {
         public void delete_Facility(String facilityID) throws IOException, ClassNotFoundException {
             Facility facility = new Facility();
             ArrayList<Facility> facilityArrayList = facility.getArrayList();
-            for (Facility facility1 : facilityArrayList){
-                if (facility1.getFacilityID().equals(facilityID))
-                    facilityArrayList.remove(facility1);
-            }
+            facilityArrayList.removeIf(facility1 -> facility1.getFacilityID().equals(facilityID));
             facility.save_All_Facility(facilityArrayList);
         }
 
@@ -217,10 +194,7 @@ public class Admin_Executive_Function {
         public void delete_Booking(String bookingID) throws IOException, ClassNotFoundException {
             Facility.Booking booking = new Facility.Booking();
             ArrayList<Facility.Booking> bookingArrayList = booking.getArrayList();
-            for (Facility.Booking booking1 : bookingArrayList){
-                if (booking1.getBookingID().equals(bookingID))
-                    bookingArrayList.remove(booking1);
-            }
+            bookingArrayList.removeIf(booking1 -> booking1.getBookingID().equals(bookingID));
             booking.save_All_Facility_Booking(bookingArrayList);
         }
         public void facility_Booking_Update(Facility.Booking booking, String bookingID) throws IOException, ClassNotFoundException {
@@ -306,10 +280,7 @@ public class Admin_Executive_Function {
         public void vendor_Delete(String vendor_Username) throws IOException {
             Vendor vendor = new Vendor();
             ArrayList<Vendor> vendorArrayList = vendor.getArrayList();
-            for (Vendor vendor1 : vendorArrayList){
-                if (vendor1.getVendor_Username().equals(vendor_Username))
-                    vendorArrayList.remove(vendor1);
-            }
+            vendorArrayList.removeIf(vendor1 -> vendor1.getVendor_Username().equals(vendor_Username));
             vendor.save_All_Vendor(vendorArrayList);
         }
 
@@ -317,10 +288,7 @@ public class Admin_Executive_Function {
         public ArrayList<Visitor_Pass> get_All_Disapproved_Visitor_Pass() throws FileNotFoundException {
             Visitor_Pass visitorPass = new Visitor_Pass();
             ArrayList<Visitor_Pass> visitorPassArrayList = visitorPass.getArrayList();
-            for (Visitor_Pass visitorPass1 : visitorPassArrayList){
-                if (!(visitorPass1.getStatus().equals("Disapproved")))
-                    visitorPassArrayList.remove(visitorPass1);
-            }
+            visitorPassArrayList.removeIf(visitorPass1 -> !(visitorPass1.getStatus().equals("Disapproved")));
             return visitorPassArrayList;
         }
 

@@ -1,6 +1,5 @@
 package Entity.Building_Manager;
 
-import Entity.Employee.Employee;
 import Entity.Executive.Account_Executive.Account_Executive_Function;
 import Entity.Executive.Admin_Executive.Admin_Executive_Function;
 import Entity.Executive.Building_Executive.Building_Executive_Function;
@@ -27,7 +26,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ public class Building_Manager_User_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String buildingManagerID = "Executive ID";
+    public String buildingManagerID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -254,7 +252,7 @@ public class Building_Manager_User_Management extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("employee", "User Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("report", "Report", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("deposit", "Operation and Budget Planning", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Sructure Management", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Structure Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#f4791f");
@@ -510,7 +508,7 @@ public class Building_Manager_User_Management extends JFrame {
             positionNameField.setEditable(false);
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            Building_Manager_Function.Button addButton = new Building_Manager_Function.Button("Add New Executive");
+            Building_Manager_Function.Button modifyButton = new Building_Manager_Function.Button("Add New Executive");
             Building_Manager_Function.Button cancelButton = new Building_Manager_Function.Button("Cancel");
 
             addButton.setAlignmentX(JButton.CENTER);
@@ -538,7 +536,7 @@ public class Building_Manager_User_Management extends JFrame {
             panel2.add(positionNameField);
             panel1.add(panel2, BorderLayout.CENTER);
 
-            panel3.add(addButton);
+            panel3.add(modifyButton);
             panel3.add(cancelButton);
             panel1.add(panel3, BorderLayout.SOUTH);
             setUndecorated(true);
@@ -553,7 +551,7 @@ public class Building_Manager_User_Management extends JFrame {
             setVisible(true);
 
             int finalPosition = position;
-            addButton.addActionListener(new ActionListener() {
+            modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     char gender = 'M';
@@ -563,11 +561,11 @@ public class Building_Manager_User_Management extends JFrame {
                         Account_Executive_Function.Account_Executive accountExecutive = new Account_Executive_Function.Account_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
                         try {
                             boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(accountExecutive.getExecutiveID());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 new Building_Manager_Function.Building_Manager().modify_Account_Executive(accountExecutive, executive.getExecutiveID());
-                                JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
                                 new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
                                 dispose();
                             }
@@ -578,11 +576,11 @@ public class Building_Manager_User_Management extends JFrame {
                         Admin_Executive_Function.Admin_Executive adminExecutive = new Admin_Executive_Function.Admin_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
                         try {
                             boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(adminExecutive.getExecutiveID());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 new Building_Manager_Function.Building_Manager().modify_Admin_Executive(adminExecutive, executive.getExecutiveID());
-                                JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
                                 new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
                                 dispose();
                             }
@@ -593,11 +591,11 @@ public class Building_Manager_User_Management extends JFrame {
                         Building_Executive_Function.Building_Executive buildingExecutive = new Building_Executive_Function.Building_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
                         try {
                             boolean check = new Building_Executive_Function.Building_Executive().check_Building_Executive_Availability(buildingExecutive.getExecutiveID());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 new Building_Manager_Function.Building_Manager().modify_Building_Executive(buildingExecutive, executive.getExecutiveID());
-                                JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User modification successful", JOptionPane.INFORMATION_MESSAGE);
                                 new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
                                 dispose();
                             }

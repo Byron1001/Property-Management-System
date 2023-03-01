@@ -1,7 +1,6 @@
 package Entity.Executive.Admin_Executive;
 
 import Entity.Building_Manager.Building_Manager_Function;
-import Entity.Facility;
 import Entity.Login.Login_Frame;
 import Entity.Resident.Resident;
 import Entity.Unit;
@@ -26,13 +25,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.RoundRectangle2D;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Admin_Executive_Unit_Management extends JFrame {
     public PanelBorder panelBorderLeft, panelBorderRight, panelBorderIn;
@@ -41,7 +37,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
     public Form_Home formHome = new Form_Home();
     public Table tableData = new Table();
     public Color backgroundColor = Color.WHITE;
-    public String executiveID = "Executive ID";
+    public String executiveID;
     public JScrollPane scrollPane;
     public GridBagConstraints constraints;
     public JPanel panel;
@@ -299,7 +295,6 @@ public class Admin_Executive_Unit_Management extends JFrame {
     }
 
     private class addFrame extends JFrame {
-        private final ArrayList<Unit> unitArrayList = new Unit().getArrayList();
         public addFrame() throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -410,7 +405,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), furnishComboBox.getSelectedItem().toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
+                    Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), Objects.requireNonNull(furnishComboBox.getSelectedItem()).toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
                     try {
                         boolean check = newUnit.check_Unit_Availability(newUnit.getUnitID());
                         if (check) {
@@ -450,7 +445,6 @@ public class Admin_Executive_Unit_Management extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
-        private final ArrayList<Unit> unitArrayList = new Unit().getArrayList();
         public modifyFrame(Unit unit) throws IOException, ClassNotFoundException, ParseException {
             JPanel panel1 = new JPanel();
             JPanel panel2 = new JPanel();
@@ -480,7 +474,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
             furnishComboBox.addItem("Half");
             furnishComboBox.addItem("Not");
             for (int i = 0;i < 3;i++){
-                if (unit.getFurnish().equals(furnishComboBox.getItemAt(i).toString()))
+                if (unit.getFurnish().equals(furnishComboBox.getItemAt(i)))
                     furnishComboBox.setSelectedIndex(i);
             }
             JTextField parkingUnitField = new JTextField();
@@ -550,11 +544,11 @@ public class Admin_Executive_Unit_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), furnishComboBox.getSelectedItem().toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
+                    Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), Objects.requireNonNull(furnishComboBox.getSelectedItem()).toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
                     try {
                         boolean check = newUnit.check_Unit_Availability(newUnit.getUnitID());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Unit ID already existed", "Unit ID found", JOptionPane.ERROR_MESSAGE);
+                        if (!check) {
+                            JOptionPane.showMessageDialog(null, "Unit ID not existed", "Unit ID not found", JOptionPane.ERROR_MESSAGE);
                         } else {
                             check = newUnit.check_Parking_Unit_Availability(newUnit.getParking_Unit());
                             if (check){
@@ -596,8 +590,6 @@ public class Admin_Executive_Unit_Management extends JFrame {
             JPanel panel3 = new JPanel();
             panel1.setLayout(new BorderLayout());
             panel3.setLayout(new GridLayout(3, 1, 15, 15));
-
-            MaskFormatter yearMask = new MaskFormatter("####");
 
             JLabel formTitle = new JLabel("UNIT DETAILS");
             JLabel[] jLabelLeft = {new JLabel("Floor"), new JLabel("Unit ID"),
@@ -652,6 +644,5 @@ public class Admin_Executive_Unit_Management extends JFrame {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, ParseException {
         new Admin_Executive_Unit_Management("AD01").run("AD01");
-        Building_Manager_Function.Building_Manager.Team_Leader teamLeader = new Building_Manager_Function.Building_Manager.Team_Leader();
     }
 }

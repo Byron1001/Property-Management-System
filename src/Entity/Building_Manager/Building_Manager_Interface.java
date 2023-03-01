@@ -46,7 +46,7 @@ public class Building_Manager_Interface extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("employee", "User Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("report", "Report", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("deposit", "Operation and Budget Planning", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Sructure Management", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("pass", "Team Structure Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#f4791f");
@@ -77,7 +77,6 @@ public class Building_Manager_Interface extends JFrame {
     }
 
     public class Building_Executive_Profile_Panel extends JPanel {
-        private final Font bodyFont = new Font("sansserif", Font.PLAIN, 14);
         public Building_Manager_Function.Button updateButton;
 
         public Building_Executive_Profile_Panel(String buildingManagerID) throws FileNotFoundException {
@@ -125,7 +124,7 @@ public class Building_Manager_Interface extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     setEnabled(false);
-                    Building_Manager_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame updateInfo = null;
+                    Building_Manager_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame updateInfo;
                     try {
                         updateInfo = new Building_Manager_Interface.Building_Executive_Profile_Panel.UpdateInfo_Frame(buildingManager);
                         updateInfo.setLocationRelativeTo(null);
