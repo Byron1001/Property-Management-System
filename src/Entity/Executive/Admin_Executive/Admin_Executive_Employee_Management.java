@@ -237,7 +237,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("house", "Unit Management", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("pass", "Employee Management", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("pass", "Resident Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("complaint", "Complaint Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("employee", "Employee Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("facility", "Facility Management", Model_Menu.MenuType.MENU));
@@ -344,9 +344,27 @@ public class Admin_Executive_Employee_Management extends JFrame {
             group.add(femaleButton);
 
             MaskFormatter contactNumberMask = new MaskFormatter("01#-#######");
-            MaskFormatter salaryMask = new MaskFormatter("####.##");
             JFormattedTextField contactNumberField = new JFormattedTextField(contactNumberMask);
-            JFormattedTextField salaryField = new JFormattedTextField(salaryMask);
+            JFormattedTextField salaryField = new JFormattedTextField();
+            salaryField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyChar() == '.'){
+                    } else {
+                        e.consume();
+                    }
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+
+                }
+            });
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             Admin_Executive_Function.Button addButton = new Admin_Executive_Function.Button("Add New Employee");
@@ -396,33 +414,37 @@ public class Admin_Executive_Employee_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    Employee employee = new Employee();
-                    employee.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), Objects.requireNonNull(positionComboBox.getSelectedItem()).toString());
-                    try {
-                        boolean check = false;
-                        boolean contactNumberCheck = false;
-                        for (Employee employee1 : employeeArrayList){
-                            if (employee1.getEmployeeID().equals(employee.getEmployeeID()))
-                                check = true;
-                            if (employee1.getContact_Number().equals(employee.getContact_Number()))
-                                contactNumberCheck = true;
+                    setAlwaysOnTop(false);
+                    if (!employeeIDField.getText().equals("SG") && !nameField.getText().equals("") && !contactNumberField.getText().equals("01 -       ") && !salaryField.getText().equals("    .  ")) {
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        Employee employee = new Employee();
+                        employee.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), Objects.requireNonNull(positionComboBox.getSelectedItem()).toString());
+                        try {
+                            boolean check = false;
+                            boolean contactNumberCheck = false;
+                            for (Employee employee1 : employeeArrayList){
+                                if (employee1.getEmployeeID().equals(employee.getEmployeeID()))
+                                    check = true;
+                                if (employee1.getContact_Number().equals(employee.getContact_Number()))
+                                    contactNumberCheck = true;
+                            }
+                            if (check) {
+                                JOptionPane.showMessageDialog(null, "EmployeeID already existed", "EmployeeID found", JOptionPane.ERROR_MESSAGE);
+                            } else if (contactNumberCheck) {
+                                JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Admin_Executive_Function.Admin_Executive().add_Employee(employee);
+                                JOptionPane.showMessageDialog(null, "Employee registration successful.Please ask Employee to sign up.", "Employee adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "EmployeeID already existed", "EmployeeID found", JOptionPane.ERROR_MESSAGE);
-                        } else if (contactNumberCheck) {
-                            JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Admin_Executive_Function.Admin_Executive().add_Employee(employee);
-                            JOptionPane.showMessageDialog(null, "Employee registration successful.Please ask Employee to sign up.", "Employee adding successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
-                            dispose();
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -487,10 +509,28 @@ public class Admin_Executive_Employee_Management extends JFrame {
             group.add(femaleButton);
 
             MaskFormatter contactNumberMask = new MaskFormatter("01#-#######");
-            MaskFormatter salaryMask = new MaskFormatter("####.##");
             JFormattedTextField contactNumberField = new JFormattedTextField(contactNumberMask);
             contactNumberField.setText(employee.getContact_Number());
-            JFormattedTextField salaryField = new JFormattedTextField(salaryMask);
+            JFormattedTextField salaryField = new JFormattedTextField();
+            salaryField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyChar() == '.'){
+                    } else {
+                        e.consume();
+                    }
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+
+                }
+            });
             salaryField.setText(Integer.toString(employee.getSalary()));
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
@@ -547,32 +587,36 @@ public class Admin_Executive_Employee_Management extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    Employee employeeNew = new Employee();
-                    employeeNew.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), Objects.requireNonNull(positionComboBox.getSelectedItem()).toString());
-                    try {
-                        boolean check = false;
-                        boolean contactNumberCheck = false;
-                        for (Employee employee1 : employeeArrayList){
-                            if (employee1.getEmployeeID().equals(employeeNew.getEmployeeID()) && !employeeNew.getEmployeeID().equals(employee.getEmployeeID()))
-                                check = true;
-                            if (employee1.getContact_Number().equals(employee.getContact_Number()) && !employeeNew.getContact_Number().equals(employee.getContact_Number()))
-                                contactNumberCheck = true;
+                    if (!employeeIDField.getText().equals("SG") && !nameField.getText().equals("") && !contactNumberField.getText().equals("01 -       ") && !salaryField.getText().equals("    .  ")){
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        Employee employeeNew = new Employee();
+                        employeeNew.set_Info(employeeIDField.getText(), nameField.getText(), gender, contactNumberField.getText(), Integer.parseInt(salaryField.getText()), Objects.requireNonNull(positionComboBox.getSelectedItem()).toString());
+                        try {
+                            boolean check = false;
+                            boolean contactNumberCheck = false;
+                            for (Employee employee1 : employeeArrayList){
+                                if (employee1.getEmployeeID().equals(employeeNew.getEmployeeID()) && !employeeNew.getEmployeeID().equals(employee.getEmployeeID()))
+                                    check = true;
+                                if (employee1.getContact_Number().equals(employee.getContact_Number()) && !employeeNew.getContact_Number().equals(employee.getContact_Number()))
+                                    contactNumberCheck = true;
+                            }
+                            if (check) {
+                                JOptionPane.showMessageDialog(null, "EmployeeID already existed", "EmployeeID found", JOptionPane.ERROR_MESSAGE);
+                            } else if (contactNumberCheck) {
+                                JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Admin_Executive_Function.Admin_Executive().update_Employee(employeeNew, employee.getEmployeeID());
+                                JOptionPane.showMessageDialog(null, "Employee update successful", "Employee adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "EmployeeID already existed", "EmployeeID found", JOptionPane.ERROR_MESSAGE);
-                        } else if (contactNumberCheck) {
-                            JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Admin_Executive_Function.Admin_Executive().update_Employee(employeeNew, employee.getEmployeeID());
-                            JOptionPane.showMessageDialog(null, "Employee update successful", "Employee adding successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Entity.Executive.Admin_Executive.Admin_Executive_Employee_Management(executiveID).run(executiveID);
-                            dispose();
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

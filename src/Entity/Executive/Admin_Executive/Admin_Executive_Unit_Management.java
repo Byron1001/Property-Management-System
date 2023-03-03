@@ -523,7 +523,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
             panel2.add(parkingUnitField);
             panel2.add(jLabelLeft[5]);
             panel2.add(ownerUsernameField);
-            panel2.add(jLabelLeft[5]);
+            panel2.add(jLabelLeft[6]);
             panel2.add(residentUsernameField);
             panel1.add(panel2, BorderLayout.CENTER);
 

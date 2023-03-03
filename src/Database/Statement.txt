@@ -1,5 +1,5 @@
 statement ID:issuer Position:date:description:receiverID
 State1:Admin Executive:01.23.2023:electricity cut for 2 days:Mike1001
 State2:Account Executive:01.20.2023:management fees raises 100 from next year onwards:Mike1001
-State1:Admin Executive:01.23.2023:electricity cut for 2 days:VE001
-State2:Account Executive:01.20.2023:management fees raises 100 from next year onwards:VE001
+State3:Admin Executive:01.23.2023:electricity cut for 2 days:VE001
+State4:Account Executive:01.20.2023:management fees raises 100 from next year onwards:VE001

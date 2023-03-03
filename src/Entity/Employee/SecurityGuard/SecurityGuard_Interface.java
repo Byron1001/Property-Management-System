@@ -184,6 +184,7 @@ public class SecurityGuard_Interface extends JFrame {
                 panel.add(cancelButton);
 
                 securityGuard_EmployeeID_TextField.setText(data[0]);
+                securityGuard_EmployeeID_TextField.setEditable(false);
                 name_TextField.setText(data[1]);
                 if (data[2].equals("F")){
                     femaleButton.setSelected(true);
@@ -209,8 +210,8 @@ public class SecurityGuard_Interface extends JFrame {
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(securityGuard_EmployeeID_TextField.getText())) {
-                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, SecurityGuard.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                                if (!login.check_Username_Availability(securityGuard_EmployeeID_TextField.getText())) {
+                                    JOptionPane.showMessageDialog(null, "Username not registered", "Username registration error", JOptionPane.ERROR_MESSAGE, SecurityGuard.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
                             } catch (IOException | ClassNotFoundException ex) {

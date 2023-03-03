@@ -259,7 +259,7 @@ public class Payment {
         ArrayList<Payment> paymentArrayList = payment.getArrayList();
         ArrayList<Payment> paymentArrayList1 = new ArrayList<>();
         for (Payment payment1 : paymentArrayList){
-            if (payment1.getUnitID().equals(unitID))
+            if (payment1.getUnitID().equals(unitID) && payment1.getIssuerID() != null && !payment1.getIssuerID().equals(""))
                 paymentArrayList1.add(payment1);
         }
         return paymentArrayList1;

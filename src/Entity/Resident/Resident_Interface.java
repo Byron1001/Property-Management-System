@@ -201,6 +201,7 @@ public class Resident_Interface {
 
                 resident_Username_TextField.setText(data[0]);
                 name_TextField.setText(data[1]);
+                name_TextField.setEditable(false);
                 if (data[2].equals("F")){
                     femaleButton.setSelected(true);
                 } else {
@@ -225,8 +226,8 @@ public class Resident_Interface {
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(resident_Username_TextField.getText()) && !resident_Username.equals(resident_Username_TextField.getText())) {
-                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                                if (!login.check_Username_Availability(resident_Username_TextField.getText())) {
+                                    JOptionPane.showMessageDialog(null, "Username not registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
                             } catch (IOException | ClassNotFoundException ex) {

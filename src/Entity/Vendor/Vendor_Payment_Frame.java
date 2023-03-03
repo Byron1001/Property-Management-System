@@ -154,10 +154,14 @@ public class Vendor_Payment_Frame extends JFrame {
                 if (row != -1){
                     Invoice invoiceSelected = invoiceArrayList.get(row);
                     try {
-                        finalVendor.make_Payment(invoiceSelected, vendor_Username);
-                        JOptionPane.showMessageDialog(null, "Invoice Paid", "Payment success", JOptionPane.INFORMATION_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 80, 80));
-                        new Entity.Vendor.Vendor_Payment_Frame(vendor_Username).run(vendor_Username);
-                        dispose();
+                        if (invoiceSelected.getStatus().equals("unpaid")){
+                            finalVendor.make_Payment(invoiceSelected, vendor_Username);
+                            JOptionPane.showMessageDialog(null, "Invoice Paid", "Payment success", JOptionPane.INFORMATION_MESSAGE, header.toIcon(new ImageIcon("src/UIPackage/Icon/success.png"), 80, 80));
+                            new Entity.Vendor.Vendor_Payment_Frame(vendor_Username).run(vendor_Username);
+                            dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "The invoice has already been paid", "Invoice Paid", JOptionPane.INFORMATION_MESSAGE);
+                        }
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }

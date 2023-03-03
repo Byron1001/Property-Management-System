@@ -1,3 +1,3 @@
 TaskID:EmployeeID:description:status
-Task1:SG0001:check gym:done
-Task2:CN0001:check floor 1 washroom:undone
+Task1:SG001:check gym:done
+Task2:CN001:check floor 1 washroom:undone

@@ -341,19 +341,23 @@ public class Admin_Executive_Facility_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Facility facilityNew = new Facility(facilityIDField.getText(), nameField.getText());
-                    try {
-                        boolean check = facilityNew.check_Facility_Availability(facilityNew.getFacilityID());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Facility ID already existed", "Facility ID found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Admin_Executive_Function.Admin_Executive().add_Facility(facilityNew);
-                            JOptionPane.showMessageDialog(null, "Facility registration successful.", "Facility adding successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
-                            dispose();
+                    if (!facilityIDField.getText().equals("") && !nameField.getText().equals("")){
+                        Facility facilityNew = new Facility(facilityIDField.getText(), nameField.getText());
+                        try {
+                            boolean check = facilityNew.check_Facility_Availability(facilityNew.getFacilityID());
+                            if (check) {
+                                JOptionPane.showMessageDialog(null, "Facility ID already existed", "Facility ID found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Admin_Executive_Function.Admin_Executive().add_Facility(facilityNew);
+                                JOptionPane.showMessageDialog(null, "Facility registration successful.", "Facility adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

@@ -96,10 +96,10 @@ public class Vendor_Interface {
             panel.add(profileLabel, BorderLayout.NORTH);
 
             JPanel downPanel = new JPanel();
-            downPanel.setLayout(new GridLayout(7, 2, 30, 10));
-            String[] rowString = {"Vendor Username", "Name", "Gender", "Contact_Number", "Vendor unit", "Monthly Payment", "Payment pending"};
+            downPanel.setLayout(new GridLayout(8, 2, 30, 10));
+            String[] rowString = {"Vendor Username", "Name", "Gender", "Contact_Number", "Vendor unit", "Monthly Payment", "Payment pending", "Position"};
             Vendor vendor = new Vendor().get_Vendor_Info(vendor_Username);
-            String[] data = {vendor.getVendor_Username(), vendor.getName(), Character.toString(vendor.getGender()), vendor.getContact_Number(), vendor.getVendor_Unit(), Integer.toString(vendor.getMonthly_payment()), Integer.toString(vendor.getUnpaid_payment())};
+            String[] data = {vendor.getVendor_Username(), vendor.getName(), Character.toString(vendor.getGender()), vendor.getContact_Number(), vendor.getVendor_Unit(), Integer.toString(vendor.getMonthly_payment()), Integer.toString(vendor.getUnpaid_payment()), "Vendor"};
             for (int i = 0;i < rowString.length;i++){
                 JLabel label1 = new JLabel(rowString[i]);
                 label1.setHorizontalAlignment(JLabel.RIGHT);
@@ -189,6 +189,7 @@ public class Vendor_Interface {
                 panel.add(cancelButton);
 
                 vendor_Username_TextField.setText(data[0]);
+                vendor_Username_TextField.setEditable(false);
                 name_TextField.setText(data[1]);
                 if (data[2].equals("F")){
                     femaleButton.setSelected(true);
@@ -214,8 +215,8 @@ public class Vendor_Interface {
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(vendor_Username_TextField.getText()) && !data[0].equals(vendor_Username_TextField.getText())) {
-                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Vendor.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                                if (!login.check_Username_Availability(vendor_Username_TextField.getText())) {
+                                    JOptionPane.showMessageDialog(null, "Username not registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Vendor.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
                             } catch (IOException | ClassNotFoundException ex) {

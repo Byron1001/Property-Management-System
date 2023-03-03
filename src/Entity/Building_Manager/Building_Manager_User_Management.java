@@ -145,7 +145,7 @@ public class Building_Manager_User_Management extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JDialog.setDefaultLookAndFeelDecorated(false);
-                Object[] selectionValues = {"Account Executive", "Building Executive"};
+                Object[] selectionValues = {"Account Executive", "Admin Executive", "Building Executive"};
                 String initialSelection = selectionValues[0].toString();
                 Object selection = JOptionPane.showInputDialog(null, "Which executive do you want to add?",
                         "Position of Executive", JOptionPane.QUESTION_MESSAGE, null, selectionValues, initialSelection);
@@ -453,6 +453,7 @@ public class Building_Manager_User_Management extends JFrame {
     }
 
     private class modifyFrame extends JFrame {
+        MaskFormatter idMask = new MaskFormatter();
         public modifyFrame(Executive executive) throws IOException, ClassNotFoundException, ParseException {
             String[] positionNameArray = {"Account Executive", "Admin Executive", "Building Executive"};
 
@@ -471,7 +472,6 @@ public class Building_Manager_User_Management extends JFrame {
             }
 
             int position = 0;
-            MaskFormatter idMask = new MaskFormatter();
             if (positionNameArray[0].equals(executive.getPosition())) {
                 idMask = new MaskFormatter("AC##");
                 position = 1;
@@ -484,6 +484,7 @@ public class Building_Manager_User_Management extends JFrame {
             }
             JFormattedTextField executiveIDField = new JFormattedTextField(idMask);
             executiveIDField.setText(executive.getExecutiveID());
+            executiveIDField.setEditable(false);
             JTextField nameField = new JTextField();
             nameField.setText(executive.getName());
             JRadioButton maleButton = new JRadioButton("Male");

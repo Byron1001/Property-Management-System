@@ -348,9 +348,27 @@ public class Account_Executive_Invoice extends JFrame {
             for (String unit : unitList){
                 unitComboBox.addItem(unit);
             }
-            MaskFormatter amountMask = new MaskFormatter("####.00");
             MaskFormatter dateMask = new MaskFormatter("##.##.####");
-            JFormattedTextField amountField = new JFormattedTextField(amountMask);
+            JFormattedTextField amountField = new JFormattedTextField();
+            amountField.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyChar() == '.'){
+                    } else {
+                        e.consume();
+                    }
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+
+                }
+            });
             JFormattedTextField dueDateField = new JFormattedTextField(dateMask);
             JTextField paymentTypesField = new JTextField();
             TextArea descriptionArea = new TextArea();

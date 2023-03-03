@@ -235,11 +235,19 @@ public class Vendor_Payment_History extends JFrame {
                     new JLabel("Payment Types"), new JLabel("Issuer ID"),
                     new JLabel("Issued date"), new JLabel("Description")};
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
+            String date = "";
+            String id = "";
+            if (payment.getIssuedDate() != null){
+                date = payment.getIssuedDate().format(formatter);
+            }
+            if (payment.getIssuerID() != null){
+                id = payment.getIssuerID();
+            }
             JLabel[] jLabelRight = {new JLabel(payment.getPaymentID()), new JLabel(payment.getInvoiceID()),
                     new JLabel(payment.getPay_Username()), new JLabel(payment.getUnitID()),
                     new JLabel("RM " + payment.getAmount()), new JLabel(payment.getPayment_Date().format(formatter)),
                     new JLabel(payment.getPaymentTypes()), new JLabel(payment.getIssuerID()),
-                    new JLabel(payment.getIssuedDate().format(formatter)), new JLabel(payment.getDescription())};
+                    new JLabel(date), new JLabel(id)};
             Vendor.Button button = new Vendor.Button("Close");
             button.setAlignmentX(JButton.CENTER);
             receiptTitle.setFont(new Font("sansserif", Font.BOLD, 24));

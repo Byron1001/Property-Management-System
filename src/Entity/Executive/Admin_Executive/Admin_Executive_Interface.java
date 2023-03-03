@@ -177,6 +177,7 @@ public class Admin_Executive_Interface {
                 MaskFormatter id_Mask = new MaskFormatter("AD##");
                 JFormattedTextField executive_ID_TextField = new JFormattedTextField(id_Mask);
                 executive_ID_TextField.setText(adminExecutive.getExecutiveID());
+                executive_ID_TextField.setEditable(false);
                 JTextField name_TextField = new JTextField(adminExecutive.getName());
                 panel.add(executive_ID_Label);
                 panel.add(executive_ID_TextField);
@@ -239,8 +240,8 @@ public class Admin_Executive_Interface {
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(executive_ID_TextField.getText()) && !executive_ID_TextField.getText().equals(executiveID)) {
-                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Admin_Executive_Function.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                                if (!login.check_Username_Availability(executive_ID_TextField.getText())) {
+                                    JOptionPane.showMessageDialog(null, "Username not registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Admin_Executive_Function.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
                             } catch (IOException | ClassNotFoundException ex) {

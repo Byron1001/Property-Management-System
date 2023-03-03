@@ -162,6 +162,7 @@ public class Building_Manager_Interface extends JFrame {
 
                 MaskFormatter id_Mask = new MaskFormatter("BM##");
                 JFormattedTextField executive_ID_TextField = new JFormattedTextField(id_Mask);
+                executive_ID_TextField.setEditable(false);
                 executive_ID_TextField.setText(building_Manager.getBuildingManagerID());
                 JTextField name_TextField = new JTextField(building_Manager.getName());
                 panel.add(executive_ID_Label);
@@ -224,8 +225,8 @@ public class Building_Manager_Interface extends JFrame {
                             check = false;
                         } else {
                             try {
-                                if (login.check_Username_Availability(executive_ID_TextField.getText())) {
-                                    JOptionPane.showMessageDialog(null, "Username already registered", "Username registration error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
+                                if (!login.check_Username_Availability(executive_ID_TextField.getText())) {
+                                    JOptionPane.showMessageDialog(null, "Username not found", "Username registration error", JOptionPane.ERROR_MESSAGE, Resident.toIcon(new ImageIcon("src/UIPackage/Icon/error.png"), 60, 60));
                                     check = false;
                                 }
                             } catch (IOException | ClassNotFoundException ex) {
