@@ -357,7 +357,7 @@ public class Building_Executive_Patrolling_Management extends JFrame {
             setupButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (!timeStartField.getText().equals("") && !timeEndField.getText().equals("")){
+                    if (!timeStartField.getText().equals("      ") && !timeEndField.getText().equals("      ")){
                         Patrolling newPatrolling = new Patrolling(patrollingIDField.getText(), Objects.requireNonNull(employeeIDComboBox.getSelectedItem()).toString(), Objects.requireNonNull(dayComboBox.getSelectedItem()).toString(), LocalTime.parse(timeStartField.getText(), timeFormatter), LocalTime.parse(timeEndField.getText(), timeFormatter));
                         try {
                             new Building_Executive_Function.Building_Executive().add_Patrolling_Schedule(newPatrolling);
@@ -467,7 +467,7 @@ public class Building_Executive_Patrolling_Management extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (!timeStartField.getText().equals("") && !timeEndField.getText().equals("")){
+                    if (!timeStartField.getText().equals("      ") && !timeEndField.getText().equals("      ")){
                         Patrolling newPatrolling = new Patrolling(patrollingIDField.getText(), Objects.requireNonNull(employeeIDComboBox.getSelectedItem()).toString(), Objects.requireNonNull(dayComboBox.getSelectedItem()).toString(), LocalTime.parse(timeStartField.getText(), timeFormatter), LocalTime.parse(timeEndField.getText(), timeFormatter));
                         try {
                             new Building_Executive_Function.Building_Executive().modify_Patrolling_Schedule(newPatrolling, patrolling.getPatrolID());

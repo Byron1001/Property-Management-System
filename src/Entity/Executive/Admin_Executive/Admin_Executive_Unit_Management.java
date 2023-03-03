@@ -507,7 +507,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
             });
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            Admin_Executive_Function.Button addButton = new Admin_Executive_Function.Button("Add New Unit");
+            Admin_Executive_Function.Button addButton = new Admin_Executive_Function.Button("Modify Unit Info");
             Admin_Executive_Function.Button cancelButton = new Admin_Executive_Function.Button("Cancel");
 
             addButton.setAlignmentX(JButton.CENTER);
@@ -556,7 +556,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
                             if (!check) {
                                 JOptionPane.showMessageDialog(null, "Unit ID not existed", "Unit ID not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                check = newUnit.check_Parking_Unit_Availability(newUnit.getParking_Unit());
+                                check = newUnit.check_Parking_Unit_Availability(newUnit.getParking_Unit()) && !newUnit.getParking_Unit().equals(unit.getParking_Unit());
                                 if (check){
                                     JOptionPane.showMessageDialog(null, "Parking Unit already occupied", "Parking Unit Occupied", JOptionPane.ERROR_MESSAGE);
                                 } else {
@@ -565,7 +565,6 @@ public class Admin_Executive_Unit_Management extends JFrame {
                                         JOptionPane.showMessageDialog(null, "Resident or Owner Username not exists, please register first.", "Resident or owner username not exists", JOptionPane.ERROR_MESSAGE);
                                     } else {
                                         new Admin_Executive_Function.Admin_Executive().unit_Modify(newUnit, unit.getUnitID());
-                                        JOptionPane.showMessageDialog(null, "Unit adding successful", "Unit adding successful", JOptionPane.INFORMATION_MESSAGE);
                                         new Admin_Executive_Unit_Management(executiveID).run(executiveID);
                                         dispose();
                                     }

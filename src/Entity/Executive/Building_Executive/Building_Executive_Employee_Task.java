@@ -337,19 +337,23 @@ public class Building_Executive_Employee_Task extends JFrame {
             assignButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Employee_Task employee_Task = new Employee_Task(taskIDField.getText(), employeeIDField.getText(), descriptionArea.getText(), "undone");
-                    try {
-                        boolean check = new Employee().check_Employee_Availability(employeeIDField.getText());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Employee not existed", "Employee not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Building_Executive_Function.Building_Executive().add_Employee_Task(employee_Task);
-                            JOptionPane.showMessageDialog(null, "Employee_Task registration successful.Please ask Employee_Task to sign up and remember to register new unit if needed.", "Employee_Task adding successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Executive_Employee_Task(executiveID).run(executiveID);
-                            dispose();
+                    if (!employeeIDField.getText().equals("") && !descriptionArea.getText().equals("")){
+                        Employee_Task employee_Task = new Employee_Task(taskIDField.getText(), employeeIDField.getText(), descriptionArea.getText(), "undone");
+                        try {
+                            boolean check = new Employee().check_Employee_Availability(employeeIDField.getText());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Employee not existed", "Employee not found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Building_Executive_Function.Building_Executive().add_Employee_Task(employee_Task);
+                                JOptionPane.showMessageDialog(null, "Employee_Task registration successful.Please ask Employee_Task to sign up and remember to register new unit if needed.", "Employee_Task adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Executive_Employee_Task(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please complete the information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -448,6 +452,8 @@ public class Building_Executive_Employee_Task extends JFrame {
                         } catch (IOException | ClassNotFoundException ex) {
                             throw new RuntimeException(ex);
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please complete the information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

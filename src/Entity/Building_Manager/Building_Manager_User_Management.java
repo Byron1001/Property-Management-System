@@ -513,7 +513,7 @@ public class Building_Manager_User_Management extends JFrame {
             positionNameField.setEditable(false);
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            Building_Manager_Function.Button modifyButton = new Building_Manager_Function.Button("Add New Executive");
+            Building_Manager_Function.Button modifyButton = new Building_Manager_Function.Button("Modify Executive Info");
             Building_Manager_Function.Button cancelButton = new Building_Manager_Function.Button("Cancel");
 
             addButton.setAlignmentX(JButton.CENTER);

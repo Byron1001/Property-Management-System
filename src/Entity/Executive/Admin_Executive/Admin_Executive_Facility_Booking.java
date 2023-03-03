@@ -378,7 +378,7 @@ public class Admin_Executive_Facility_Booking extends JFrame {
                                 JOptionPane.showMessageDialog(null, "Facility not existed", "Facility not found", JOptionPane.ERROR_MESSAGE);
                             } else {
                                 check = new Resident().check_Resident_Availability(newBooking.getResident_Username());
-                                if (check) {
+                                if (!check) {
                                     JOptionPane.showMessageDialog(null, "Resident username not existed", "Resident Username error", JOptionPane.ERROR_MESSAGE);
                                 } else {
                                     check = new Facility.Booking().check_TimeSlot_Availability(newBooking);

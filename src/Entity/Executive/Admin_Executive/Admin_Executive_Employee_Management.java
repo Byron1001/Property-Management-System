@@ -243,6 +243,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
         frame.menu.listMenu.addItem(new Model_Menu("facility", "Facility Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("booking", "Facility Booking", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("vendor", "Vendor", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("entry", "Visitor Pass", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("logout", "Logout", Model_Menu.MenuType.MENU));
 
         frame.menu.colorRight = Color.decode("#243B55");
@@ -654,7 +655,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
             JLabel[] jLabelRight = {new JLabel(employee.getEmployeeID()), new JLabel(employee.getName()),
                     new JLabel(Character.toString(employee.getGender())), new JLabel(employee.getContact_Number()),
-                    new JLabel(employee.getPosition_Name())};
+                    new JLabel(employee.getPosition_Name()), new JLabel(employee.getPosition_Name())};
 
             Admin_Executive_Function.Button closeButton = new Admin_Executive_Function.Button("Close");
             closeButton.setAlignmentX(JButton.CENTER);

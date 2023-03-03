@@ -498,7 +498,6 @@ public class Resident_Facility_Booking extends JFrame {
                                 dispose();
                             }
                         }
-
                     } catch (ClassNotFoundException | IOException ex) {
                         throw new RuntimeException(ex);
                     }

@@ -226,7 +226,7 @@ public class Building_Executive_CheckPoint extends JFrame {
         Building_Executive_CheckPoint frame = new Building_Executive_CheckPoint(executiveID);
         frame.formHome.removeAll();
         frame.menu.listMenu.addItem(new Model_Menu("avatar", "Profile", Model_Menu.MenuType.MENU));
-        frame.menu.listMenu.addItem(new Model_Menu("employee", "CheckPoint", Model_Menu.MenuType.MENU));
+        frame.menu.listMenu.addItem(new Model_Menu("employee", "Employee Task", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("complaint", "Complaint Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("patrolling", "Patrolling Management", Model_Menu.MenuType.MENU));
         frame.menu.listMenu.addItem(new Model_Menu("checkpoint", "Checkpoint Management", Model_Menu.MenuType.MENU));
