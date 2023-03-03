@@ -382,7 +382,7 @@ public class Resident_Visitor_Pass extends JFrame {
                             if (!check) {
                                 JOptionPane.showMessageDialog(null, "Resident username not found", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                check = visitorPass.check_Visitor_Pass_Availability(visitorPass);
+                                check = visitorPass.check_Visitor_Pass_Availability(visitorPass.getVisitor_Pass_ID());
                                 if (check) {
                                     JOptionPane.showMessageDialog(null, "Visitor Pass already exists", "Visitor Pass exists", JOptionPane.ERROR_MESSAGE);
                                 } else {

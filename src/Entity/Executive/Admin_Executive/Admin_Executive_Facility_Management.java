@@ -169,7 +169,7 @@ public class Admin_Executive_Facility_Management extends JFrame {
                     try {
                         int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete this Facility?", "Delete confirmation", JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
-                            new Admin_Executive_Function.Admin_Executive().delete_Employee(facilitySelected.getFacilityID());
+                            new Admin_Executive_Function.Admin_Executive().delete_Facility(facilitySelected.getFacilityID());
                             JOptionPane.showMessageDialog(null, "Facility deleted", "Facility delete success", JOptionPane.INFORMATION_MESSAGE);
                             new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Management(executiveID).run(executiveID);
                             dispose();
@@ -392,6 +392,7 @@ public class Admin_Executive_Facility_Management extends JFrame {
 
             JTextField facilityIDField = new JTextField();
             facilityIDField.setText(facility.getFacilityID());
+            facilityIDField.setEditable(false);
             JTextField nameField = new JTextField();
             nameField.setText(facility.getName());
 

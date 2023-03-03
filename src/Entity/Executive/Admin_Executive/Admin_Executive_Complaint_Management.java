@@ -114,7 +114,7 @@ public class Admin_Executive_Complaint_Management extends JFrame {
         add(panelBorderRight, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 2, 40, 15));
+        buttonPanel.setLayout(new GridLayout(2, 3, 40, 15));
         buttonPanel.setBackground(Color.white);
 
         addButton = new Admin_Executive_Function.Button("New Complaint");
@@ -175,7 +175,7 @@ public class Admin_Executive_Complaint_Management extends JFrame {
                     try {
                         int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete this complaint?", "Delete confirmation", JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
-                            new Admin_Executive_Function.Admin_Executive().unit_Delete(complaintSelected.getResident_Username());
+                            new Admin_Executive_Function.Admin_Executive().complaint_Delete(complaintSelected.getResident_Username());
                             JOptionPane.showMessageDialog(null, "Complaint deleted", "Complaint delete success", JOptionPane.INFORMATION_MESSAGE);
                             new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
                             dispose();
@@ -371,19 +371,23 @@ public class Admin_Executive_Complaint_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Complaint complaintNew = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "unsolved");
-                    try {
-                        boolean check = new Resident().check_Resident_Availability(residentUsernameField.getText());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Resident Username not existed", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Admin_Executive_Function.Admin_Executive().complaint_Add(complaintNew);
-                            JOptionPane.showMessageDialog(null, "Complaint adding successful", "Complaint adding successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
-                            dispose();
+                    if (!residentUsernameField.getText().equals("") && !descriptionArea.getText().equals("")){
+                        Complaint complaintNew = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "unsolved");
+                        try {
+                            boolean check = new Resident().check_Resident_Availability(residentUsernameField.getText());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Resident Username not existed", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Admin_Executive_Function.Admin_Executive().complaint_Add(complaintNew);
+                                JOptionPane.showMessageDialog(null, "Complaint adding successful", "Complaint adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -466,19 +470,23 @@ public class Admin_Executive_Complaint_Management extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Complaint complaintNew = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), Objects.requireNonNull(statusComboBox.getSelectedItem()).toString());
-                    try {
-                        boolean check = new Resident().check_Resident_Availability(residentUsernameField.getText());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Resident Username not existed", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Admin_Executive_Function.Admin_Executive().complaint_Update(complaintNew, complaint.getComplaintID());
-                            JOptionPane.showMessageDialog(null, "Complaint modifying successful", "Complaint modifying successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
-                            dispose();
+                    if (!residentUsernameField.getText().equals("") && !descriptionArea.getText().equals("")){
+                        Complaint complaintNew = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), Objects.requireNonNull(statusComboBox.getSelectedItem()).toString());
+                        try {
+                            boolean check = new Resident().check_Resident_Availability(residentUsernameField.getText());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Resident Username not existed", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Admin_Executive_Function.Admin_Executive().complaint_Update(complaintNew, complaint.getComplaintID());
+                                JOptionPane.showMessageDialog(null, "Complaint modifying successful", "Complaint modifying successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Entity.Executive.Admin_Executive.Admin_Executive_Complaint_Management(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

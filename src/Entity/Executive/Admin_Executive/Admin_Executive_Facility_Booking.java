@@ -174,7 +174,7 @@ public class Admin_Executive_Facility_Booking extends JFrame {
                     try {
                         int result = JOptionPane.showConfirmDialog(null, "Are you sure to delete this booking?", "Delete confirmation", JOptionPane.YES_NO_OPTION);
                         if (result == JOptionPane.YES_OPTION) {
-                            new Admin_Executive_Function.Admin_Executive().unit_Delete(bookingSelected.getBookingID());
+                            new Admin_Executive_Function.Admin_Executive().delete_Booking(bookingSelected.getBookingID());
                             JOptionPane.showMessageDialog(null, "Booking deleted", "Booking delete success", JOptionPane.INFORMATION_MESSAGE);
                             new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
                             dispose();
@@ -370,29 +370,33 @@ public class Admin_Executive_Facility_Booking extends JFrame {
             bookButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Facility.Booking newBooking = new Facility.Booking(bookingIDField.getText(), facilityArrayList.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), dateFormatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
-                    try {
-                        boolean check = new Facility().check_Facility_Availability(newBooking.getFacilityID());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Facility not existed", "Facility not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = new Resident().check_Resident_Availability(newBooking.getResident_Username());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "Resident username not existed", "Resident Username error", JOptionPane.ERROR_MESSAGE);
+                    if (!dateField.getText().equals("  .  .    ") && !residentUsernameField.getText().equals("") && !startTimeField.getText().equals("      ") && !endTimeField.getText().equals("      ")){
+                        Facility.Booking newBooking = new Facility.Booking(bookingIDField.getText(), facilityArrayList.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), dateFormatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
+                        try {
+                            boolean check = new Facility().check_Facility_Availability(newBooking.getFacilityID());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Facility not existed", "Facility not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                check = new Facility.Booking().check_TimeSlot_Availability(newBooking);
-                                if (!check) {
-                                    JOptionPane.showMessageDialog(null, "This timeslot is not available. Please choose other timeslot", "Timeslot not available", JOptionPane.ERROR_MESSAGE);
+                                check = new Resident().check_Resident_Availability(newBooking.getResident_Username());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "Resident username not existed", "Resident Username error", JOptionPane.ERROR_MESSAGE);
                                 } else {
-                                    new Admin_Executive_Function.Admin_Executive().add_Booking(newBooking);
-                                    JOptionPane.showMessageDialog(null, "Booking successful", "Booking successful", JOptionPane.INFORMATION_MESSAGE);
-                                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
-                                    dispose();
+                                    check = new Facility.Booking().check_TimeSlot_Availability(newBooking);
+                                    if (!check) {
+                                        JOptionPane.showMessageDialog(null, "This timeslot is not available. Please choose other timeslot", "Timeslot not available", JOptionPane.ERROR_MESSAGE);
+                                    } else {
+                                        new Admin_Executive_Function.Admin_Executive().add_Booking(newBooking);
+                                        JOptionPane.showMessageDialog(null, "Booking successful", "Booking successful", JOptionPane.INFORMATION_MESSAGE);
+                                        new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
+                                        dispose();
+                                    }
                                 }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -495,29 +499,33 @@ public class Admin_Executive_Facility_Booking extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Facility.Booking newBooking = new Facility.Booking(bookingIDField.getText(), facilityArrayList.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), dateFormatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
-                    try {
-                        boolean check = new Facility().check_Facility_Availability(newBooking.getFacilityID());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Facility not existed", "Facility not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = new Resident().check_Resident_Availability(newBooking.getResident_Username());
+                    if (!dateField.getText().equals("  .  .    ") && !residentUsernameField.getText().equals("") && !startTimeField.getText().equals("      ") && !endTimeField.getText().equals("      ")) {
+                        Facility.Booking newBooking = new Facility.Booking(bookingIDField.getText(), facilityArrayList.get(facilityComboBox.getSelectedIndex()).getFacilityID(), residentUsernameField.getText(), LocalDate.parse(dateField.getText(), dateFormatter), LocalTime.parse(startTimeField.getText(), timeFormatter), LocalTime.parse(endTimeField.getText(), timeFormatter));
+                        try {
+                            boolean check = new Facility().check_Facility_Availability(newBooking.getFacilityID());
                             if (!check) {
-                                JOptionPane.showMessageDialog(null, "Resident username not existed", "Resident Username error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Facility not existed", "Facility not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                check = new Facility.Booking().check_TimeSlot_Availability(newBooking) && !newBooking.getDate().format(dateFormatter).equals(booking.getDate().format(dateFormatter)) && !newBooking.getStart_Time().format(timeFormatter).equals(booking.getStart_Time().format(timeFormatter)) && !newBooking.getEnd_Time().format(timeFormatter).equals(booking.getEnd_Time().format(timeFormatter));
+                                check = new Resident().check_Resident_Availability(newBooking.getResident_Username());
                                 if (!check) {
-                                    JOptionPane.showMessageDialog(null, "This timeslot is not available. Please choose other timeslot", "Timeslot not available", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Resident username not existed", "Resident Username error", JOptionPane.ERROR_MESSAGE);
                                 } else {
-                                    new Admin_Executive_Function.Admin_Executive().facility_Booking_Update(newBooking, booking.getBookingID());
-                                    JOptionPane.showMessageDialog(null, "Booking successful", "Booking successful", JOptionPane.INFORMATION_MESSAGE);
-                                    new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
-                                    dispose();
+                                    check = new Facility.Booking().check_TimeSlot_Availability(newBooking) && !newBooking.getDate().format(dateFormatter).equals(booking.getDate().format(dateFormatter)) && !newBooking.getStart_Time().format(timeFormatter).equals(booking.getStart_Time().format(timeFormatter)) && !newBooking.getEnd_Time().format(timeFormatter).equals(booking.getEnd_Time().format(timeFormatter));
+                                    if (!check) {
+                                        JOptionPane.showMessageDialog(null, "This timeslot is not available. Please choose other timeslot", "Timeslot not available", JOptionPane.ERROR_MESSAGE);
+                                    } else {
+                                        new Admin_Executive_Function.Admin_Executive().facility_Booking_Update(newBooking, booking.getBookingID());
+                                        JOptionPane.showMessageDialog(null, "Booking successful", "Booking successful", JOptionPane.INFORMATION_MESSAGE);
+                                        new Entity.Executive.Admin_Executive.Admin_Executive_Facility_Booking(executiveID).run(executiveID);
+                                        dispose();
+                                    }
                                 }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

@@ -497,6 +497,7 @@ public class Admin_Executive_Employee_Management extends JFrame {
 
             JFormattedTextField employeeIDField = new JFormattedTextField(idMask);
             employeeIDField.setText(employee.getEmployeeID());
+            employeeIDField.setEditable(false);
             JTextField nameField = new JTextField();
             nameField.setText(employee.getName());
             JRadioButton maleButton = new JRadioButton("Male");

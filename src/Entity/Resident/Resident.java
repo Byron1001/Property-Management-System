@@ -243,7 +243,6 @@ public class Resident {
         ArrayList<Facility.Booking> bookingArrayList = booking.getArrayList();
         if (new Facility().check_Facility_Availability(booking.getFacilityID()) && booking.check_TimeSlot_Availability(booking)){
             bookingArrayList.add(booking);
-            System.out.println("pass");
             booking.save_All_Facility_Booking(bookingArrayList);
         }
     }

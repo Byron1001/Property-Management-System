@@ -317,6 +317,7 @@ public class Admin_Executive_Vendor extends JFrame {
             ButtonGroup group = new ButtonGroup();
             group.add(maleButton);
             group.add(femaleButton);
+            maleButton.setSelected(true);
 
             MaskFormatter contactNumberMask = new MaskFormatter("01#-#######");
             JFormattedTextField contactNumberField = new JFormattedTextField(contactNumberMask);
@@ -390,27 +391,31 @@ public class Admin_Executive_Vendor extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    Vendor vendor = new Vendor(vendorUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), vendorUnitField.getText(), Integer.parseInt(monthlyPaymentField.getText()), 0);
-                    try {
-                        boolean check = vendor.check_Vendor_Availability(vendor.getVendor_Username());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Vendor Username already existed", "Vendor Username found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = vendor.check_Vendor_Contact_Number_Availability(vendor.getContact_Number());
+                    if (!vendorUsernameField.getText().equals("") && !nameField.getText().equals("") && !contactNumberField.getText().equals("01 -       ") && !vendorUnitField.getText().equals("") && !monthlyPaymentField.getText().equals("")){
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        Vendor vendor = new Vendor(vendorUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), vendorUnitField.getText(), Integer.parseInt(monthlyPaymentField.getText()), 0);
+                        try {
+                            boolean check = vendor.check_Vendor_Availability(vendor.getVendor_Username());
                             if (check) {
-                                JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Vendor Username already existed", "Vendor Username found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                new Admin_Executive_Function.Admin_Executive().vendor_Add(vendor);
-                                JOptionPane.showMessageDialog(null, "Vendor registration successful.Please ask Vendor to sign up.", "Vendor adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
-                                dispose();
+                                check = vendor.check_Vendor_Contact_Number_Availability(vendor.getContact_Number());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Admin_Executive_Function.Admin_Executive().vendor_Add(vendor);
+                                    JOptionPane.showMessageDialog(null, "Vendor registration successful.Please ask Vendor to sign up.", "Vendor adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                                    dispose();
+                                }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -447,6 +452,7 @@ public class Admin_Executive_Vendor extends JFrame {
 
             JTextField vendorUsernameField = new JTextField();
             vendorUsernameField.setText(vendor.getVendor_Username());
+            vendorUsernameField.setEditable(false);
             JTextField nameField = new JTextField();
             nameField.setText(vendor.getName());
             JRadioButton maleButton = new JRadioButton("Male");
@@ -556,27 +562,30 @@ public class Admin_Executive_Vendor extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    Vendor vendorModify = new Vendor(vendorUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), vendorUnitField.getText(), Integer.parseInt(monthlyPaymentField.getText()), Integer.parseInt(unpaidPaymentField.getText()));
-                    try {
-                        boolean check = vendorModify.check_Vendor_Availability(vendorModify.getVendor_Username()) && !vendorModify.getVendor_Username().equals(vendor.getVendor_Username());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Vendor Username not existed", "Vendor Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = vendorModify.check_Vendor_Contact_Number_Availability(vendorModify.getContact_Number()) && !vendorModify.getContact_Number().equals(vendor.getContact_Number());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                    if (!vendorUsernameField.getText().equals("") && !nameField.getText().equals("") && !contactNumberField.getText().equals("01 -       ") && !vendorUnitField.getText().equals("") && !monthlyPaymentField.getText().equals("")){
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        Vendor vendorModify = new Vendor(vendorUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), vendorUnitField.getText(), (int) Float.parseFloat(monthlyPaymentField.getText()), (int) Float.parseFloat(unpaidPaymentField.getText()));
+                        try {
+                            boolean check = vendorModify.check_Vendor_Availability(vendorModify.getVendor_Username());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Vendor Username not existed", "Vendor Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                new Admin_Executive_Function.Admin_Executive().vendor_Modify(vendorModify, vendor.getVendor_Username());
-                                JOptionPane.showMessageDialog(null, "Vendor modification successful.Please ask Vendor to sign up and remember to register new unit if needed.", "Vendor adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
-                                dispose();
+                                check = vendorModify.check_Vendor_Contact_Number_Availability(vendorModify.getContact_Number()) && !vendorModify.getContact_Number().equals(vendor.getContact_Number());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Admin_Executive_Function.Admin_Executive().vendor_Modify(vendorModify, vendor.getVendor_Username());
+                                    new Entity.Executive.Admin_Executive.Admin_Executive_Vendor(executiveID).run(executiveID);
+                                    dispose();
+                                }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

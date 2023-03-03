@@ -267,11 +267,19 @@ public class Account_Executive_Payment extends JFrame{
             String statusText = "Pending";
             if (!payment.getIssuerID().equals(""))
                 statusText = "Received";
+            String date = "";
+            String id = "";
+            if (payment.getIssuedDate() != null){
+                date = payment.getIssuedDate().format(formatter);
+            }
+            if (payment.getIssuerID() != null){
+                id = payment.getIssuerID();
+            }
             JLabel[] jLabelRight = {new JLabel(payment.getPaymentID()), new JLabel(payment.getInvoiceID()),
                     new JLabel(payment.getPay_Username()), new JLabel(payment.getUnitID()),
                     new JLabel("RM " + payment.getAmount()), new JLabel(payment.getPayment_Date().format(formatter)),
-                    new JLabel(payment.getPaymentTypes()), new JLabel(payment.getIssuerID()),
-                    new JLabel(payment.getIssuedDate().format(formatter)), new JLabel(payment.getDescription()),
+                    new JLabel(payment.getPaymentTypes()), new JLabel(id),
+                    new JLabel(date), new JLabel(payment.getDescription()),
                     new JLabel(statusText)};
             Account_Executive_Function.AcExButton button = new Account_Executive_Function.AcExButton("Close");
             button.setAlignmentX(JButton.CENTER);

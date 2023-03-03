@@ -285,7 +285,6 @@ public class Building_Manager_Function{
                 scanner.nextLine();
                 while (scanner.hasNextLine()){
                     String[] data = scanner.nextLine().split(":", 5);
-                    System.out.println(data[3]);
                     operationArrayList.add(new Operation(data[0], data[1], data[2], data[3], Integer.parseInt(data[4])));
                 }
                 return operationArrayList;
@@ -374,7 +373,7 @@ public class Building_Manager_Function{
             public void delete_Operation(String operationID) throws IOException {
                 Operation operation = new Operation();
                 ArrayList<Operation> operationArrayList = operation.getArrayList();
-                if (check_Operation_Availability(operation.getOperationID())){
+                if (check_Operation_Availability(operationID)){
                     operationArrayList.removeIf(operation1 -> operation1.getOperationID().equals(operationID));
                 }
                 save_All_Operation(operationArrayList);

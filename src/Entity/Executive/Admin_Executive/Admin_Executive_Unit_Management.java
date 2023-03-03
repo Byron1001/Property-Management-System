@@ -405,29 +405,33 @@ public class Admin_Executive_Unit_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), Objects.requireNonNull(furnishComboBox.getSelectedItem()).toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
-                    try {
-                        boolean check = newUnit.check_Unit_Availability(newUnit.getUnitID());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Unit ID already existed", "Unit ID found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = newUnit.check_Parking_Unit_Availability(newUnit.getParking_Unit());
-                            if (check){
-                                JOptionPane.showMessageDialog(null, "Parking Unit already occupied", "Parking Unit Occupied", JOptionPane.ERROR_MESSAGE);
+                    if (!floorField.getText().equals("") && !unitIDField.getText().equals("") && !completeYearField.getText().equals("    ") && !parkingUnitField.getText().equals("") && !ownerUsernameField.getText().equals("") && !residentUsernameField.getText().equals("")){
+                        Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), Objects.requireNonNull(furnishComboBox.getSelectedItem()).toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
+                        try {
+                            boolean check = newUnit.check_Unit_Availability(newUnit.getUnitID());
+                            if (check) {
+                                JOptionPane.showMessageDialog(null, "Unit ID already existed", "Unit ID found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                check = new Resident().check_Resident_Availability(ownerUsernameField.getText()) || new Resident().check_Resident_Availability(residentUsernameField.getText());
-                                if (!check) {
-                                    JOptionPane.showMessageDialog(null, "Resident or Owner Username not exists, please register first.", "Resident or owner username not exists", JOptionPane.ERROR_MESSAGE);
+                                check = newUnit.check_Parking_Unit_Availability(newUnit.getParking_Unit());
+                                if (check){
+                                    JOptionPane.showMessageDialog(null, "Parking Unit already occupied", "Parking Unit Occupied", JOptionPane.ERROR_MESSAGE);
                                 } else {
-                                    new Admin_Executive_Function.Admin_Executive().unit_Add(newUnit);
-                                    JOptionPane.showMessageDialog(null, "Unit adding successful", "Unit adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                    new Admin_Executive_Unit_Management(executiveID).run(executiveID);
-                                    dispose();
+                                    check = new Resident().check_Resident_Availability(ownerUsernameField.getText()) || new Resident().check_Resident_Availability(residentUsernameField.getText());
+                                    if (!check) {
+                                        JOptionPane.showMessageDialog(null, "Resident or Owner Username not exists, please register first.", "Resident or owner username not exists", JOptionPane.ERROR_MESSAGE);
+                                    } else {
+                                        new Admin_Executive_Function.Admin_Executive().unit_Add(newUnit);
+                                        JOptionPane.showMessageDialog(null, "Unit adding successful", "Unit adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                        new Admin_Executive_Unit_Management(executiveID).run(executiveID);
+                                        dispose();
+                                    }
                                 }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -467,6 +471,7 @@ public class Admin_Executive_Unit_Management extends JFrame {
             floorField.setText(Integer.toString(unit.getFloor()));
             JTextField unitIDField = new JTextField();
             unitIDField.setText(unit.getUnitID());
+            unitIDField.setEditable(false);
             JFormattedTextField completeYearField = new JFormattedTextField(yearMask);
             completeYearField.setText(Integer.toString(unit.getComplete_Year()));
             JComboBox<String> furnishComboBox = new JComboBox<>();
@@ -544,29 +549,33 @@ public class Admin_Executive_Unit_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), Objects.requireNonNull(furnishComboBox.getSelectedItem()).toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
-                    try {
-                        boolean check = newUnit.check_Unit_Availability(newUnit.getUnitID());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Unit ID not existed", "Unit ID not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = newUnit.check_Parking_Unit_Availability(newUnit.getParking_Unit());
-                            if (check){
-                                JOptionPane.showMessageDialog(null, "Parking Unit already occupied", "Parking Unit Occupied", JOptionPane.ERROR_MESSAGE);
+                    if (!floorField.getText().equals("") && !unitIDField.getText().equals("") && !completeYearField.getText().equals("    ") && !parkingUnitField.getText().equals("") && !ownerUsernameField.getText().equals("") && !residentUsernameField.getText().equals("")){
+                        Unit newUnit = new Unit(Integer.parseInt(floorField.getText()), unitIDField.getText(), Integer.parseInt(completeYearField.getText()), Objects.requireNonNull(furnishComboBox.getSelectedItem()).toString(), parkingUnitField.getText(), ownerUsernameField.getText(), residentUsernameField.getText());
+                        try {
+                            boolean check = newUnit.check_Unit_Availability(newUnit.getUnitID());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Unit ID not existed", "Unit ID not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                check = new Resident().check_Resident_Availability(ownerUsernameField.getText()) || new Resident().check_Resident_Availability(residentUsernameField.getText());
-                                if (!check) {
-                                    JOptionPane.showMessageDialog(null, "Resident or Owner Username not exists, please register first.", "Resident or owner username not exists", JOptionPane.ERROR_MESSAGE);
+                                check = newUnit.check_Parking_Unit_Availability(newUnit.getParking_Unit());
+                                if (check){
+                                    JOptionPane.showMessageDialog(null, "Parking Unit already occupied", "Parking Unit Occupied", JOptionPane.ERROR_MESSAGE);
                                 } else {
-                                    new Admin_Executive_Function.Admin_Executive().unit_Modify(newUnit, unit.getUnitID());
-                                    JOptionPane.showMessageDialog(null, "Unit adding successful", "Unit adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                    new Admin_Executive_Unit_Management(executiveID).run(executiveID);
-                                    dispose();
+                                    check = new Resident().check_Resident_Availability(ownerUsernameField.getText()) || new Resident().check_Resident_Availability(residentUsernameField.getText());
+                                    if (!check) {
+                                        JOptionPane.showMessageDialog(null, "Resident or Owner Username not exists, please register first.", "Resident or owner username not exists", JOptionPane.ERROR_MESSAGE);
+                                    } else {
+                                        new Admin_Executive_Function.Admin_Executive().unit_Modify(newUnit, unit.getUnitID());
+                                        JOptionPane.showMessageDialog(null, "Unit adding successful", "Unit adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                        new Admin_Executive_Unit_Management(executiveID).run(executiveID);
+                                        dispose();
+                                    }
                                 }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

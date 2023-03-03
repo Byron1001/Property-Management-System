@@ -246,7 +246,6 @@ public class SecurityGuard_Visitor_Entry_Record extends JFrame {
             JTextField visitorPassIDField = new JTextField(entryRecord[0]);
             JFormattedTextField dateField = new JFormattedTextField(dateMask);
             dateField.setText(entryRecord[1]);
-            System.out.println(entryRecord[1]);
             JFormattedTextField timeField = new JFormattedTextField(timeMask);
             timeField.setText(entryRecord[2]);
 

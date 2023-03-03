@@ -124,21 +124,9 @@ public class Visitor_Pass {
 
     public boolean check_Visitor_Pass_Availability(String visitor_Pass_ID) throws FileNotFoundException {
         boolean result = false;
-        ArrayList<Visitor_Pass> visitorPassArrayList = this.getArrayList();
+        ArrayList<Visitor_Pass> visitorPassArrayList = getArrayList();
         for (Visitor_Pass visitor_Pass : visitorPassArrayList){
             if (visitor_Pass.getVisitor_Pass_ID().equals(visitor_Pass_ID)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
-
-    public boolean check_Visitor_Pass_Availability(Visitor_Pass visitorPass) throws FileNotFoundException {
-        boolean result = false;
-        ArrayList<Visitor_Pass> visitorPassArrayList = this.getArrayList();
-        for (Visitor_Pass visitor_Pass : visitorPassArrayList){
-            if (visitor_Pass.getResident_Username().equals(visitorPass.getResident_Username()) || visitor_Pass.getVisitor_Name().equals(visitorPass.getVisitor_Name()) || visitor_Pass.getContact_Number().equals(visitorPass.getContact_Number())) {
                 result = true;
                 break;
             }

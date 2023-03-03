@@ -110,7 +110,7 @@ public class Building_Executive_Complaint_Management extends JFrame {
         add(panelBorderRight, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(3, 2, 40, 15));
+        buttonPanel.setLayout(new GridLayout(1, 2, 40, 15));
         buttonPanel.setBackground(Color.white);
 
         viewButton = new Building_Executive_Function.Button("View Complaint details");

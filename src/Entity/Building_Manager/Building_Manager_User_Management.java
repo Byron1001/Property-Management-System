@@ -388,53 +388,57 @@ public class Building_Manager_User_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    if (finalPosition == 1) {
-                        Account_Executive_Function.Account_Executive accountExecutive = new Account_Executive_Function.Account_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
-                        try {
-                            boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(accountExecutive.getExecutiveID());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                new Building_Manager_Function.Building_Manager().add_Account_Executive(accountExecutive);
-                                JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
-                                dispose();
+                    if (!contactNumberField.getText().equals("01 -       ") && !nameField.getText().equals("")){
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        if (finalPosition == 1) {
+                            Account_Executive_Function.Account_Executive accountExecutive = new Account_Executive_Function.Account_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
+                            try {
+                                boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(accountExecutive.getExecutiveID());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Building_Manager_Function.Building_Manager().add_Account_Executive(accountExecutive);
+                                    JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                    dispose();
+                                }
+                            } catch (IOException | ClassNotFoundException ex) {
+                                throw new RuntimeException(ex);
                             }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else if (finalPosition == 2) {
-                        Admin_Executive_Function.Admin_Executive adminExecutive = new Admin_Executive_Function.Admin_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
-                        try {
-                            boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(adminExecutive.getExecutiveID());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                new Building_Manager_Function.Building_Manager().add_Admin_Executive(adminExecutive);
-                                JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
-                                dispose();
+                        } else if (finalPosition == 2) {
+                            Admin_Executive_Function.Admin_Executive adminExecutive = new Admin_Executive_Function.Admin_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
+                            try {
+                                boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(adminExecutive.getExecutiveID());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Building_Manager_Function.Building_Manager().add_Admin_Executive(adminExecutive);
+                                    JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                    dispose();
+                                }
+                            } catch (IOException | ClassNotFoundException ex) {
+                                throw new RuntimeException(ex);
                             }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else if (finalPosition == 3) {
-                        Building_Executive_Function.Building_Executive buildingExecutive = new Building_Executive_Function.Building_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
-                        try {
-                            boolean check = new Building_Executive_Function.Building_Executive().check_Building_Executive_Availability(buildingExecutive.getExecutiveID());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                new Building_Manager_Function.Building_Manager().add_Building_Executive(buildingExecutive);
-                                JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                        } else if (finalPosition == 3) {
+                            Building_Executive_Function.Building_Executive buildingExecutive = new Building_Executive_Function.Building_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
+                            try {
+                                boolean check = new Building_Executive_Function.Building_Executive().check_Building_Executive_Availability(buildingExecutive.getExecutiveID());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "User Username already existed", "User Username found", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Building_Manager_Function.Building_Manager().add_Building_Executive(buildingExecutive);
+                                    JOptionPane.showMessageDialog(null, "User registration successful.Please ask User to sign up and remember to register new unit if needed.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                }
+                            } catch (IOException | ClassNotFoundException ex) {
+                                throw new RuntimeException(ex);
                             }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -555,54 +559,58 @@ public class Building_Manager_User_Management extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    if (finalPosition == 1) {
-                        Account_Executive_Function.Account_Executive accountExecutive = new Account_Executive_Function.Account_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
-                        try {
-                            boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(accountExecutive.getExecutiveID());
-                            if (!check) {
-                                JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                new Building_Manager_Function.Building_Manager().modify_Account_Executive(accountExecutive, executive.getExecutiveID());
-                                JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
-                                dispose();
+                    if (!contactNumberField.getText().equals("01 -       ") && !nameField.getText().equals("")){
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        if (finalPosition == 1) {
+                            Account_Executive_Function.Account_Executive accountExecutive = new Account_Executive_Function.Account_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
+                            try {
+                                boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(accountExecutive.getExecutiveID());
+                                if (!check) {
+                                    JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Building_Manager_Function.Building_Manager().modify_Account_Executive(accountExecutive, executive.getExecutiveID());
+                                    JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                    dispose();
+                                }
+                            } catch (IOException | ClassNotFoundException ex) {
+                                throw new RuntimeException(ex);
                             }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else if (finalPosition == 2) {
-                        Admin_Executive_Function.Admin_Executive adminExecutive = new Admin_Executive_Function.Admin_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
-                        try {
-                            boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(adminExecutive.getExecutiveID());
-                            if (!check) {
-                                JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                new Building_Manager_Function.Building_Manager().modify_Admin_Executive(adminExecutive, executive.getExecutiveID());
-                                JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
-                                dispose();
+                        } else if (finalPosition == 2) {
+                            Admin_Executive_Function.Admin_Executive adminExecutive = new Admin_Executive_Function.Admin_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
+                            try {
+                                boolean check = new Account_Executive_Function.Account_Executive().check_Account_Executive_Availability(adminExecutive.getExecutiveID());
+                                if (!check) {
+                                    JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Building_Manager_Function.Building_Manager().modify_Admin_Executive(adminExecutive, executive.getExecutiveID());
+                                    JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                    dispose();
+                                }
+                            } catch (IOException | ClassNotFoundException ex) {
+                                throw new RuntimeException(ex);
                             }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    } else if (finalPosition == 3) {
-                        Building_Executive_Function.Building_Executive buildingExecutive = new Building_Executive_Function.Building_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
-                        try {
-                            boolean check = new Building_Executive_Function.Building_Executive().check_Building_Executive_Availability(buildingExecutive.getExecutiveID());
-                            if (!check) {
-                                JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
-                            } else {
-                                new Building_Manager_Function.Building_Manager().modify_Building_Executive(buildingExecutive, executive.getExecutiveID());
-                                JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User modification successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
-                                dispose();
+                        } else if (finalPosition == 3) {
+                            Building_Executive_Function.Building_Executive buildingExecutive = new Building_Executive_Function.Building_Executive(executiveIDField.getText(), nameField.getText(), gender, contactNumberField.getText());
+                            try {
+                                boolean check = new Building_Executive_Function.Building_Executive().check_Building_Executive_Availability(buildingExecutive.getExecutiveID());
+                                if (!check) {
+                                    JOptionPane.showMessageDialog(null, "User Username not existed", "User Username not found", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Building_Manager_Function.Building_Manager().modify_Building_Executive(buildingExecutive, executive.getExecutiveID());
+                                    JOptionPane.showMessageDialog(null, "User modification successful.Please ask User to check.", "User modification successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Building_Manager_User_Management(buildingManagerID).run(buildingManagerID);
+                                    dispose();
+                                }
+                            } catch (IOException | ClassNotFoundException ex) {
+                                throw new RuntimeException(ex);
                             }
-                        } catch (IOException | ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

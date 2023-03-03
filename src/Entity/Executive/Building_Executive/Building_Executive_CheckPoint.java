@@ -336,19 +336,23 @@ public class Building_Executive_CheckPoint extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    CheckPoint newCheckPoint = new CheckPoint(checkPointIDField.getText(), nameField.getText(), locationField.getText());
-                    try {
-                        boolean check = new CheckPoint().check_CheckPoint_Existence(newCheckPoint.getCheckPointID());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "CheckPoint ID existed", "CheckPoint ID found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            new Building_Executive_Function.Building_Executive().add_New_CheckPoint(newCheckPoint);
-                            JOptionPane.showMessageDialog(null, "CheckPoint adding successful", "CheckPoint adding successful", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Executive_CheckPoint(executiveID).run(executiveID);
-                            dispose();
+                    if (!checkPointIDField.getText().equals("CP") && !nameField.getText().equals("") && !locationField.getText().equals("")){
+                        CheckPoint newCheckPoint = new CheckPoint(checkPointIDField.getText(), nameField.getText(), locationField.getText());
+                        try {
+                            boolean check = new CheckPoint().check_CheckPoint_Existence(newCheckPoint.getCheckPointID());
+                            if (check) {
+                                JOptionPane.showMessageDialog(null, "CheckPoint ID existed", "CheckPoint ID found", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                new Building_Executive_Function.Building_Executive().add_New_CheckPoint(newCheckPoint);
+                                JOptionPane.showMessageDialog(null, "CheckPoint adding successful", "CheckPoint adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                                dispose();
+                            }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -423,14 +427,18 @@ public class Building_Executive_CheckPoint extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    CheckPoint newCheckPoint = new CheckPoint(checkPointIDField.getText(), nameField.getText(), locationField.getText());
-                    try {
-                        new Building_Executive_Function.Building_Executive().modify_CheckPoint(newCheckPoint, checkPoint.getCheckPointID());
-                        JOptionPane.showMessageDialog(null, "CheckPoint modifying successful", "CheckPoint modifying successful", JOptionPane.INFORMATION_MESSAGE);
-                        new Building_Executive_CheckPoint(executiveID).run(executiveID);
-                        dispose();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    if (!checkPointIDField.getText().equals("CP") && !nameField.getText().equals("") && !locationField.getText().equals("")){
+                        CheckPoint newCheckPoint = new CheckPoint(checkPointIDField.getText(), nameField.getText(), locationField.getText());
+                        try {
+                            new Building_Executive_Function.Building_Executive().modify_CheckPoint(newCheckPoint, checkPoint.getCheckPointID());
+                            JOptionPane.showMessageDialog(null, "CheckPoint modifying successful", "CheckPoint modifying successful", JOptionPane.INFORMATION_MESSAGE);
+                            new Building_Executive_CheckPoint(executiveID).run(executiveID);
+                            dispose();
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

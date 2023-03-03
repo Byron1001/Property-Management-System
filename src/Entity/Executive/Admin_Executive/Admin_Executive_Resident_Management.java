@@ -319,6 +319,7 @@ public class Admin_Executive_Resident_Management extends JFrame {
             ButtonGroup group = new ButtonGroup();
             group.add(maleButton);
             group.add(femaleButton);
+            maleButton.setSelected(true);
 
             MaskFormatter contactNumberMask = new MaskFormatter("01#-#######");
             JFormattedTextField contactNumberField = new JFormattedTextField(contactNumberMask);
@@ -370,27 +371,31 @@ public class Admin_Executive_Resident_Management extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    Resident resident = new Resident(residentUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), unitIDField.getText(), 0);
-                    try {
-                        boolean check = resident.check_Resident_Availability(resident.getResident_Username()) && new Unit().check_Unit_Availability(unitIDField.getText());
-                        if (check) {
-                            JOptionPane.showMessageDialog(null, "Resident Username or unit already existed", "Resident Username ot unit found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = resident.check_Resident_Contact_Number_Availability(resident.getContact_Number());
+                    if (!residentUsernameField.getText().equals("") && !nameField.getText().equals("") && !contactNumberField.getText().equals("01 -       ") && !unitIDField.getText().equals("")){
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        Resident resident = new Resident(residentUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), unitIDField.getText(), 0);
+                        try {
+                            boolean check = resident.check_Resident_Availability(resident.getResident_Username()) && new Unit().check_Unit_Availability(unitIDField.getText());
                             if (check) {
-                                JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Resident Username or unit already existed", "Resident Username ot unit found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                new Admin_Executive_Function.Admin_Executive().resident_Add(resident);
-                                JOptionPane.showMessageDialog(null, "Resident registration successful.Please ask resident to sign up and remember to register new unit if needed.", "Resident adding successful", JOptionPane.INFORMATION_MESSAGE);
-                                new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
-                                dispose();
+                                check = resident.check_Resident_Contact_Number_Availability(resident.getContact_Number());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Admin_Executive_Function.Admin_Executive().resident_Add(resident);
+                                    JOptionPane.showMessageDialog(null, "Resident registration successful.Please ask resident to sign up and remember to register new unit if needed.", "Resident adding successful", JOptionPane.INFORMATION_MESSAGE);
+                                    new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                                    dispose();
+                                }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -426,6 +431,7 @@ public class Admin_Executive_Resident_Management extends JFrame {
 
             JTextField residentUsernameField = new JTextField();
             residentUsernameField.setText(resident.getResident_Username());
+            residentUsernameField.setEditable(false);
             JTextField nameField = new JTextField();
             nameField.setText(resident.getName());
             JRadioButton maleButton = new JRadioButton("Male");
@@ -491,26 +497,30 @@ public class Admin_Executive_Resident_Management extends JFrame {
             modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    char gender = 'M';
-                    if (femaleButton.isSelected())
-                        gender = 'F';
-                    Resident residentModify = new Resident(residentUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), unitIDField.getText(), resident.getPayment());
-                    try {
-                        boolean check = residentModify.check_Resident_Availability(residentModify.getResident_Username()) && residentModify.getResident_Username().equals(resident.getResident_Username());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Resident Username not existed", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            check = residentModify.check_Resident_Contact_Number_Availability(residentModify.getContact_Number())  && !residentModify.getContact_Number().equals(resident.getContact_Number());
-                            if (check) {
-                                JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                    if (!residentUsernameField.getText().equals("") && !nameField.getText().equals("") && !contactNumberField.getText().equals("01 -       ") && !unitIDField.getText().equals("")){
+                        char gender = 'M';
+                        if (femaleButton.isSelected())
+                            gender = 'F';
+                        Resident residentModify = new Resident(residentUsernameField.getText(), nameField.getText(), gender, contactNumberField.getText(), unitIDField.getText(), resident.getPayment());
+                        try {
+                            boolean check = residentModify.check_Resident_Availability(residentModify.getResident_Username()) && residentModify.getResident_Username().equals(resident.getResident_Username());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Resident Username not existed", "Resident Username not found", JOptionPane.ERROR_MESSAGE);
                             } else {
-                                new Admin_Executive_Function.Admin_Executive().resident_Modify(residentModify, resident.getResident_Username());
-                                new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
-                                dispose();
+                                check = residentModify.check_Resident_Contact_Number_Availability(residentModify.getContact_Number())  && !residentModify.getContact_Number().equals(resident.getContact_Number());
+                                if (check) {
+                                    JOptionPane.showMessageDialog(null, "Contact Number already registered", "Contact Number registered", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    new Admin_Executive_Function.Admin_Executive().resident_Modify(residentModify, resident.getResident_Username());
+                                    new Entity.Executive.Admin_Executive.Admin_Executive_Resident_Management(executiveID).run(executiveID);
+                                    dispose();
+                                }
                             }
+                        } catch (IOException | ClassNotFoundException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide information", "Information lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });

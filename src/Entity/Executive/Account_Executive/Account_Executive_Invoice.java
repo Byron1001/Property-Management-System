@@ -410,7 +410,7 @@ public class Account_Executive_Invoice extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     if (!amountField.getText().equals("    .00") && !dueDateField.getText().equals("    .  ") && !paymentTypesField.getText().equals("") && !descriptionArea.getText().equals("")){
                         try {
-                            Invoice invoice = new Invoice(invoiceIDField.getText(), issuerIDField.getText(), Objects.requireNonNull(unitComboBox.getSelectedItem()).toString(), Integer.parseInt(amountField.getText().substring(0, amountField.getText().length() - 3)), LocalDate.parse(dueDateField.getText(), formatter), paymentTypesField.getText(), descriptionArea.getText(), "unpaid");
+                            Invoice invoice = new Invoice(invoiceIDField.getText(), issuerIDField.getText(), Objects.requireNonNull(unitComboBox.getSelectedItem()).toString(), Integer.parseInt(amountField.getText()), LocalDate.parse(dueDateField.getText(), formatter), paymentTypesField.getText(), descriptionArea.getText(), "unpaid");
                             accountExecutive.issue_Unit_Invoice(invoice);
                             JOptionPane.showMessageDialog(null, "Invoice issued", "Invoice issued", JOptionPane.INFORMATION_MESSAGE);
                             new Account_Executive_Invoice(executiveID).run(executiveID);

@@ -237,6 +237,7 @@ public class Resident_Complaint extends JFrame {
 
         for (Complaint complaint : complaintArrayList) {
             frame.tableData.addRow(complaint.getStringArray(complaint));
+            System.out.println(complaint.getStatus());
         }
 
         frame.formHome.removeAll();
@@ -332,7 +333,7 @@ public class Resident_Complaint extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!descriptionArea.getText().equals("")){
-                        Complaint complaint = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "Unsolved");
+                        Complaint complaint = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "unsolved");
                         try {
                             boolean check = new Resident().check_Resident_Availability(complaint.getResident_Username());
                             if (!check) {
@@ -420,7 +421,7 @@ public class Resident_Complaint extends JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (!descriptionArea.getText().equals("")){
-                        Complaint complaint1 = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "Unsolved");
+                        Complaint complaint1 = new Complaint(complaintIDField.getText(), residentUsernameField.getText(), descriptionArea.getText(), "unsolved");
                         try {
                             boolean check = new Resident().check_Resident_Availability(complaint1.getResident_Username());
                             if (!check) {

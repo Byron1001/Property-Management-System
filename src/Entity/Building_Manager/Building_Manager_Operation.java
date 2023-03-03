@@ -399,19 +399,23 @@ public class Building_Manager_Operation extends JFrame {
             addButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Building_Manager_Function.Building_Manager.Operation operationNew = new Building_Manager_Function.Building_Manager.Operation(operationIDField.getText(), buildingManagerIDField.getText(), operationTitleField.getText(), descriptionArea.getText(), Integer.parseInt(amountField.getText()));
-                    try {
-                        boolean check = operationNew.check_Fund_Amount_Enough(operationNew.getBudget_Amount());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Fund Amount not enough", "Fund amount not enough", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            operationNew.add_Operation(operationNew);
-                            JOptionPane.showMessageDialog(null, "Operation added", "Opeartion added", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
-                            dispose();
+                    if (!operationTitleField.getText().equals("") && !descriptionArea.getText().equals("") && !amountField.getText().equals("")){
+                        Building_Manager_Function.Building_Manager.Operation operationNew = new Building_Manager_Function.Building_Manager.Operation(operationIDField.getText(), buildingManagerIDField.getText(), operationTitleField.getText(), descriptionArea.getText(), Integer.parseInt(amountField.getText()));
+                        try {
+                            boolean check = operationNew.check_Fund_Amount_Enough(operationNew.getBudget_Amount());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Fund Amount not enough", "Fund amount not enough", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                operationNew.add_Operation(operationNew);
+                                JOptionPane.showMessageDialog(null, "Operation added", "Opeartion added", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                                dispose();
+                            }
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Informatiion lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
@@ -473,10 +477,10 @@ public class Building_Manager_Operation extends JFrame {
             });
 
             panel2.setLayout(new GridLayout(jLabelLeft.length, 2, 15, 15));
-            Resident.Button addButton = new Resident.Button("MODIFY Operation Budget");
+            Resident.Button modifyButton = new Resident.Button("MODIFY Operation Budget");
             Resident.Button cancelButton = new Resident.Button("Cancel Budgeting");
 
-            addButton.setAlignmentX(JButton.CENTER);
+            modifyButton.setAlignmentX(JButton.CENTER);
             cancelButton.setAlignmentX(JButton.CENTER);
             formTitle.setFont(new Font("sansserif", Font.BOLD, 24));
             formTitle.setHorizontalAlignment(JLabel.CENTER);
@@ -493,7 +497,7 @@ public class Building_Manager_Operation extends JFrame {
             panel2.add(amountField);
             panel1.add(panel2, BorderLayout.CENTER);
 
-            panel3.add(addButton);
+            panel3.add(modifyButton);
             panel3.add(cancelButton);
             panel1.add(panel3, BorderLayout.SOUTH);
             setUndecorated(true);
@@ -507,22 +511,26 @@ public class Building_Manager_Operation extends JFrame {
             setShape(new RoundRectangle2D.Double(0, 0, 1186, 621, 15, 15));
             setVisible(true);
 
-            addButton.addActionListener(new ActionListener() {
+            modifyButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Building_Manager_Function.Building_Manager.Operation operationNew = new Building_Manager_Function.Building_Manager.Operation(operationIDField.getText(), buildingManagerIDField.getText(), operationTitleField.getText(), descriptionArea.getText(), Integer.parseInt(amountField.getText()));
-                    try {
-                        boolean check = operationNew.check_Fund_Amount_Enough(operationNew.getBudget_Amount());
-                        if (!check) {
-                            JOptionPane.showMessageDialog(null, "Fund Amount not enough", "Fund amount not enough", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            operationNew.modify_Operation(operationNew, operation.getOperationID());
-                            JOptionPane.showMessageDialog(null, "Operation modified", "Operation modified", JOptionPane.INFORMATION_MESSAGE);
-                            new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
-                            dispose();
+                    if (!operationTitleField.getText().equals("") && !descriptionArea.getText().equals("") && !amountField.getText().equals("")){
+                        Building_Manager_Function.Building_Manager.Operation operationNew = new Building_Manager_Function.Building_Manager.Operation(operationIDField.getText(), buildingManagerIDField.getText(), operationTitleField.getText(), descriptionArea.getText(), Integer.parseInt(amountField.getText()));
+                        try {
+                            boolean check = operationNew.check_Fund_Amount_Enough(operationNew.getBudget_Amount());
+                            if (!check) {
+                                JOptionPane.showMessageDialog(null, "Fund Amount not enough", "Fund amount not enough", JOptionPane.ERROR_MESSAGE);
+                            } else {
+                                operationNew.modify_Operation(operationNew, operation.getOperationID());
+                                JOptionPane.showMessageDialog(null, "Operation modified", "Operation modified", JOptionPane.INFORMATION_MESSAGE);
+                                new Building_Manager_Operation(buildingManagerID).run(buildingManagerID);
+                                dispose();
+                            }
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
                         }
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Please provide complete information", "Informatiion lost", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
